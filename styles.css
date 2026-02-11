@@ -274,6 +274,39 @@ nav a.active {
     margin-left: 10px;
 }
 
+footer {
+    background: #003d2e;
+    padding: 30px 20px;
+    margin-top: 40px;
+    border-top: 4px solid #00a86b;
+    text-align: center;
+    color: #b8e0d2;
+}
+
+footer .school-name {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 15px;
+}
+
+footer .report-problem {
+    font-size: 0.95em;
+    color: #b8e0d2;
+}
+
+footer .report-problem a {
+    color: #7dffd0;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+footer .report-problem a:hover {
+    color: #00a86b;
+    text-decoration: underline;
+}
+
 @media print {
     body {
         background: white;
@@ -293,5 +326,9 @@ nav a.active {
 
     .vocab-table td {
         color: black;
+    }
+
+    footer {
+        display: none;
     }
 }
