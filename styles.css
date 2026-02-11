@@ -8,7 +8,7 @@
 
 body {
     font-family: 'Crimson Text', Garamond, Baskerville, Georgia, serif;
-    background: #004d3a;
+    background: #004d41;
     color: white;
     line-height: 1.7;
     min-height: 100vh;
@@ -118,7 +118,7 @@ nav a.active {
     transform: translateY(-3px);
     box-shadow: 0 4px 16px rgba(0, 168, 107, 0.4);
     border-color: #7dffd0;
-    background: #004d3a;
+    background: #004d41;
 }
 
 .topic-card h3 {
@@ -156,7 +156,7 @@ nav a.active {
 }
 
 .vocab-table tr:hover {
-    background: #004d3a;
+    background: #004d41;
 }
 
 .checklist {
