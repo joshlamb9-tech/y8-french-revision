@@ -1,0 +1,102 @@
+{
+  "id": "free-time-likes-dislikes",
+  "title": "Free Time (Likes/Dislikes)",
+  "topic": "free-time-hobbies",
+  "columns": [
+    {
+      "id": 1,
+      "header": "Time Phrases",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "Le week-end", "en": "At the weekend"},
+        {"fr": "Pendant la semaine", "en": "During the week"},
+        {"fr": "Le soir", "en": "In the evening"},
+        {"fr": "L'après-midi", "en": "In the afternoon"},
+        {"fr": "Le matin", "en": "In the morning"},
+        {"fr": "Après l'école", "en": "After school"},
+        {"fr": "Pendant les vacances", "en": "During the holidays"}
+      ]
+    },
+    {
+      "id": 2,
+      "header": "Subject",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "je", "en": "I"}
+      ]
+    },
+    {
+      "id": 3,
+      "header": "Opinion Verbs",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "aime", "en": "like"},
+        {"fr": "adore", "en": "love"},
+        {"fr": "déteste", "en": "hate"},
+        {"fr": "préfère", "en": "prefer"},
+        {"fr": "n'aime pas", "en": "don't like"}
+      ]
+    },
+    {
+      "id": 4,
+      "header": "Activities",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "jouer au foot", "en": "playing football"},
+        {"fr": "jouer aux cartes", "en": "playing cards"},
+        {"fr": "jouer du piano", "en": "playing the piano"},
+        {"fr": "regarder la télé", "en": "watching TV"},
+        {"fr": "écouter de la musique", "en": "listening to music"},
+        {"fr": "lire", "en": "reading"},
+        {"fr": "faire du vélo", "en": "riding a bike"},
+        {"fr": "faire du cheval", "en": "horse riding"},
+        {"fr": "aller au cinéma", "en": "going to the cinema"},
+        {"fr": "danser", "en": "dancing"},
+        {"fr": "nager", "en": "swimming"},
+        {"fr": "jouer aux jeux vidéo", "en": "playing video games"}
+      ]
+    },
+    {
+      "id": 5,
+      "header": "Extensions",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "avec mes amis", "en": "with my friends"},
+        {"fr": "avec ma famille", "en": "with my family"},
+        {"fr": "parce que c'est amusant", "en": "because it's fun"},
+        {"fr": "parce que c'est ennuyeux", "en": "because it's boring"},
+        {"fr": "parce que c'est relaxant", "en": "because it's relaxing"},
+        {"fr": "parce que c'est passionnant", "en": "because it's exciting"},
+        {"fr": "quand il fait beau", "en": "when the weather is nice"},
+        {"fr": "quand j'ai le temps", "en": "when I have time"}
+      ]
+    }
+  ],
+  "rules": {
+    "difficulty": {
+      "1-star": {
+        "minColumns": 3,
+        "maxColumns": 4,
+        "excludeComplexity": ["advanced"],
+        "optionalColumnsMax": 0
+      },
+      "2-star": {
+        "minColumns": 4,
+        "maxColumns": 4,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 0
+      },
+      "3-star": {
+        "minColumns": 4,
+        "maxColumns": 5,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 1
+      }
+    }
+  }
+}

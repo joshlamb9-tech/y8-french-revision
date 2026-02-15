@@ -1,0 +1,96 @@
+{
+  "id": "school-subjects",
+  "title": "School Subjects (Likes/Dislikes)",
+  "topic": "school",
+  "columns": [
+    {
+      "id": 1,
+      "header": "Frequency",
+      "complexity": "simple",
+      "optional": true,
+      "items": [
+        {"fr": "En général", "en": "In general"},
+        {"fr": "Normalement", "en": "Normally"},
+        {"fr": "Au collège", "en": "At school"},
+        {"fr": "Cette année", "en": "This year"}
+      ]
+    },
+    {
+      "id": 2,
+      "header": "Subject",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "je", "en": "I"}
+      ]
+    },
+    {
+      "id": 3,
+      "header": "Opinion",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "aime", "en": "like"},
+        {"fr": "adore", "en": "love"},
+        {"fr": "déteste", "en": "hate"},
+        {"fr": "préfère", "en": "prefer"},
+        {"fr": "n'aime pas", "en": "don't like"}
+      ]
+    },
+    {
+      "id": 4,
+      "header": "School Subjects",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "le français", "en": "French"},
+        {"fr": "l'anglais", "en": "English"},
+        {"fr": "les maths", "en": "maths"},
+        {"fr": "les sciences", "en": "science"},
+        {"fr": "l'histoire", "en": "history"},
+        {"fr": "la géographie", "en": "geography"},
+        {"fr": "l'éducation physique", "en": "PE"},
+        {"fr": "la musique", "en": "music"},
+        {"fr": "le dessin", "en": "art"},
+        {"fr": "l'informatique", "en": "ICT"}
+      ]
+    },
+    {
+      "id": 5,
+      "header": "Reasons",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "parce que c'est facile", "en": "because it's easy"},
+        {"fr": "parce que c'est difficile", "en": "because it's difficult"},
+        {"fr": "parce que c'est intéressant", "en": "because it's interesting"},
+        {"fr": "parce que c'est ennuyeux", "en": "because it's boring"},
+        {"fr": "parce que c'est utile", "en": "because it's useful"},
+        {"fr": "parce que le prof est sympa", "en": "because the teacher is nice"},
+        {"fr": "parce que j'aime apprendre", "en": "because I like learning"}
+      ]
+    }
+  ],
+  "rules": {
+    "difficulty": {
+      "1-star": {
+        "minColumns": 3,
+        "maxColumns": 3,
+        "excludeComplexity": ["advanced"],
+        "optionalColumnsMax": 0
+      },
+      "2-star": {
+        "minColumns": 3,
+        "maxColumns": 4,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 1
+      },
+      "3-star": {
+        "minColumns": 4,
+        "maxColumns": 5,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 1
+      }
+    }
+  }
+}

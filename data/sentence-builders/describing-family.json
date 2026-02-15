@@ -1,0 +1,93 @@
+{
+  "id": "describing-family",
+  "title": "Describing Family Members",
+  "topic": "personal-information",
+  "columns": [
+    {
+      "id": 1,
+      "header": "Introduction",
+      "complexity": "simple",
+      "optional": true,
+      "items": [
+        {"fr": "Dans ma famille", "en": "In my family"},
+        {"fr": "Chez moi", "en": "At my house"},
+        {"fr": "À la maison", "en": "At home"}
+      ]
+    },
+    {
+      "id": 2,
+      "header": "Subject",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "j'ai", "en": "I have"},
+        {"fr": "il y a", "en": "there is/are"}
+      ]
+    },
+    {
+      "id": 3,
+      "header": "Family Members",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "un frère", "en": "a brother"},
+        {"fr": "une sœur", "en": "a sister"},
+        {"fr": "deux frères", "en": "two brothers"},
+        {"fr": "deux sœurs", "en": "two sisters"},
+        {"fr": "un frère et une sœur", "en": "a brother and a sister"},
+        {"fr": "trois personnes", "en": "three people"},
+        {"fr": "quatre personnes", "en": "four people"}
+      ]
+    },
+    {
+      "id": 4,
+      "header": "Who/Description",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "qui s'appelle", "en": "who is called"},
+        {"fr": "qui a", "en": "who is"},
+        {"fr": "et il est", "en": "and he is"},
+        {"fr": "et elle est", "en": "and she is"}
+      ]
+    },
+    {
+      "id": 5,
+      "header": "Details",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "dix ans", "en": "ten years old"},
+        {"fr": "douze ans", "en": "twelve years old"},
+        {"fr": "quinze ans", "en": "fifteen years old"},
+        {"fr": "sympa", "en": "nice"},
+        {"fr": "intelligent", "en": "intelligent"},
+        {"fr": "amusant", "en": "funny"},
+        {"fr": "gentil", "en": "kind"},
+        {"fr": "embêtant", "en": "annoying"}
+      ]
+    }
+  ],
+  "rules": {
+    "difficulty": {
+      "1-star": {
+        "minColumns": 2,
+        "maxColumns": 3,
+        "excludeComplexity": ["advanced"],
+        "optionalColumnsMax": 0
+      },
+      "2-star": {
+        "minColumns": 3,
+        "maxColumns": 4,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 1
+      },
+      "3-star": {
+        "minColumns": 3,
+        "maxColumns": 5,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 2
+      }
+    }
+  }
+}

@@ -307,6 +307,220 @@ footer .report-problem a:hover {
     text-decoration: underline;
 }
 
+/* Practice Generator Styles */
+.practice-generator {
+    background: #003d2e;
+    border: 3px solid #00a86b;
+    border-radius: 12px;
+    padding: 30px;
+    margin: 40px 0;
+    box-shadow: 0 4px 20px rgba(0, 168, 107, 0.3);
+}
+
+.practice-generator h3 {
+    margin-top: 0;
+    color: #7dffd0;
+    font-size: 2em;
+}
+
+.practice-generator > p {
+    color: #b8e0d2;
+    font-size: 1.1em;
+    margin-bottom: 25px;
+}
+
+.builder-select,
+.difficulty-select,
+.timer-settings {
+    margin: 20px 0;
+}
+
+.builder-select label,
+.timer-settings label {
+    display: block;
+    color: #7dffd0;
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.builder-select select,
+.timer-settings select {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+    background: #005a43;
+    color: white;
+    border: 2px solid #00a86b;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.builder-select select:hover,
+.timer-settings select:hover {
+    background: #004d41;
+    border-color: #7dffd0;
+}
+
+.difficulty-select {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.difficulty-btn {
+    padding: 12px 24px;
+    background: #005a43;
+    color: white;
+    border: 2px solid #00a86b;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.difficulty-btn:hover {
+    background: #004d41;
+    border-color: #7dffd0;
+    transform: translateY(-2px);
+}
+
+.difficulty-btn.active {
+    background: #00a86b;
+    color: white;
+    border-color: #7dffd0;
+    box-shadow: 0 4px 12px rgba(0, 168, 107, 0.4);
+}
+
+.sentence-display {
+    margin-top: 30px;
+    padding: 0;
+    background: transparent;
+}
+
+.sentence-display.hidden {
+    display: none;
+}
+
+.english-sentence {
+    font-size: 1.8em;
+    font-weight: 600;
+    color: white;
+    text-align: center;
+    padding: 30px;
+    background: #005a43;
+    border: 2px solid #00a86b;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.countdown-container {
+    margin: 30px 0;
+}
+
+.countdown-number {
+    font-size: 3.5em;
+    font-weight: bold;
+    color: #7dffd0;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 30px;
+    background: #003d2e;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 2px solid #00a86b;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.progress-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #00a86b 0%, #7dffd0 100%);
+    transition: width 0.3s linear, background 0.3s ease;
+    border-radius: 13px;
+}
+
+.progress-bar.warning {
+    background: linear-gradient(90deg, #ff9800 0%, #ffcc00 100%);
+}
+
+.progress-bar.danger {
+    background: linear-gradient(90deg, #ff4444 0%, #ff6666 100%);
+}
+
+.french-answer {
+    font-size: 1.6em;
+    color: white;
+    text-align: center;
+    padding: 25px;
+    background: #00a86b;
+    border: 3px solid #7dffd0;
+    border-radius: 10px;
+    margin-top: 20px;
+    line-height: 1.5;
+    box-shadow: 0 4px 16px rgba(0, 168, 107, 0.4);
+}
+
+.french-answer strong {
+    color: #7dffd0;
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.8em;
+}
+
+.hidden {
+    display: none;
+}
+
+#nextBtn {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 300px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .practice-generator {
+        padding: 20px;
+    }
+
+    .english-sentence {
+        font-size: 1.4em;
+        padding: 20px;
+    }
+
+    .countdown-number {
+        font-size: 2.5em;
+    }
+
+    .progress-bar-container {
+        height: 25px;
+    }
+
+    .french-answer {
+        font-size: 1.3em;
+        padding: 20px;
+    }
+
+    .difficulty-btn {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 120px;
+    }
+}
+
 @media print {
     body {
         background: white;
@@ -329,6 +543,10 @@ footer .report-problem a:hover {
     }
 
     footer {
+        display: none;
+    }
+
+    .practice-generator {
         display: none;
     }
 }

@@ -1,0 +1,99 @@
+{
+  "id": "food-preferences",
+  "title": "Talking About Food",
+  "topic": "food-drink",
+  "columns": [
+    {
+      "id": 1,
+      "header": "Time/Context",
+      "complexity": "simple",
+      "optional": true,
+      "items": [
+        {"fr": "Au petit déjeuner", "en": "At breakfast"},
+        {"fr": "Au déjeuner", "en": "At lunch"},
+        {"fr": "Au dîner", "en": "At dinner"},
+        {"fr": "Normalement", "en": "Normally"},
+        {"fr": "D'habitude", "en": "Usually"}
+      ]
+    },
+    {
+      "id": 2,
+      "header": "Subject",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "je", "en": "I"}
+      ]
+    },
+    {
+      "id": 3,
+      "header": "Opinion/Action",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "aime", "en": "like"},
+        {"fr": "adore", "en": "love"},
+        {"fr": "déteste", "en": "hate"},
+        {"fr": "préfère", "en": "prefer"},
+        {"fr": "mange", "en": "eat"},
+        {"fr": "bois", "en": "drink"}
+      ]
+    },
+    {
+      "id": 4,
+      "header": "Food & Drink",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "les céréales", "en": "cereal"},
+        {"fr": "un croissant", "en": "a croissant"},
+        {"fr": "du pain", "en": "bread"},
+        {"fr": "du fromage", "en": "cheese"},
+        {"fr": "du poulet", "en": "chicken"},
+        {"fr": "des frites", "en": "chips"},
+        {"fr": "une pizza", "en": "a pizza"},
+        {"fr": "un sandwich", "en": "a sandwich"},
+        {"fr": "du chocolat", "en": "chocolate"},
+        {"fr": "de l'eau", "en": "water"},
+        {"fr": "du jus de fruit", "en": "fruit juice"},
+        {"fr": "du coca", "en": "coke"}
+      ]
+    },
+    {
+      "id": 5,
+      "header": "Reasons/Extensions",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "parce que c'est délicieux", "en": "because it's delicious"},
+        {"fr": "parce que c'est bon", "en": "because it's good"},
+        {"fr": "parce que c'est mauvais", "en": "because it's bad"},
+        {"fr": "parce que c'est sain", "en": "because it's healthy"},
+        {"fr": "avec mes amis", "en": "with my friends"},
+        {"fr": "avec ma famille", "en": "with my family"}
+      ]
+    }
+  ],
+  "rules": {
+    "difficulty": {
+      "1-star": {
+        "minColumns": 3,
+        "maxColumns": 3,
+        "excludeComplexity": ["advanced"],
+        "optionalColumnsMax": 0
+      },
+      "2-star": {
+        "minColumns": 3,
+        "maxColumns": 4,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 1
+      },
+      "3-star": {
+        "minColumns": 4,
+        "maxColumns": 5,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 1
+      }
+    }
+  }
+}

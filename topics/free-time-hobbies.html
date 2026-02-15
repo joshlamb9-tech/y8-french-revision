@@ -191,6 +191,56 @@
                 <p>= At school everyone has a club: you can do photography, horse riding, lots of different things. It's great.</p>
             </div>
 
+            <!-- Random Sentence Practice Generator -->
+            <div class="practice-generator">
+                <h3>🎯 Random Sentence Practice</h3>
+                <p>Translate the sentence before time runs out! Write your answer on paper.</p>
+
+                <!-- Difficulty Selection -->
+                <div class="difficulty-select">
+                    <button class="difficulty-btn active" data-level="1">⭐ Easy</button>
+                    <button class="difficulty-btn" data-level="2">⭐⭐ Medium</button>
+                    <button class="difficulty-btn" data-level="3">⭐⭐⭐ Hard</button>
+                </div>
+
+                <!-- Timer Settings -->
+                <div class="timer-settings">
+                    <label>Countdown time:</label>
+                    <select id="timerDuration">
+                        <option value="10">10 seconds</option>
+                        <option value="15">15 seconds</option>
+                        <option value="20">20 seconds</option>
+                        <option value="30" selected>30 seconds</option>
+                    </select>
+                </div>
+
+                <!-- Start Button -->
+                <button id="generateBtn" class="button">Generate Sentence</button>
+
+                <!-- Display Area -->
+                <div id="sentenceDisplay" class="sentence-display hidden">
+                    <div class="english-sentence" id="englishSentence">
+                        <!-- English sentence appears here -->
+                    </div>
+
+                    <div class="countdown-container">
+                        <div class="countdown-number" id="countdown">
+                            <!-- Timer countdown number -->
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+                    </div>
+
+                    <div class="french-answer hidden" id="frenchAnswer">
+                        <strong>Answer:</strong>
+                        <!-- French answer revealed after countdown -->
+                    </div>
+
+                    <button id="nextBtn" class="button hidden">Next Sentence</button>
+                </div>
+            </div>
+
             <div class="section-box">
                 <h3>Practice Activities</h3>
 
@@ -253,5 +303,14 @@
         <div class="school-name">Mowden Hall School</div>
         <div class="report-problem">Found a problem or want to request a feature? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></div>
     </footer>
+
+    <!-- Random Sentence Practice Scripts -->
+    <script src="../js/sentence-generator.js"></script>
+    <script src="../js/ui-controller.js"></script>
+    <script>
+        // Initialize the practice generator for this topic
+        const controller = new UIController();
+        controller.init('free-time-likes-dislikes');
+    </script>
 </body>
 </html>

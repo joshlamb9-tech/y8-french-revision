@@ -1,0 +1,92 @@
+{
+  "id": "daily-routine",
+  "title": "Talking About My Daily Routine",
+  "topic": "daily-routine",
+  "columns": [
+    {
+      "id": 1,
+      "header": "Time/Frequency",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "Le matin", "en": "In the morning"},
+        {"fr": "L'après-midi", "en": "In the afternoon"},
+        {"fr": "Le soir", "en": "In the evening"},
+        {"fr": "D'habitude", "en": "Usually"},
+        {"fr": "Tous les jours", "en": "Every day"},
+        {"fr": "Le week-end", "en": "At the weekend"}
+      ]
+    },
+    {
+      "id": 2,
+      "header": "Subject",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "je", "en": "I"}
+      ]
+    },
+    {
+      "id": 3,
+      "header": "Reflexive Verbs",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "me réveille", "en": "wake up"},
+        {"fr": "me lève", "en": "get up"},
+        {"fr": "me lave", "en": "wash"},
+        {"fr": "me brosse les dents", "en": "brush my teeth"},
+        {"fr": "me couche", "en": "go to bed"}
+      ]
+    },
+    {
+      "id": 4,
+      "header": "Time Expressions",
+      "complexity": "medium",
+      "optional": true,
+      "items": [
+        {"fr": "à sept heures", "en": "at seven o'clock"},
+        {"fr": "à huit heures", "en": "at eight o'clock"},
+        {"fr": "à huit heures et demie", "en": "at half past eight"},
+        {"fr": "à neuf heures moins le quart", "en": "at quarter to nine"},
+        {"fr": "vers dix heures", "en": "around ten o'clock"},
+        {"fr": "à midi", "en": "at midday"},
+        {"fr": "à minuit", "en": "at midnight"}
+      ]
+    },
+    {
+      "id": 5,
+      "header": "Additional Activities",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "puis je prends le petit déjeuner", "en": "then I have breakfast"},
+        {"fr": "avant de quitter la maison", "en": "before leaving the house"},
+        {"fr": "après les cours", "en": "after lessons"},
+        {"fr": "quand je rentre à la maison", "en": "when I get home"}
+      ]
+    }
+  ],
+  "rules": {
+    "difficulty": {
+      "1-star": {
+        "minColumns": 3,
+        "maxColumns": 3,
+        "excludeComplexity": ["advanced"],
+        "optionalColumnsMax": 0
+      },
+      "2-star": {
+        "minColumns": 3,
+        "maxColumns": 4,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 1
+      },
+      "3-star": {
+        "minColumns": 4,
+        "maxColumns": 5,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 2
+      }
+    }
+  }
+}
