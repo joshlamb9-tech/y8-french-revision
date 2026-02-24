@@ -1,92 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grammar Hub | Year 8 French Revision</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grammar Hub | Year 8 French Revision</title>
+  <link rel="stylesheet" href="styles-v2.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Grammar Hub</h1>
-            <p class="subtitle">Choose a grammar topic to focus on</p>
-        </header>
 
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="grammar.html" class="active">Grammar Reference</a>
-            <a href="checklist.html">Knowledge Checklist</a>
-        </nav>
-
-        <div class="content">
-            <div class="section-box">
-                <h3>🧠 Smart Learning Tip</h3>
-                <p>Don't try to learn all the grammar at once! Pick one topic at a time, spend 25 minutes on it using the techniques on each page, then take a 5-minute break. Return to the same topic in a few days to strengthen your memory.</p>
-            </div>
-
-            <h2>Tenses</h2>
-            <p>Click on a tense to learn it properly with study techniques that actually work:</p>
-
-            <div class="topic-grid">
-                <a href="grammar/present-tense.html" class="topic-card">
-                    <h3>Present Tense</h3>
-                    <p>Talk about things happening now, habits, and general facts</p>
-                </a>
-
-                <a href="grammar/perfect-tense.html" class="topic-card">
-                    <h3>Perfect Tense</h3>
-                    <p>Talk about completed actions in the past (passé composé)</p>
-                </a>
-
-                <a href="grammar/near-future.html" class="topic-card">
-                    <h3>Near Future</h3>
-                    <p>Talk about what you're going to do (aller + infinitive)</p>
-                </a>
-            </div>
-
-            <h2>Other Grammar</h2>
-            <p>Essential grammar rules you need to know:</p>
-
-            <div class="topic-grid">
-                <a href="grammar/articles.html" class="topic-card">
-                    <h3>Articles & Nouns</h3>
-                    <p>Le/la/les, un/une/des, du/de la, gender, and negatives</p>
-                </a>
-
-                <a href="grammar/adjectives.html" class="topic-card">
-                    <h3>Adjectives</h3>
-                    <p>Agreement, position, and BAGS adjectives</p>
-                </a>
-
-                <a href="grammar/other.html" class="topic-card">
-                    <h3>Everything Else</h3>
-                    <p>Negatives, prepositions, question words, and more</p>
-                </a>
-            </div>
-
-            <div class="section-box">
-                <h3>How to Use This Section</h3>
-                <p><strong>Don't just read!</strong> Research shows that re-reading is one of the weakest revision methods. Instead:</p>
-                <ol>
-                    <li><strong>Study one topic</strong> for 25 minutes using the activities on each page</li>
-                    <li><strong>Test yourself</strong> using the Brain Dump or Flashcard activities</li>
-                    <li><strong>Return in 2-3 days</strong> to strengthen your memory (spaced practice)</li>
-                    <li><strong>Mix it up</strong> - practice different tenses together so you learn when to use each one</li>
-                </ol>
-            </div>
-
-            <div class="section-box">
-                <h3>Quick Links</h3>
-                <a href="index.html" class="button">Back to Topics</a>
-                <a href="checklist.html" class="button">Knowledge Checklist</a>
-            </div>
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
         </div>
+      </a>
+      <nav class="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="grammar.html" class="hn-link active">Grammar</a>
+        <a href="checklist.html" class="hn-link">Checklist</a>
+        <a href="past-papers.html" class="hn-link">Past Papers</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- PAGE BANNER -->
+  <div class="page-banner">
+    <div class="page-banner-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Grammar Hub</span>
+      </div>
+      <div class="hero-kicker kicker-purple">
+        <div class="kicker-dot"></div>
+        Grammar Reference
+      </div>
+      <h1 class="hero-title" style="margin-top:12px;">Grammar Hub</h1>
+      <p class="hero-desc">Choose a grammar topic to focus on. Don&rsquo;t try to learn everything at once &mdash; pick one, spend 25 minutes, then take a break.</p>
+    </div>
+  </div>
+
+  <main class="content-wrap">
+
+    <!-- SMART LEARNING TIP -->
+    <div class="info-banner">
+      <div class="info-banner-icon">&#129504;</div>
+      <div class="info-banner-body">
+        <p><strong>Smart Learning Tip:</strong> Don&rsquo;t try to learn all the grammar at once! Pick one topic at a time, spend 25 minutes on it using the techniques on each page, then take a 5-minute break. Return to the same topic in a few days to strengthen your memory.</p>
+      </div>
     </div>
 
-    <footer>
-        <div class="school-name">Mowden Hall School</div>
-        <div class="report-problem">Found a problem or want to request a feature? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></div>
-    </footer>
+    <!-- TENSES -->
+    <div class="sh">
+      <div class="sh-left">
+        <div class="sh-title">Tenses</div>
+        <div class="sh-count">3 topics</div>
+      </div>
+    </div>
+
+    <div class="grammar-hub-grid" style="margin-bottom:40px;">
+      <a class="grammar-hub-card" href="grammar/present-tense.html">
+        <div class="ghc-icon">&#128336;</div>
+        <div class="ghc-title">Present Tense <span class="level-badge level-both">Both</span></div>
+        <div class="ghc-sub">Talk about things happening now, habits, and general facts</div>
+      </a>
+      <a class="grammar-hub-card" href="grammar/perfect-tense.html">
+        <div class="ghc-icon">&#9194;&#65039;</div>
+        <div class="ghc-title">Perfect Tense <span class="level-badge level-both">Both</span></div>
+        <div class="ghc-sub">Talk about completed actions in the past (pass&eacute; compos&eacute;)</div>
+      </a>
+      <a class="grammar-hub-card" href="grammar/near-future.html">
+        <div class="ghc-icon">&#9193;&#65039;</div>
+        <div class="ghc-title">Near Future <span class="level-badge level-2">L2</span></div>
+        <div class="ghc-sub">Talk about what you&rsquo;re going to do (aller + infinitive)</div>
+      </a>
+    </div>
+
+    <!-- OTHER GRAMMAR -->
+    <div class="sh">
+      <div class="sh-left">
+        <div class="sh-title">Other Grammar</div>
+        <div class="sh-count">3 topics</div>
+      </div>
+    </div>
+
+    <div class="grammar-hub-grid" style="margin-bottom:40px;">
+      <a class="grammar-hub-card" href="grammar/articles.html">
+        <div class="ghc-icon">&#128292;</div>
+        <div class="ghc-title">Articles &amp; Nouns <span class="level-badge level-both">Both</span></div>
+        <div class="ghc-sub">Le/la/les, un/une/des, du/de la, gender, and negatives</div>
+      </a>
+      <a class="grammar-hub-card" href="grammar/adjectives.html">
+        <div class="ghc-icon">&#128208;</div>
+        <div class="ghc-title">Adjectives <span class="level-badge level-both">Both</span></div>
+        <div class="ghc-sub">Agreement, position, and BAGS adjectives</div>
+      </a>
+      <a class="grammar-hub-card" href="grammar/other.html">
+        <div class="ghc-icon">&#10060;</div>
+        <div class="ghc-title">Everything Else <span class="level-badge level-both">Both</span></div>
+        <div class="ghc-sub">Negatives, prepositions, question words, and more</div>
+      </a>
+    </div>
+
+    <!-- HOW TO USE -->
+    <div class="section-box">
+      <h3>How to Use This Section</h3>
+      <p><strong>Don&rsquo;t just read!</strong> Research shows that re-reading is one of the weakest revision methods. Instead:</p>
+      <ol>
+        <li><strong>Study one topic</strong> for 25 minutes using the activities on each page</li>
+        <li><strong>Test yourself</strong> using the Brain Dump or Flashcard activities</li>
+        <li><strong>Return in 2&ndash;3 days</strong> to strengthen your memory (spaced practice)</li>
+        <li><strong>Mix it up</strong> &mdash; practice different tenses together so you learn when to use each one</li>
+      </ol>
+    </div>
+
+    <div style="margin-top:24px; display:flex; gap:10px; flex-wrap:wrap;">
+      <a href="index.html" class="button">&#8592; Back to Topics</a>
+      <a href="checklist.html" class="button resource-link">Knowledge Checklist</a>
+    </div>
+
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem or want to request a feature? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
 </body>
 </html>

@@ -1,237 +1,365 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Past Papers | Year 8 French Revision</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        .paper-section {
-            background: #003d2e;
-            border: 2px solid #00a86b;
-            border-radius: 8px;
-            padding: 25px;
-            margin: 20px 0;
-        }
-        .paper-section h3 {
-            margin-top: 0;
-            border-bottom: 2px solid #00a86b;
-            padding-bottom: 10px;
-            color: #7dffd0;
-        }
-        .paper-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
-        }
-        .paper-link {
-            display: block;
-            background: #005a43;
-            border: 2px solid #00a86b;
-            border-radius: 8px;
-            padding: 15px;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .paper-link:hover {
-            background: #00a86b;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 168, 107, 0.5);
-        }
-        .paper-title {
-            font-weight: 600;
-            font-size: 1.1em;
-            margin-bottom: 5px;
-            color: white;
-        }
-        .paper-type {
-            font-size: 0.9em;
-            color: #b8e0d2;
-        }
-        .paper-link:hover .paper-type {
-            color: white;
-        }
-        .mark-scheme-note {
-            background: #003d2e;
-            border: 3px solid #00a86b;
-            padding: 25px;
-            margin: 20px 0;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 168, 107, 0.3);
-        }
-        .mark-scheme-note h3 {
-            color: #7dffd0;
-            margin-top: 0;
-            font-size: 1.3em;
-        }
-        .mark-scheme-note ol {
-            color: white;
-        }
-        .mark-scheme-note strong {
-            color: #7dffd0;
-        }
-        .audio-link {
-            background: #004d75;
-            border: 2px solid #2196f3;
-        }
-        .audio-link:hover {
-            background: #2196f3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Past Papers | Year 8 French Revision</title>
+  <link rel="stylesheet" href="styles-v2.css">
+  <style>
+    .year-picker {
+      display: flex;
+      gap: 12px;
+      margin: 24px 0 32px;
+      flex-wrap: wrap;
+    }
+    .year-btn {
+      font-family: 'Dosis', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 10px 28px;
+      border-radius: 99px;
+      border: 2.5px solid #1e293b;
+      background: #fff;
+      color: #1e293b;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .year-btn.active {
+      background: #1e293b;
+      color: #fff;
+    }
+    .year-btn:hover:not(.active) {
+      background: #f1f5f9;
+    }
+    .year-papers { display: none; }
+    .year-papers.visible { display: block; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Past Papers <span class="level-badge level-both">Both Levels</span></h1>
-            <p class="subtitle">Common Entrance 13+ French - Spring 2025</p>
-        </header>
 
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="grammar.html">Grammar Reference</a>
-            <a href="checklist.html">Knowledge Checklist</a>
-        </nav>
-
-        <div class="content">
-            <div class="section-box">
-                <p><strong>📝 Practice with real exam papers!</strong> These are the actual Common Entrance French papers from Spring 2025. Work through them under timed conditions, then check your answers with the mark schemes.</p>
-            </div>
-
-            <div class="mark-scheme-note">
-                <h3>💡 How to Use These Papers</h3>
-                <ol>
-                    <li><strong>Time yourself:</strong> Do the paper under exam conditions</li>
-                    <li><strong>Check your work:</strong> Use the mark scheme to see how you did</li>
-                    <li><strong>Learn from mistakes:</strong> Review topics you struggled with</li>
-                    <li><strong>Revise & retry:</strong> Go back to the topic pages, then try again</li>
-                </ol>
-            </div>
-
-            <h2><span class="level-badge level-1">Level 1</span> Past Papers (Foundation 13+ CE)</h2>
-
-            <div class="paper-section">
-                <h3>📖 Reading & Writing</h3>
-                <div class="paper-grid">
-                    <a href="https://drive.google.com/file/d/1Z233nFazTvBumZ3ApwRD3n_irqaSDg1B/view" target="_blank" class="paper-link">
-                        <div class="paper-title">📄 Exam Paper</div>
-                        <div class="paper-type">Reading & Writing</div>
-                    </a>
-                    <a href="https://drive.google.com/file/d/1Z5IJDoq7w2KeK1Bv0d7PYDzC9an53ff8/view" target="_blank" class="paper-link">
-                        <div class="paper-title">✅ Mark Scheme</div>
-                        <div class="paper-type">Reading & Writing</div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="paper-section">
-                <h3>🎧 Listening</h3>
-                <div class="paper-grid">
-                    <a href="https://drive.google.com/file/d/1YkwltJQaXiOW13OA2hCfTYzZC9Y42q9s/view" target="_blank" class="paper-link">
-                        <div class="paper-title">📄 Exam Paper</div>
-                        <div class="paper-type">Listening</div>
-                    </a>
-                    <a href="https://drive.google.com/file/d/1Yej4YBd6wLp6a5JXfg0VllIos5YK9UxR/view" target="_blank" class="paper-link audio-link">
-                        <div class="paper-title">🔊 Audio File</div>
-                        <div class="paper-type">Listening Audio (MP3)</div>
-                    </a>
-                    <a href="https://drive.google.com/file/d/1YrZQ9u-zgKBO64ER577hZgmA6FxsZgsT/view" target="_blank" class="paper-link">
-                        <div class="paper-title">✅ Mark Scheme</div>
-                        <div class="paper-type">Listening</div>
-                    </a>
-                    <a href="https://drive.google.com/file/d/1YyQrogyt14J_HyHT_usvDVOc-Mt23FO6/view" target="_blank" class="paper-link">
-                        <div class="paper-title">📝 Transcript</div>
-                        <div class="paper-type">Listening</div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="paper-section">
-                <h3>🗣️ Speaking</h3>
-                <div class="paper-grid">
-                    <a href="https://drive.google.com/file/d/1Z8WlLY9S03Bhj-sYve1rOpidAtwVRE93/view" target="_blank" class="paper-link">
-                        <div class="paper-title">📄 Candidate Paper</div>
-                        <div class="paper-type">Speaking</div>
-                    </a>
-                    <a href="https://drive.google.com/file/d/1Z9vBMTB4rYuANN9V4HwmFssNWmJT7W9A/view" target="_blank" class="paper-link">
-                        <div class="paper-title">👨‍🏫 Examiner's Paper</div>
-                        <div class="paper-type">Speaking</div>
-                    </a>
-                    <a href="https://drive.google.com/file/d/1YIomBlb4H2ijXq35XsxsAMwWU-Jlp9S3/view" target="_blank" class="paper-link">
-                        <div class="paper-title">✅ Mark Scheme</div>
-                        <div class="paper-type">Speaking</div>
-                    </a>
-                </div>
-            </div>
-
-            <h2><span class="level-badge level-2">Level 2</span> Past Papers (Higher 13+ CE)</h2>
-
-            <div class="paper-section">
-                <h3>📖 Reading & Writing</h3>
-                <div class="paper-grid">
-                    <a href="https://drive.google.com/file/d/1YXOQ20YLCJWkDtQbvvnP3okLk9S0BL2W/view" target="_blank" class="paper-link">
-                        <div class="paper-title">📄 Exam Paper</div>
-                        <div class="paper-type">Reading & Writing</div>
-                    </a>
-                    <a href="https://drive.google.com/file/d/1YZyf_Jx9weRQz8zUerkZZUQmsPMmo5Aj/view" target="_blank" class="paper-link">
-                        <div class="paper-title">✅ Mark Scheme</div>
-                        <div class="paper-type">Reading & Writing</div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="paper-section">
-                <h3>🎧 Listening</h3>
-                <div class="paper-grid">
-                    <a href="https://drive.google.com/file/d/1YJZZT4cTsz8QCZSa4kWDz3z2WPn5SiBE/view" target="_blank" class="paper-link">
-                        <div class="paper-title">📄 Exam Paper</div>
-                        <div class="paper-type">Listening</div>
-                    </a>
-                    <a href="https://drive.google.com/file/d/1YExx1JljtDpHXLz2KGr2F7koUfk2-4xv/view" target="_blank" class="paper-link audio-link">
-                        <div class="paper-title">🔊 Audio File</div>
-                        <div class="paper-type">Listening Audio (MP3)</div>
-                    </a>
-                    <a href="https://drive.google.com/file/d/1YMLmcfYrK75rB4-rYnZ37Xdbs-mSsDa5/view" target="_blank" class="paper-link">
-                        <div class="paper-title">✅ Mark Scheme</div>
-                        <div class="paper-type">Listening</div>
-                    </a>
-                    <a href="https://drive.google.com/file/d/1YPGimKdjstnFPD4GPPuxqDD4_TXOd86o/view" target="_blank" class="paper-link">
-                        <div class="paper-title">📝 Transcript</div>
-                        <div class="paper-type">Listening</div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="paper-section">
-                <h3>🗣️ Speaking</h3>
-                <div class="paper-grid">
-                    <a href="https://drive.google.com/file/d/1YaAVDKetNpCr24RBsujXGSIkHwLZ-xJL/view" target="_blank" class="paper-link">
-                        <div class="paper-title">📄 Candidate Paper</div>
-                        <div class="paper-type">Speaking</div>
-                    </a>
-                    <a href="https://drive.google.com/file/d/1Yd6eKGC3scveTX72d8rnONjH0QXEKRe8/view" target="_blank" class="paper-link">
-                        <div class="paper-title">👨‍🏫 Examiner's Paper</div>
-                        <div class="paper-type">Speaking</div>
-                    </a>
-                    <a href="https://drive.google.com/file/d/1XyH9BrwHgINP49jHxDnRN80u1PD52W2p/view" target="_blank" class="paper-link">
-                        <div class="paper-title">✅ Mark Scheme</div>
-                        <div class="paper-type">Speaking</div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="section-box">
-                <h3>Next Steps</h3>
-                <a href="index.html" class="button">Back to Topics</a>
-                <a href="checklist.html" class="button resource-link">Knowledge Checklist</a>
-            </div>
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
         </div>
+      </a>
+      <nav class="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="grammar.html" class="hn-link">Grammar</a>
+        <a href="checklist.html" class="hn-link">Checklist</a>
+        <a href="past-papers.html" class="hn-link active">Past Papers</a>
+      </nav>
     </div>
-<footer>
-        <div class="school-name">Mowden Hall School</div>
-        <div class="report-problem">Found a problem or want to request a feature? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></div>
-    </footer>
+  </header>
+
+  <!-- PAGE BANNER -->
+  <div class="page-banner">
+    <div class="page-banner-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Past Papers</span>
+      </div>
+      <div class="hero-kicker kicker-orange">
+        <div class="kicker-dot"></div>
+        CE 13+ French
+      </div>
+      <h1 class="hero-title" style="margin-top:12px;">Past Papers <span class="level-badge level-both">Both Levels</span></h1>
+      <p class="hero-desc">Common Entrance 13+ French. Work through papers under timed conditions, then check your answers with the mark schemes.</p>
+    </div>
+  </div>
+
+  <main class="content-wrap">
+
+    <!-- HOW TO USE -->
+    <div class="info-banner">
+      <div class="info-banner-icon">&#128161;</div>
+      <div class="info-banner-body">
+        <p><strong>How to Use These Papers</strong></p>
+        <p><strong>1. Time yourself</strong> &mdash; do the paper under exam conditions &nbsp;|&nbsp; <strong>2. Check your work</strong> with the mark scheme &nbsp;|&nbsp; <strong>3. Learn from mistakes</strong> &mdash; review topics you struggled with &nbsp;|&nbsp; <strong>4. Revise &amp; retry</strong> &mdash; go back to topic pages, then try again</p>
+      </div>
+    </div>
+
+    <!-- YEAR PICKER -->
+    <div class="year-picker">
+      <button class="year-btn active" onclick="showYear('2025', this)">Spring 2025</button>
+      <button class="year-btn" onclick="showYear('2024', this)">Spring 2024</button>
+    </div>
+
+    <!-- SPRING 2025 -->
+    <div class="year-papers visible" id="papers-2025">
+
+      <div class="level-section-header">
+        <h2>Level 1 Past Papers</h2>
+        <span class="level-badge level-1">Foundation 13+ CE</span>
+      </div>
+
+      <div class="papers-section">
+        <h3>&#128214; Reading &amp; Writing</h3>
+        <div class="paper-grid">
+          <a href="https://drive.google.com/file/d/1Z233nFazTvBumZ3ApwRD3n_irqaSDg1B/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128196; Exam Paper</div>
+            <div class="paper-type">Reading &amp; Writing</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1Z5IJDoq7w2KeK1Bv0d7PYDzC9an53ff8/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#9989; Mark Scheme</div>
+            <div class="paper-type">Reading &amp; Writing</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="papers-section">
+        <h3>&#127911; Listening</h3>
+        <div class="paper-grid">
+          <a href="https://drive.google.com/file/d/1YkwltJQaXiOW13OA2hCfTYzZC9Y42q9s/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128196; Exam Paper</div>
+            <div class="paper-type">Listening</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1Yej4YBd6wLp6a5JXfg0VllIos5YK9UxR/view" target="_blank" class="paper-link audio-link">
+            <div class="paper-title">&#128266; Audio File</div>
+            <div class="paper-type">Listening Audio (MP3)</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1YrZQ9u-zgKBO64ER577hZgmA6FxsZgsT/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#9989; Mark Scheme</div>
+            <div class="paper-type">Listening</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1YyQrogyt14J_HyHT_usvDVOc-Mt23FO6/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128221; Transcript</div>
+            <div class="paper-type">Listening</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="papers-section">
+        <h3>&#128483;&#65039; Speaking</h3>
+        <div class="paper-grid">
+          <a href="https://drive.google.com/file/d/1Z8WlLY9S03Bhj-sYve1rOpidAtwVRE93/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128196; Candidate Paper</div>
+            <div class="paper-type">Speaking</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1Z9vBMTB4rYuANN9V4HwmFssNWmJT7W9A/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128104;&#8205;&#127979; Examiner&rsquo;s Paper</div>
+            <div class="paper-type">Speaking</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1YIomBlb4H2ijXq35XsxsAMwWU-Jlp9S3/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#9989; Mark Scheme</div>
+            <div class="paper-type">Speaking</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="level-section-header">
+        <h2>Level 2 Past Papers</h2>
+        <span class="level-badge level-2">Higher 13+ CE</span>
+      </div>
+
+      <div class="papers-section">
+        <h3>&#128214; Reading &amp; Writing</h3>
+        <div class="paper-grid">
+          <a href="https://drive.google.com/file/d/1YXOQ20YLCJWkDtQbvvnP3okLk9S0BL2W/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128196; Exam Paper</div>
+            <div class="paper-type">Reading &amp; Writing</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1YZyf_Jx9weRQz8zUerkZZUQmsPMmo5Aj/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#9989; Mark Scheme</div>
+            <div class="paper-type">Reading &amp; Writing</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="papers-section">
+        <h3>&#127911; Listening</h3>
+        <div class="paper-grid">
+          <a href="https://drive.google.com/file/d/1YJZZT4cTsz8QCZSa4kWDz3z2WPn5SiBE/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128196; Exam Paper</div>
+            <div class="paper-type">Listening</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1YExx1JljtDpHXLz2KGr2F7koUfk2-4xv/view" target="_blank" class="paper-link audio-link">
+            <div class="paper-title">&#128266; Audio File</div>
+            <div class="paper-type">Listening Audio (MP3)</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1YMLmcfYrK75rB4-rYnZ37Xdbs-mSsDa5/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#9989; Mark Scheme</div>
+            <div class="paper-type">Listening</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1YPGimKdjstnFPD4GPPuxqDD4_TXOd86o/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128221; Transcript</div>
+            <div class="paper-type">Listening</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="papers-section">
+        <h3>&#128483;&#65039; Speaking</h3>
+        <div class="paper-grid">
+          <a href="https://drive.google.com/file/d/1YaAVDKetNpCr24RBsujXGSIkHwLZ-xJL/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128196; Candidate Paper</div>
+            <div class="paper-type">Speaking</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1Yd6eKGC3scveTX72d8rnONjH0QXEKRe8/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128104;&#8205;&#127979; Examiner&rsquo;s Paper</div>
+            <div class="paper-type">Speaking</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1XyH9BrwHgINP49jHxDnRN80u1PD52W2p/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#9989; Mark Scheme</div>
+            <div class="paper-type">Speaking</div>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /papers-2025 -->
+
+    <!-- SPRING 2024 -->
+    <div class="year-papers" id="papers-2024">
+
+      <div class="level-section-header">
+        <h2>Level 1 Past Papers</h2>
+        <span class="level-badge level-1">Foundation 13+ CE</span>
+      </div>
+
+      <div class="papers-section">
+        <h3>&#128214; Reading &amp; Writing</h3>
+        <div class="paper-grid">
+          <a href="https://drive.google.com/file/d/1wM1uOQUE2kSlZmPHVAw2F78_37N38HFC/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128196; Exam Paper</div>
+            <div class="paper-type">Reading &amp; Writing</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1gub4ihMAb_lc74mFsS5-J3jp5I2mQOqP/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#9989; Mark Scheme</div>
+            <div class="paper-type">Reading &amp; Writing</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="papers-section">
+        <h3>&#127911; Listening</h3>
+        <div class="paper-grid">
+          <a href="https://drive.google.com/file/d/1Bym6dMH0F3BBEBvPJJDdug8glL08Eofm/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128196; Exam Paper</div>
+            <div class="paper-type">Listening</div>
+          </a>
+          <a href="https://drive.google.com/file/d/12Ubg-suoceJCzgnpLUKMcSeTEXi9RjJo/view" target="_blank" class="paper-link audio-link">
+            <div class="paper-title">&#128266; Audio File</div>
+            <div class="paper-type">Listening Audio (MP3)</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1ok0m0irOkJGZMwi9XRuv54w5kYN6Icts/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#9989; Mark Scheme</div>
+            <div class="paper-type">Listening</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1rNJOALjjpE7hddzmWLkn_jQFm9oJps6n/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128221; Transcript</div>
+            <div class="paper-type">Listening</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="papers-section">
+        <h3>&#128483;&#65039; Speaking</h3>
+        <div class="paper-grid">
+          <a href="https://drive.google.com/file/d/1ipmmWmtP5aOp0hPMr4jQeSO4ciL3l0o2/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128196; Candidate Paper</div>
+            <div class="paper-type">Speaking</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1ZM0kJ6mafB4JBWZxHoguZFdCg5sxeFOP/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128104;&#8205;&#127979; Examiner&rsquo;s Paper</div>
+            <div class="paper-type">Speaking</div>
+          </a>
+          <a href="https://drive.google.com/file/d/17JqcGwxvp4MkQ7NFCuwRAGhN3cVxKmzo/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#9989; Mark Scheme</div>
+            <div class="paper-type">Speaking</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="level-section-header">
+        <h2>Level 2 Past Papers</h2>
+        <span class="level-badge level-2">Higher 13+ CE</span>
+      </div>
+
+      <div class="papers-section">
+        <h3>&#128214; Reading &amp; Writing</h3>
+        <div class="paper-grid">
+          <a href="https://drive.google.com/file/d/1SPrAPy_HPH5wJB2Q0ZGsaCGLPzxDiWT8/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128196; Exam Paper</div>
+            <div class="paper-type">Reading &amp; Writing</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1AVY06B6_tkEjnt9ZYGDncfLaH9iOLtrZ/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#9989; Mark Scheme</div>
+            <div class="paper-type">Reading &amp; Writing</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="papers-section">
+        <h3>&#127911; Listening</h3>
+        <div class="paper-grid">
+          <a href="https://drive.google.com/file/d/16XowrY265G3CqrxXxdW42oZDcF3oqyn7/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128196; Exam Paper</div>
+            <div class="paper-type">Listening</div>
+          </a>
+          <a href="https://drive.google.com/file/d/10ULxWGF_LQsFchAreFIHud5z7IwPIfkG/view" target="_blank" class="paper-link audio-link">
+            <div class="paper-title">&#128266; Audio File</div>
+            <div class="paper-type">Listening Audio (MP3)</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1Ejjq6_97itjAAHTgnWGPTsNjA8zabixt/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#9989; Mark Scheme</div>
+            <div class="paper-type">Listening</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1uc4JVVnC_HzAiXQvfu4MPKGOtB5tSGO3/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128221; Transcript</div>
+            <div class="paper-type">Listening</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="papers-section">
+        <h3>&#128483;&#65039; Speaking</h3>
+        <div class="paper-grid">
+          <a href="https://drive.google.com/file/d/1yGBFSSbQ50GS96xZt7ea_FJqXlVD0Bjd/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128196; Candidate Paper</div>
+            <div class="paper-type">Speaking</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1PhSKRss6Nk_aaK4mwme-t0Fdq9n2XvX9/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#128104;&#8205;&#127979; Examiner&rsquo;s Paper</div>
+            <div class="paper-type">Speaking</div>
+          </a>
+          <a href="https://drive.google.com/file/d/1bHx0RUk_im1Nrqeq8A6VPsV_NrUcPrIR/view" target="_blank" class="paper-link">
+            <div class="paper-title">&#9989; Mark Scheme</div>
+            <div class="paper-type">Speaking</div>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /papers-2024 -->
+
+    <!-- NEXT STEPS -->
+    <div class="section-box" style="margin-top:8px;">
+      <h3>Next Steps</h3>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+        <a href="index.html" class="button">&#8592; Back to Topics</a>
+        <a href="checklist.html" class="button resource-link">Knowledge Checklist</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem or want to request a feature? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
+  <script>
+    function showYear(year, btn) {
+      document.querySelectorAll('.year-papers').forEach(el => el.classList.remove('visible'));
+      document.querySelectorAll('.year-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById('papers-' + year).classList.add('visible');
+      btn.classList.add('active');
+    }
+  </script>
+
 </body>
 </html>
