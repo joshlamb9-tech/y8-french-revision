@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600;700;800&display=swap');
 
 * {
     margin: 0;
@@ -7,8 +7,8 @@
 }
 
 body {
-    font-family: 'Crimson Text', Garamond, Baskerville, Georgia, serif;
-    background: #004d41;
+    font-family: 'Dosis', sans-serif;
+    background: #00534C;
     color: white;
     line-height: 1.7;
     min-height: 100vh;
@@ -21,16 +21,16 @@ body {
 }
 
 header {
-    background: #003d2e;
+    background: #003d35;
     padding: 30px 20px;
     border-radius: 0;
     margin-bottom: 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    border-bottom: 4px solid #00a86b;
+    border-bottom: 4px solid #81001C;
 }
 
 h1 {
-    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Dosis', sans-serif;
     color: white;
     font-size: 2.5em;
     font-weight: 700;
@@ -38,29 +38,29 @@ h1 {
 }
 
 h2 {
-    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
-    color: #7dffd0;
+    font-family: 'Dosis', sans-serif;
+    color: #ffc9bc;
     font-size: 2em;
     font-weight: 600;
     margin: 30px 0 20px 0;
 }
 
 h3 {
-    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
-    color: #7dffd0;
+    font-family: 'Dosis', sans-serif;
+    color: #ffc9bc;
     font-size: 1.5em;
     font-weight: 600;
     margin: 20px 0 15px 0;
 }
 
 .subtitle {
-    color: #b8e0d2;
+    color: #e8ccc8;
     font-size: 1.2em;
     font-weight: 400;
 }
 
 nav {
-    background: #003d2e;
+    background: #003d35;
     padding: 15px 20px;
     border-radius: 0;
     margin-bottom: 0;
@@ -79,17 +79,17 @@ nav a {
 }
 
 nav a:hover {
-    background: #00a86b;
+    background: #81001C;
     color: white;
 }
 
 nav a.active {
-    background: #00a86b;
+    background: #81001C;
     color: white;
 }
 
 .content {
-    background: #005a43;
+    background: #005c50;
     padding: 40px;
     border-radius: 0;
     box-shadow: none;
@@ -104,8 +104,8 @@ nav a.active {
 }
 
 .topic-card {
-    background: #003d2e;
-    border: 2px solid #00a86b;
+    background: #003d35;
+    border: 2px solid #81001C;
     border-radius: 8px;
     padding: 25px;
     text-decoration: none;
@@ -116,18 +116,18 @@ nav a.active {
 
 .topic-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 16px rgba(0, 168, 107, 0.4);
-    border-color: #7dffd0;
-    background: #004d41;
+    box-shadow: 0 4px 16px rgba(129, 0, 28, 0.4);
+    border-color: #ffc9bc;
+    background: #00534C;
 }
 
 .topic-card h3 {
     margin: 0 0 15px 0;
-    color: #7dffd0;
+    color: #ffc9bc;
 }
 
 .topic-card p {
-    color: #b8e0d2;
+    color: #e8ccc8;
     margin: 0;
 }
 
@@ -135,14 +135,14 @@ nav a.active {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
-    background: #003d2e;
+    background: #003d35;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
 .vocab-table th {
-    background: #00a86b;
+    background: #81001C;
     color: white;
     padding: 15px;
     text-align: left;
@@ -151,12 +151,12 @@ nav a.active {
 
 .vocab-table td {
     padding: 12px 15px;
-    border-bottom: 1px solid #005a43;
+    border-bottom: 1px solid #005c50;
     color: white;
 }
 
 .vocab-table tr:hover {
-    background: #004d41;
+    background: #00534C;
 }
 
 .checklist {
@@ -165,11 +165,11 @@ nav a.active {
 }
 
 .checklist li {
-    background: #003d2e;
+    background: #003d35;
     padding: 15px 15px 15px 50px;
     margin: 10px 0;
     border-radius: 8px;
-    border-left: 4px solid #00a86b;
+    border-left: 4px solid #81001C;
     position: relative;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     color: white;
@@ -180,12 +180,12 @@ nav a.active {
     position: absolute;
     left: 18px;
     font-size: 1.5em;
-    color: #7dffd0;
+    color: #ffc9bc;
 }
 
 .section-box {
-    background: #003d2e;
-    border-left: 4px solid #00a86b;
+    background: #003d35;
+    border-left: 4px solid #81001C;
     padding: 20px;
     margin: 20px 0;
     border-radius: 8px;
@@ -193,53 +193,53 @@ nav a.active {
 }
 
 .grammar-point {
-    background: #003d2e;
+    background: #003d35;
     padding: 20px;
     margin: 15px 0;
     border-radius: 10px;
-    border: 2px solid #00a86b;
+    border: 2px solid #81001C;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     color: white;
 }
 
 .example {
-    background: #003d2e;
+    background: #003d35;
     padding: 15px;
     margin: 10px 0;
     border-radius: 8px;
-    border-left: 4px solid #00a86b;
+    border-left: 4px solid #81001C;
     font-style: italic;
     color: white;
 }
 
 .button {
     display: inline-block;
-    background: #00a86b;
+    background: #81001C;
     color: white;
     padding: 12px 28px;
     border-radius: 9999px;
     text-decoration: none;
     font-weight: 600;
-    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Dosis', sans-serif;
     margin: 10px 10px 10px 0;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 168, 107, 0.2);
+    box-shadow: 0 2px 8px rgba(129, 0, 28, 0.2);
 }
 
 .button:hover {
-    background: #008c5a;
+    background: #6b0018;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 168, 107, 0.3);
+    box-shadow: 0 4px 12px rgba(129, 0, 28, 0.3);
 }
 
 .resource-link {
-    background: #003d2e;
-    border: 2px solid #00a86b;
-    color: #7dffd0;
+    background: #003d35;
+    border: 2px solid #81001C;
+    color: #ffc9bc;
 }
 
 .resource-link:hover {
-    background: #00a86b;
+    background: #81001C;
     color: white;
 }
 
@@ -275,12 +275,12 @@ nav a.active {
 }
 
 footer {
-    background: #003d2e;
+    background: #003d35;
     padding: 30px 20px;
     margin-top: 40px;
-    border-top: 4px solid #00a86b;
+    border-top: 4px solid #81001C;
     text-align: center;
-    color: #b8e0d2;
+    color: #e8ccc8;
 }
 
 footer .school-name {
@@ -292,39 +292,39 @@ footer .school-name {
 
 footer .report-problem {
     font-size: 0.95em;
-    color: #b8e0d2;
+    color: #e8ccc8;
 }
 
 footer .report-problem a {
-    color: #7dffd0;
+    color: #ffc9bc;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
 footer .report-problem a:hover {
-    color: #00a86b;
+    color: #81001C;
     text-decoration: underline;
 }
 
 /* Practice Generator Styles */
 .practice-generator {
-    background: #003d2e;
-    border: 3px solid #00a86b;
+    background: #003d35;
+    border: 3px solid #81001C;
     border-radius: 12px;
     padding: 30px;
     margin: 40px 0;
-    box-shadow: 0 4px 20px rgba(0, 168, 107, 0.3);
+    box-shadow: 0 4px 20px rgba(129, 0, 28, 0.3);
 }
 
 .practice-generator h3 {
     margin-top: 0;
-    color: #7dffd0;
+    color: #ffc9bc;
     font-size: 2em;
 }
 
 .practice-generator > p {
-    color: #b8e0d2;
+    color: #e8ccc8;
     font-size: 1.1em;
     margin-bottom: 25px;
 }
@@ -338,7 +338,7 @@ footer .report-problem a:hover {
 .builder-select label,
 .timer-settings label {
     display: block;
-    color: #7dffd0;
+    color: #ffc9bc;
     font-weight: 600;
     margin-bottom: 10px;
     font-size: 1.1em;
@@ -349,9 +349,9 @@ footer .report-problem a:hover {
     width: 100%;
     max-width: 400px;
     padding: 12px;
-    background: #005a43;
+    background: #005c50;
     color: white;
-    border: 2px solid #00a86b;
+    border: 2px solid #81001C;
     border-radius: 8px;
     font-size: 1em;
     cursor: pointer;
@@ -360,8 +360,8 @@ footer .report-problem a:hover {
 
 .builder-select select:hover,
 .timer-settings select:hover {
-    background: #004d41;
-    border-color: #7dffd0;
+    background: #00534C;
+    border-color: #ffc9bc;
 }
 
 .difficulty-select {
@@ -372,28 +372,28 @@ footer .report-problem a:hover {
 
 .difficulty-btn {
     padding: 12px 24px;
-    background: #005a43;
+    background: #005c50;
     color: white;
-    border: 2px solid #00a86b;
+    border: 2px solid #81001C;
     border-radius: 8px;
     cursor: pointer;
     font-size: 1em;
     font-weight: 600;
     transition: all 0.3s ease;
-    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Dosis', sans-serif;
 }
 
 .difficulty-btn:hover {
-    background: #004d41;
-    border-color: #7dffd0;
+    background: #00534C;
+    border-color: #ffc9bc;
     transform: translateY(-2px);
 }
 
 .difficulty-btn.active {
-    background: #00a86b;
+    background: #81001C;
     color: white;
-    border-color: #7dffd0;
-    box-shadow: 0 4px 12px rgba(0, 168, 107, 0.4);
+    border-color: #ffc9bc;
+    box-shadow: 0 4px 12px rgba(129, 0, 28, 0.4);
 }
 
 .sentence-display {
@@ -412,8 +412,8 @@ footer .report-problem a:hover {
     color: white;
     text-align: center;
     padding: 30px;
-    background: #005a43;
-    border: 2px solid #00a86b;
+    background: #005c50;
+    border: 2px solid #81001C;
     border-radius: 10px;
     margin-bottom: 20px;
     line-height: 1.5;
@@ -426,26 +426,26 @@ footer .report-problem a:hover {
 .countdown-number {
     font-size: 3.5em;
     font-weight: bold;
-    color: #7dffd0;
+    color: #ffc9bc;
     text-align: center;
     margin-bottom: 20px;
-    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Dosis', sans-serif;
 }
 
 .progress-bar-container {
     width: 100%;
     height: 30px;
-    background: #003d2e;
+    background: #003d35;
     border-radius: 15px;
     overflow: hidden;
-    border: 2px solid #00a86b;
+    border: 2px solid #81001C;
     box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .progress-bar {
     height: 100%;
     width: 100%;
-    background: linear-gradient(90deg, #00a86b 0%, #7dffd0 100%);
+    background: linear-gradient(90deg, #81001C 0%, #ffc9bc 100%);
     transition: width 0.3s linear, background 0.3s ease;
     border-radius: 13px;
 }
@@ -463,16 +463,16 @@ footer .report-problem a:hover {
     color: white;
     text-align: center;
     padding: 25px;
-    background: #00a86b;
-    border: 3px solid #7dffd0;
+    background: #81001C;
+    border: 3px solid #ffc9bc;
     border-radius: 10px;
     margin-top: 20px;
     line-height: 1.5;
-    box-shadow: 0 4px 16px rgba(0, 168, 107, 0.4);
+    box-shadow: 0 4px 16px rgba(129, 0, 28, 0.4);
 }
 
 .french-answer strong {
-    color: #7dffd0;
+    color: #ffc9bc;
     display: block;
     margin-bottom: 10px;
     font-size: 0.8em;
@@ -535,7 +535,7 @@ footer .report-problem a:hover {
     }
 
     h1, h2, h3 {
-        color: #00a86b;
+        color: #81001C;
     }
 
     .vocab-table td {

@@ -1,0 +1,103 @@
+{
+  "id": "future-plans",
+  "title": "Future Plans & Ambitions",
+  "topic": "future-plans",
+  "columns": [
+    {
+      "id": 1,
+      "header": "Time Frame",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "À l'avenir", "en": "In the future"},
+        {"fr": "Un jour", "en": "One day"},
+        {"fr": "Après le collège", "en": "After school"},
+        {"fr": "Quand je serai grand(e)", "en": "When I am older"},
+        {"fr": "Dans dix ans", "en": "In ten years' time"},
+        {"fr": "L'année prochaine", "en": "Next year"}
+      ]
+    },
+    {
+      "id": 2,
+      "header": "Near Future / Wish",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "je vais devenir", "en": "I am going to become"},
+        {"fr": "je voudrais être", "en": "I would like to be"},
+        {"fr": "j'espère devenir", "en": "I hope to become"},
+        {"fr": "j'aimerais être", "en": "I would love to be"},
+        {"fr": "je vais étudier pour devenir", "en": "I am going to study to become"},
+        {"fr": "je vais travailler à l'étranger", "en": "I am going to work abroad"},
+        {"fr": "je voudrais habiter à l'étranger", "en": "I would like to live abroad"}
+      ]
+    },
+    {
+      "id": 3,
+      "header": "Career / Goal",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "médecin", "en": "a doctor"},
+        {"fr": "professeur", "en": "a teacher"},
+        {"fr": "ingénieur", "en": "an engineer"},
+        {"fr": "acteur/actrice", "en": "an actor/actress"},
+        {"fr": "vétérinaire", "en": "a vet"},
+        {"fr": "informaticien(ne)", "en": "an IT specialist"},
+        {"fr": "infirmier/infirmière", "en": "a nurse"},
+        {"fr": "avocat(e)", "en": "a lawyer"}
+      ]
+    },
+    {
+      "id": 4,
+      "header": "Reason",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "parce que c'est bien payé", "en": "because it is well paid"},
+        {"fr": "parce que j'aime aider les gens", "en": "because I like helping people"},
+        {"fr": "parce que c'est intéressant", "en": "because it is interesting"},
+        {"fr": "parce que j'aime les langues", "en": "because I like languages"},
+        {"fr": "parce que c'est mon rêve", "en": "because it is my dream"},
+        {"fr": "si je travaille dur", "en": "if I work hard"},
+        {"fr": "si je réussis mes examens", "en": "if I pass my exams"}
+      ]
+    },
+    {
+      "id": 5,
+      "header": "Extension",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "Ce serait fantastique", "en": "That would be fantastic"},
+        {"fr": "Je pourrai réaliser mon rêve", "en": "I will be able to achieve my dream"},
+        {"fr": "Mais d'abord je dois étudier", "en": "But first I must study"},
+        {"fr": "C'est très important pour moi", "en": "It is very important to me"},
+        {"fr": "J'espère que ça marchera", "en": "I hope it will work out"},
+        {"fr": "Ça ne sera pas facile", "en": "It will not be easy"}
+      ]
+    }
+  ],
+  "rules": {
+    "difficulty": {
+      "1-star": {
+        "minColumns": 3,
+        "maxColumns": 4,
+        "excludeComplexity": ["advanced"],
+        "optionalColumnsMax": 0
+      },
+      "2-star": {
+        "minColumns": 4,
+        "maxColumns": 4,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 0
+      },
+      "3-star": {
+        "minColumns": 4,
+        "maxColumns": 5,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 1
+      }
+    }
+  }
+}

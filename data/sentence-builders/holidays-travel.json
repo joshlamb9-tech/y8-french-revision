@@ -1,0 +1,102 @@
+{
+  "id": "holidays-travel",
+  "title": "Holidays & Travel",
+  "topic": "holidays-travel",
+  "columns": [
+    {
+      "id": 1,
+      "header": "Time Frame",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "D'habitude", "en": "Usually"},
+        {"fr": "Normalement", "en": "Normally"},
+        {"fr": "Chaque année", "en": "Every year"},
+        {"fr": "En été", "en": "In summer"},
+        {"fr": "Pendant les grandes vacances", "en": "During the summer holidays"},
+        {"fr": "L'année dernière", "en": "Last year"},
+        {"fr": "L'année prochaine", "en": "Next year"}
+      ]
+    },
+    {
+      "id": 2,
+      "header": "Destination",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "je vais en France", "en": "I go to France"},
+        {"fr": "je vais en Espagne", "en": "I go to Spain"},
+        {"fr": "je vais en Italie", "en": "I go to Italy"},
+        {"fr": "je vais aux États-Unis", "en": "I go to the USA"},
+        {"fr": "je vais au bord de la mer", "en": "I go to the seaside"},
+        {"fr": "je vais à la montagne", "en": "I go to the mountains"},
+        {"fr": "je reste en Angleterre", "en": "I stay in England"}
+      ]
+    },
+    {
+      "id": 3,
+      "header": "Transport",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "en avion", "en": "by plane"},
+        {"fr": "en voiture", "en": "by car"},
+        {"fr": "en train", "en": "by train"},
+        {"fr": "en bateau", "en": "by boat"},
+        {"fr": "en car", "en": "by coach"}
+      ]
+    },
+    {
+      "id": 4,
+      "header": "Activities",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "et je me baigne dans la mer", "en": "and I swim in the sea"},
+        {"fr": "et je visite des monuments", "en": "and I visit monuments"},
+        {"fr": "et je me détends sur la plage", "en": "and I relax on the beach"},
+        {"fr": "et je fais de la randonnée", "en": "and I go hiking"},
+        {"fr": "et je mange au restaurant", "en": "and I eat at a restaurant"},
+        {"fr": "et je prends des photos", "en": "and I take photos"},
+        {"fr": "et je fais du shopping", "en": "and I go shopping"}
+      ]
+    },
+    {
+      "id": 5,
+      "header": "Past Tense Extension",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "L'année dernière, je suis allé(e) en France", "en": "Last year, I went to France"},
+        {"fr": "J'ai voyagé en avion", "en": "I travelled by plane"},
+        {"fr": "Nous avons séjourné dans un hôtel", "en": "We stayed in a hotel"},
+        {"fr": "J'ai adoré les vacances", "en": "I loved the holiday"},
+        {"fr": "C'était magnifique", "en": "It was magnificent"},
+        {"fr": "C'était décevant", "en": "It was disappointing"},
+        {"fr": "Je voudrais y retourner", "en": "I would like to go back there"}
+      ]
+    }
+  ],
+  "rules": {
+    "difficulty": {
+      "1-star": {
+        "minColumns": 3,
+        "maxColumns": 4,
+        "excludeComplexity": ["advanced"],
+        "optionalColumnsMax": 0
+      },
+      "2-star": {
+        "minColumns": 4,
+        "maxColumns": 4,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 0
+      },
+      "3-star": {
+        "minColumns": 4,
+        "maxColumns": 5,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 1
+      }
+    }
+  }
+}

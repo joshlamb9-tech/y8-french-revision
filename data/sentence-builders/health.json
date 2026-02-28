@@ -1,0 +1,102 @@
+{
+  "id": "health",
+  "title": "Health & Illness",
+  "topic": "health",
+  "columns": [
+    {
+      "id": 1,
+      "header": "Time/Context",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "En ce moment", "en": "At the moment"},
+        {"fr": "Aujourd'hui", "en": "Today"},
+        {"fr": "Normalement", "en": "Normally"},
+        {"fr": "D'habitude", "en": "Usually"},
+        {"fr": "Hier", "en": "Yesterday"},
+        {"fr": "Depuis quelques jours", "en": "For a few days"}
+      ]
+    },
+    {
+      "id": 2,
+      "header": "How I feel / Symptoms",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "je me sens mal", "en": "I feel ill"},
+        {"fr": "je me sens bien", "en": "I feel well"},
+        {"fr": "je suis fatigué(e)", "en": "I am tired"},
+        {"fr": "j'ai mal à la tête", "en": "I have a headache"},
+        {"fr": "j'ai mal à la gorge", "en": "I have a sore throat"},
+        {"fr": "j'ai mal au ventre", "en": "I have a stomach ache"},
+        {"fr": "j'ai de la fièvre", "en": "I have a temperature"},
+        {"fr": "je tousse", "en": "I am coughing"},
+        {"fr": "j'ai le nez qui coule", "en": "I have a runny nose"}
+      ]
+    },
+    {
+      "id": 3,
+      "header": "Advice / What to do",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "donc il faut se reposer", "en": "so you must rest"},
+        {"fr": "donc il faut boire de l'eau", "en": "so you must drink water"},
+        {"fr": "donc il faut prendre des médicaments", "en": "so you must take medicine"},
+        {"fr": "donc il ne faut pas manger trop de sucre", "en": "so you must not eat too much sugar"},
+        {"fr": "donc il faut manger sainement", "en": "so you must eat healthily"},
+        {"fr": "donc il faut éviter le stress", "en": "so you must avoid stress"}
+      ]
+    },
+    {
+      "id": 4,
+      "header": "Healthy Lifestyle",
+      "complexity": "medium",
+      "optional": true,
+      "items": [
+        {"fr": "En général, je fais du sport régulièrement", "en": "In general, I do sport regularly"},
+        {"fr": "En général, je mange équilibré", "en": "In general, I eat a balanced diet"},
+        {"fr": "En général, je dors bien", "en": "In general, I sleep well"},
+        {"fr": "En général, je ne fume pas", "en": "In general, I don't smoke"},
+        {"fr": "En général, je bois beaucoup d'eau", "en": "In general, I drink a lot of water"},
+        {"fr": "Malheureusement, je mange trop de fast-food", "en": "Unfortunately, I eat too much fast food"}
+      ]
+    },
+    {
+      "id": 5,
+      "header": "Past Tense Extension",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "Hier, j'ai pris des médicaments", "en": "Yesterday, I took some medicine"},
+        {"fr": "J'ai consulté le médecin", "en": "I visited the doctor"},
+        {"fr": "Je suis allé(e) à la pharmacie", "en": "I went to the pharmacy"},
+        {"fr": "J'ai eu de la fièvre", "en": "I had a temperature"},
+        {"fr": "J'ai dormi toute la journée", "en": "I slept all day"},
+        {"fr": "Ça n'allait pas du tout", "en": "I was not well at all"}
+      ]
+    }
+  ],
+  "rules": {
+    "difficulty": {
+      "1-star": {
+        "minColumns": 2,
+        "maxColumns": 3,
+        "excludeComplexity": ["advanced"],
+        "optionalColumnsMax": 0
+      },
+      "2-star": {
+        "minColumns": 3,
+        "maxColumns": 4,
+        "excludeComplexity": ["advanced"],
+        "optionalColumnsMax": 1
+      },
+      "3-star": {
+        "minColumns": 4,
+        "maxColumns": 5,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 2
+      }
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "id": "home-local-area",
+  "title": "Home & Local Area",
+  "topic": "home-local-area",
+  "columns": [
+    {
+      "id": 1,
+      "header": "Location/Context",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "Dans ma chambre", "en": "In my bedroom"},
+        {"fr": "Dans ma maison", "en": "In my house"},
+        {"fr": "Dans mon appartement", "en": "In my flat"},
+        {"fr": "Dans ma ville", "en": "In my town"},
+        {"fr": "Dans mon village", "en": "In my village"},
+        {"fr": "Dans mon quartier", "en": "In my area/neighbourhood"}
+      ]
+    },
+    {
+      "id": 2,
+      "header": "There is / I have",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "il y a", "en": "there is / there are"},
+        {"fr": "il n'y a pas de", "en": "there is no / there are no"},
+        {"fr": "j'ai", "en": "I have"},
+        {"fr": "je n'ai pas de", "en": "I don't have"}
+      ]
+    },
+    {
+      "id": 3,
+      "header": "Places & Things",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "un lit confortable", "en": "a comfortable bed"},
+        {"fr": "une armoire", "en": "a wardrobe"},
+        {"fr": "un bureau", "en": "a desk"},
+        {"fr": "une piscine", "en": "a swimming pool"},
+        {"fr": "un centre commercial", "en": "a shopping centre"},
+        {"fr": "un stade", "en": "a stadium"},
+        {"fr": "une bibliothèque", "en": "a library"},
+        {"fr": "un château", "en": "a castle"},
+        {"fr": "un parc", "en": "a park"},
+        {"fr": "une gare", "en": "a train station"}
+      ]
+    },
+    {
+      "id": 4,
+      "header": "Opinion",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "J'aime habiter ici parce que c'est animé", "en": "I like living here because it is lively"},
+        {"fr": "J'aime habiter ici parce que c'est tranquille", "en": "I like living here because it is peaceful"},
+        {"fr": "Je n'aime pas habiter ici parce que c'est ennuyeux", "en": "I don't like living here because it is boring"},
+        {"fr": "Je n'aime pas habiter ici parce que c'est pollué", "en": "I don't like living here because it is polluted"},
+        {"fr": "Ma ville est grande et animée", "en": "My town is big and lively"},
+        {"fr": "Ma ville est petite mais sympa", "en": "My town is small but nice"},
+        {"fr": "Ma ville est historique et belle", "en": "My town is historic and beautiful"},
+        {"fr": "Mon quartier est calme et tranquille", "en": "My area is calm and peaceful"},
+        {"fr": "J'habite dans une grande ville animée", "en": "I live in a big, lively city"}
+      ]
+    },
+    {
+      "id": 5,
+      "header": "Future Extension",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "À l'avenir, je vais déménager", "en": "In the future, I am going to move"},
+        {"fr": "Je voudrais rester ici toute ma vie", "en": "I would like to stay here all my life"},
+        {"fr": "Je préférerais habiter à la campagne", "en": "I would prefer to live in the countryside"},
+        {"fr": "Je préférerais habiter en ville", "en": "I would prefer to live in a city"},
+        {"fr": "Il y a beaucoup de choses à faire", "en": "There are lots of things to do"},
+        {"fr": "Il n'y a pas grand-chose à faire", "en": "There is not much to do"}
+      ]
+    }
+  ],
+  "rules": {
+    "difficulty": {
+      "1-star": {
+        "minColumns": 3,
+        "maxColumns": 4,
+        "excludeComplexity": ["advanced"],
+        "optionalColumnsMax": 0
+      },
+      "2-star": {
+        "minColumns": 4,
+        "maxColumns": 4,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 0
+      },
+      "3-star": {
+        "minColumns": 4,
+        "maxColumns": 5,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 1
+      }
+    }
+  }
+}

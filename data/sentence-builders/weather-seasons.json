@@ -1,0 +1,105 @@
+{
+  "id": "weather-seasons",
+  "title": "Weather & Seasons",
+  "topic": "weather-seasons",
+  "columns": [
+    {
+      "id": 1,
+      "header": "Season/Time",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "En été", "en": "In summer"},
+        {"fr": "En hiver", "en": "In winter"},
+        {"fr": "Au printemps", "en": "In spring"},
+        {"fr": "En automne", "en": "In autumn"},
+        {"fr": "En France", "en": "In France"},
+        {"fr": "En Angleterre", "en": "In England"},
+        {"fr": "Aujourd'hui", "en": "Today"}
+      ]
+    },
+    {
+      "id": 2,
+      "header": "Weather",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "il fait beau", "en": "the weather is nice"},
+        {"fr": "il fait chaud", "en": "it is hot"},
+        {"fr": "il fait froid", "en": "it is cold"},
+        {"fr": "il fait du vent", "en": "it is windy"},
+        {"fr": "il pleut", "en": "it is raining"},
+        {"fr": "il neige", "en": "it is snowing"},
+        {"fr": "il y a du soleil", "en": "it is sunny"},
+        {"fr": "il y a des nuages", "en": "it is cloudy"},
+        {"fr": "il y a du brouillard", "en": "it is foggy"},
+        {"fr": "il y a des orages", "en": "there are storms"}
+      ]
+    },
+    {
+      "id": 3,
+      "header": "Opinion",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "J'aime ce temps parce que", "en": "I like this weather because"},
+        {"fr": "Je n'aime pas ce temps parce que", "en": "I don't like this weather because"},
+        {"fr": "Je préfère le temps quand", "en": "I prefer the weather when"},
+        {"fr": "Ma saison préférée est l'été", "en": "My favourite season is summer"},
+        {"fr": "Ma saison préférée est l'hiver", "en": "My favourite season is winter"},
+        {"fr": "Ma saison préférée est le printemps", "en": "My favourite season is spring"},
+        {"fr": "Ma saison préférée est l'automne", "en": "My favourite season is autumn"}
+      ]
+    },
+    {
+      "id": 4,
+      "header": "Description",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "c'est agréable", "en": "it is pleasant"},
+        {"fr": "c'est horrible", "en": "it is horrible"},
+        {"fr": "c'est parfait", "en": "it is perfect"},
+        {"fr": "c'est déprimant", "en": "it is depressing"},
+        {"fr": "c'est relaxant", "en": "it is relaxing"},
+        {"fr": "c'est dangereux", "en": "it is dangerous"}
+      ]
+    },
+    {
+      "id": 5,
+      "header": "Activity Extension",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "quand il fait beau je joue au foot", "en": "when it's nice I play football"},
+        {"fr": "quand il pleut je reste à la maison", "en": "when it rains I stay at home"},
+        {"fr": "quand il neige je fais du ski", "en": "when it snows I go skiing"},
+        {"fr": "quand il fait chaud je me baigne", "en": "when it's hot I go swimming"},
+        {"fr": "donc on peut faire beaucoup d'activités", "en": "so you can do lots of activities"},
+        {"fr": "donc on ne peut pas sortir", "en": "so you can't go out"}
+      ]
+    }
+  ],
+  "rules": {
+    "difficulty": {
+      "1-star": {
+        "minColumns": 2,
+        "maxColumns": 3,
+        "excludeComplexity": ["advanced"],
+        "optionalColumnsMax": 0
+      },
+      "2-star": {
+        "minColumns": 3,
+        "maxColumns": 4,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 0
+      },
+      "3-star": {
+        "minColumns": 4,
+        "maxColumns": 5,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 1
+      }
+    }
+  }
+}
