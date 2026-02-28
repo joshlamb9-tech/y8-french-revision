@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spelling Test | Year 8 French Revision</title>
+  <link rel="stylesheet" href="styles-v2.css">
+  <style>
+    /* ─── SPELLING TEST ─── */
+    .st-screen { display: none; }
+    .st-screen.active { display: block; }
+
+    /* Setup */
+    .st-topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+      gap: 10px;
+      margin: 16px 0 24px;
+    }
+    .st-topic-btn {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 14px 16px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Dosis', sans-serif;
+      font-weight: 700;
+      color: var(--text);
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .st-topic-btn .tb-emoji { font-size: 22px; line-height: 1.3; }
+    .st-topic-btn .tb-name  { font-size: 14px; line-height: 1.2; }
+    .st-topic-btn .tb-count { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+    .st-topic-btn:hover      { border-color: #a78bfa; background: #f5f3ff; }
+    .st-topic-btn.sel        { border-color: #7c3aed; background: #ede9fe; }
+    .st-topic-btn.sel .tb-name  { color: #4c1d95; }
+    .st-topic-btn.sel .tb-count { color: #7c3aed; }
+
+    .st-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .st-word-count { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+    .st-sel-all {
+      background: none; border: none;
+      font-family: 'Dosis', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: #7c3aed; cursor: pointer;
+      text-decoration: underline; padding: 0;
+    }
+
+    /* Progress */
+    .st-prog-wrap { margin-bottom: 24px; }
+    .st-prog-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px; font-weight: 700;
+      color: var(--text-muted); margin-bottom: 6px;
+    }
+    .st-prog-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .st-prog-fill {
+      height: 100%; background: #7c3aed;
+      border-radius: 99px; transition: width 0.35s ease;
+    }
+
+    /* Topic badge on question */
+    .st-q-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ede9fe; color: #4c1d95;
+      border: 1.5px solid #c4b5fd;
+      border-radius: 99px;
+      padding: 3px 12px;
+      font-size: 11px; font-weight: 800;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    /* Question card */
+    .st-q-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .st-q-hint {
+      font-size: 12px; font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.07em; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .st-q-word {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 800; line-height: 1.1;
+      color: var(--text);
+    }
+
+    /* Answer input row */
+    .st-input-row { display: flex; gap: 10px; margin-bottom: 10px; }
+    #st-answer {
+      flex: 1;
+      font-family: 'Dosis', sans-serif;
+      font-size: 20px; font-weight: 700;
+      padding: 13px 18px;
+      border: 2.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--white); color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    #st-answer:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
+    #st-answer.ans-ok  { border-color: #16a34a; background: #f0fdf4; color: #166534; }
+    #st-answer.ans-bad { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
+
+    #st-submit {
+      padding: 13px 22px;
+      background: #7c3aed; color: #fff;
+      border: none; border-radius: 10px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 16px; font-weight: 800;
+      cursor: pointer; transition: background 0.15s;
+      white-space: nowrap;
+    }
+    #st-submit:hover { background: #6d28d9; }
+
+    /* Accent toolbar */
+    .st-accents { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+    .st-ab {
+      width: 34px; height: 34px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all 0.1s;
+      color: var(--text);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .st-ab:hover { background: #ede9fe; border-color: #7c3aed; color: #4c1d95; }
+
+    /* Feedback line */
+    .st-feedback { min-height: 24px; font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+    .st-feedback.ok   { color: #16a34a; }
+    .st-feedback.bad  { color: #dc2626; }
+    .st-feedback.near { color: #d97706; }
+
+    .st-reveal {
+      background: none; border: none;
+      font-family: 'Dosis', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: var(--text-muted); cursor: pointer;
+      text-decoration: underline; padding: 0;
+    }
+    .st-reveal:hover { color: var(--text); }
+
+    /* Results */
+    .st-score-box {
+      display: flex; align-items: center; gap: 24px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px; padding: 28px 32px;
+      margin-bottom: 28px;
+    }
+    .st-score-n  { font-size: 56px; font-weight: 800; line-height: 1; color: #7c3aed; flex-shrink: 0; }
+    .st-score-msg { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .st-score-sub { font-size: 14px; color: var(--text-muted); }
+
+    .st-results-ul { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+    .st-ri {
+      display: grid;
+      grid-template-columns: 30px 1fr auto;
+      align-items: center; gap: 12px;
+      padding: 12px 16px; border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+    }
+    .st-ri.ok  { background: #f0fdf4; border-color: #86efac; }
+    .st-ri.bad { background: #fef2f2; border-color: #fca5a5; }
+    .st-ri-icon {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900; flex-shrink: 0;
+    }
+    .st-ri.ok  .st-ri-icon { background: #16a34a; color: #fff; }
+    .st-ri.bad .st-ri-icon { background: #dc2626; color: #fff; }
+    .st-ri-en { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+    .st-ri-fr { font-size: 15px; font-weight: 800; color: #15803d; }
+    .st-ri-given { font-size: 12px; text-align: right; white-space: nowrap; }
+    .st-ri-gave     { color: #dc2626; font-weight: 700; }
+    .st-ri-gave-ok  { color: #15803d; font-weight: 700; }
+
+    @media (max-width: 640px) {
+      .st-topic-grid { grid-template-columns: repeat(2, 1fr); }
+      .st-q-card { padding: 20px; }
+      .st-score-box { flex-direction: column; text-align: center; }
+      .st-ri { grid-template-columns: 28px 1fr; }
+      .st-ri-given { display: none; }
+      #st-submit { padding: 13px 14px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
+        </div>
+      </a>
+      <nav class="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="grammar.html" class="hn-link">Grammar</a>
+        <a href="checklist.html" class="hn-link">Checklist</a>
+        <a href="past-papers.html" class="hn-link">Past Papers</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <div class="page-banner-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Spelling Test</span>
+      </div>
+      <div class="hero-kicker kicker-purple" style="margin-top:12px;">
+        <div class="kicker-dot"></div>
+        Practice Tool
+      </div>
+      <h1 class="hero-title" style="margin-top:12px;">&#9999;&#65039; French Spelling Test</h1>
+      <p class="hero-desc">Pick your topics, then spell 10 French words correctly from English prompts. Accents count &mdash; use the accent buttons if you need them.</p>
+    </div>
+  </div>
+
+  <main class="content-wrap">
+    <div class="content">
+
+      <!-- ══ SETUP ══════════════════════════════════════════════════════════ -->
+      <div id="st-setup" class="st-screen active">
+
+        <div class="section-box" style="margin-bottom:24px;">
+          <p>You will see the English word or phrase. Type the correct French spelling, including the right accents and article (le / la / l&rsquo; / les) where needed. Use the accent buttons during the test if you need help typing special characters.</p>
+        </div>
+
+        <h2 style="margin-bottom:8px;">Choose Topics</h2>
+
+        <div class="st-controls">
+          <span class="st-word-count" id="st-word-count">Loading&hellip;</span>
+          <button class="st-sel-all" id="st-sel-all">Deselect all</button>
+        </div>
+
+        <div class="st-topic-grid" id="st-topic-grid"></div>
+
+        <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:4px;">
+          <button class="btn btn-primary" id="st-start-btn" disabled>
+            Start Test &mdash; 10 Questions &#8594;
+          </button>
+          <span id="st-start-hint" style="font-size:13px; color:var(--text-muted);">
+            Select at least one topic to begin
+          </span>
+        </div>
+
+      </div>
+
+      <!-- ══ QUESTION ════════════════════════════════════════════════════════ -->
+      <div id="st-test" class="st-screen">
+
+        <div class="st-prog-wrap">
+          <div class="st-prog-meta">
+            <span id="st-q-label">Question 1 of 10</span>
+            <span id="st-q-score">0 correct</span>
+          </div>
+          <div class="st-prog-bar">
+            <div class="st-prog-fill" id="st-prog-fill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="st-q-badge" id="st-q-badge">Topic</div>
+
+        <div class="st-q-card">
+          <div class="st-q-hint">How do you spell this in French?</div>
+          <div class="st-q-word" id="st-q-word">&mdash;</div>
+        </div>
+
+        <div class="st-feedback" id="st-feedback"></div>
+
+        <div class="st-input-row">
+          <input type="text" id="st-answer"
+                 placeholder="Type the French here&hellip;"
+                 autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <button id="st-submit">Submit</button>
+        </div>
+
+        <div class="st-accents" id="st-accents"></div>
+
+        <button class="st-reveal" id="st-reveal">Don&rsquo;t know? Reveal answer (counts as wrong)</button>
+
+      </div>
+
+      <!-- ══ RESULTS ══════════════════════════════════════════════════════════ -->
+      <div id="st-results" class="st-screen">
+
+        <div class="st-score-box" id="st-score-box">
+          <div class="st-score-n" id="st-score-n">&mdash;</div>
+          <div>
+            <div class="st-score-msg" id="st-score-msg"></div>
+            <div class="st-score-sub" id="st-score-sub"></div>
+          </div>
+        </div>
+
+        <h2 style="margin-bottom:14px;">Your Results</h2>
+        <ul class="st-results-ul" id="st-results-ul"></ul>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="st-retry">Try Again &#8594;</button>
+          <a href="index.html" class="btn btn-outline">&#8592; Back to Topics</a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem or want to request a feature? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
+  <script>
+  (function () {
+    'use strict';
+
+    // ─── VOCABULARY ────────────────────────────────────────────────────────────
+    // Each word: { en: 'English', fr: 'French' } or { en: '...', fr: ['alt1','alt2'] }
+    // For nouns: include the article (le/la/l'/les) — this is part of French spelling
+
+    var TOPICS = [
+      {
+        id: 'numbers', name: 'Numbers', emoji: '\uD83D\uDD22',
+        words: [
+          { en: 'zero',          fr: 'z\u00e9ro' },
+          { en: 'one',           fr: 'un' },
+          { en: 'two',           fr: 'deux' },
+          { en: 'three',         fr: 'trois' },
+          { en: 'four',          fr: 'quatre' },
+          { en: 'five',          fr: 'cinq' },
+          { en: 'six',           fr: 'six' },
+          { en: 'seven',         fr: 'sept' },
+          { en: 'eight',         fr: 'huit' },
+          { en: 'nine',          fr: 'neuf' },
+          { en: 'ten',           fr: 'dix' },
+          { en: 'eleven',        fr: 'onze' },
+          { en: 'twelve',        fr: 'douze' },
+          { en: 'thirteen',      fr: 'treize' },
+          { en: 'fourteen',      fr: 'quatorze' },
+          { en: 'fifteen',       fr: 'quinze' },
+          { en: 'sixteen',       fr: 'seize' },
+          { en: 'seventeen',     fr: 'dix-sept' },
+          { en: 'eighteen',      fr: 'dix-huit' },
+          { en: 'nineteen',      fr: 'dix-neuf' },
+          { en: 'twenty',        fr: 'vingt' },
+          { en: 'twenty-one',    fr: 'vingt et un' },
+          { en: 'thirty',        fr: 'trente' },
+          { en: 'forty',         fr: 'quarante' },
+          { en: 'fifty',         fr: 'cinquante' },
+          { en: 'sixty',         fr: 'soixante' },
+          { en: 'seventy',       fr: 'soixante-dix' },
+          { en: 'eighty',        fr: 'quatre-vingts' },
+          { en: 'ninety',        fr: 'quatre-vingt-dix' },
+          { en: 'one hundred',   fr: 'cent' },
+          { en: 'one thousand',  fr: 'mille' }
+        ]
+      },
+      {
+        id: 'subjects', name: 'School Subjects', emoji: '\uD83D\uDCDA',
+        words: [
+          { en: 'French',              fr: 'le fran\u00e7ais' },
+          { en: 'English',             fr: "l'anglais" },
+          { en: 'maths',               fr: 'les maths' },
+          { en: 'science',             fr: 'les sciences' },
+          { en: 'history',             fr: "l'histoire" },
+          { en: 'geography',           fr: 'la g\u00e9ographie' },
+          { en: 'ICT / computing',     fr: "l'informatique" },
+          { en: 'music',               fr: 'la musique' },
+          { en: 'PE / sport',          fr: ["l'EPS", "l'\u00e9ducation physique"] },
+          { en: 'art',                 fr: 'le dessin' },
+          { en: 'technology',          fr: 'la technologie' },
+          { en: 'Latin',               fr: 'le latin' },
+          { en: 'German',              fr: "l'allemand" },
+          { en: 'Spanish',             fr: "l'espagnol" },
+          { en: 'drama / theatre',     fr: 'le th\u00e9\u00e2tre' },
+          { en: 'RE / religion',       fr: 'la religion' },
+          { en: 'biology',             fr: 'la biologie' },
+          { en: 'the timetable',       fr: "l'emploi du temps" }
+        ]
+      },
+      {
+        id: 'town', name: 'Places in Town', emoji: '\uD83C\uDFD9\uFE0F',
+        words: [
+          { en: 'the town hall',       fr: 'la mairie' },
+          { en: 'the library',         fr: 'la biblioth\u00e8que' },
+          { en: 'the church',          fr: "l'\u00e9glise" },
+          { en: 'the cinema',          fr: 'le cin\u00e9ma' },
+          { en: 'the market',          fr: 'le march\u00e9' },
+          { en: 'the swimming pool',   fr: 'la piscine' },
+          { en: 'the train station',   fr: 'la gare' },
+          { en: 'the supermarket',     fr: 'le supermarch\u00e9' },
+          { en: 'the park',            fr: 'le parc' },
+          { en: 'the museum',          fr: 'le mus\u00e9e' },
+          { en: 'the post office',     fr: 'la poste' },
+          { en: 'the hospital',        fr: "l'h\u00f4pital" },
+          { en: 'the stadium',         fr: 'le stade' },
+          { en: 'the castle',          fr: 'le ch\u00e2teau' },
+          { en: 'the chemist',         fr: 'la pharmacie' },
+          { en: 'the bakery',          fr: 'la boulangerie' },
+          { en: "the butcher's",       fr: 'la boucherie' },
+          { en: 'the caf\u00e9',       fr: 'le caf\u00e9' },
+          { en: 'the restaurant',      fr: 'le restaurant' },
+          { en: 'the hotel',           fr: "l'h\u00f4tel" },
+          { en: 'the bank',            fr: 'la banque' },
+          { en: 'the shop',            fr: 'le magasin' },
+          { en: 'the town centre',     fr: 'le centre-ville' },
+          { en: 'the sports centre',   fr: 'le centre sportif' }
+        ]
+      },
+      {
+        id: 'family', name: 'Family', emoji: '\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67',
+        words: [
+          { en: 'father',              fr: 'le p\u00e8re' },
+          { en: 'mother',              fr: 'la m\u00e8re' },
+          { en: 'brother',             fr: 'le fr\u00e8re' },
+          { en: 'sister',              fr: 'la s\u0153ur' },
+          { en: 'grandfather',         fr: 'le grand-p\u00e8re' },
+          { en: 'grandmother',         fr: 'la grand-m\u00e8re' },
+          { en: 'uncle',               fr: "l'oncle" },
+          { en: 'aunt',                fr: 'la tante' },
+          { en: 'cousin (m)',          fr: 'le cousin' },
+          { en: 'cousin (f)',          fr: 'la cousine' },
+          { en: 'son',                 fr: 'le fils' },
+          { en: 'daughter',            fr: 'la fille' },
+          { en: 'husband',             fr: 'le mari' },
+          { en: 'wife',                fr: 'la femme' },
+          { en: 'stepfather',          fr: 'le beau-p\u00e8re' },
+          { en: 'stepmother',          fr: 'la belle-m\u00e8re' },
+          { en: 'half-brother',        fr: 'le demi-fr\u00e8re' },
+          { en: 'half-sister',         fr: 'la demi-s\u0153ur' },
+          { en: 'parents',             fr: 'les parents' },
+          { en: 'children',            fr: 'les enfants' }
+        ]
+      },
+      {
+        id: 'food', name: 'Food & Drink', emoji: '\uD83C\uDF54',
+        words: [
+          { en: 'bread',               fr: 'le pain' },
+          { en: 'cheese',              fr: 'le fromage' },
+          { en: 'butter',              fr: 'le beurre' },
+          { en: 'meat',                fr: 'la viande' },
+          { en: 'chicken',             fr: 'le poulet' },
+          { en: 'fish',                fr: 'le poisson' },
+          { en: 'vegetables',          fr: 'les l\u00e9gumes' },
+          { en: 'fruit',               fr: 'les fruits' },
+          { en: 'apple',               fr: 'la pomme' },
+          { en: 'strawberry',          fr: 'la fraise' },
+          { en: 'tomato',              fr: 'la tomate' },
+          { en: 'carrot',              fr: 'la carotte' },
+          { en: 'potato',              fr: 'la pomme de terre' },
+          { en: 'rice',                fr: 'le riz' },
+          { en: 'pasta',               fr: 'les p\u00e2tes' },
+          { en: 'ice cream',           fr: 'la glace' },
+          { en: 'cake',                fr: 'le g\u00e2teau' },
+          { en: 'chocolate',           fr: 'le chocolat' },
+          { en: 'milk',                fr: 'le lait' },
+          { en: 'coffee',              fr: 'le caf\u00e9' },
+          { en: 'tea',                 fr: 'le th\u00e9' },
+          { en: 'water',               fr: "l'eau" },
+          { en: 'orange juice',        fr: "le jus d'orange" },
+          { en: 'lemonade',            fr: 'la limonade' },
+          { en: 'cola',                fr: 'le coca' }
+        ]
+      },
+      {
+        id: 'hobbies', name: 'Sports & Hobbies', emoji: '\u26BD',
+        words: [
+          { en: 'football',            fr: 'le football' },
+          { en: 'rugby',               fr: 'le rugby' },
+          { en: 'tennis',              fr: 'le tennis' },
+          { en: 'swimming',            fr: 'la natation' },
+          { en: 'cycling',             fr: 'le cyclisme' },
+          { en: 'reading',             fr: 'la lecture' },
+          { en: 'music',               fr: 'la musique' },
+          { en: 'drawing',             fr: 'le dessin' },
+          { en: 'dancing',             fr: 'la danse' },
+          { en: 'video games',         fr: 'les jeux vid\u00e9o' },
+          { en: 'television',          fr: 'la t\u00e9l\u00e9vision' },
+          { en: 'cooking',             fr: 'la cuisine' },
+          { en: 'hiking',              fr: 'la randonn\u00e9e' },
+          { en: 'horse riding',        fr: "l'\u00e9quitation" },
+          { en: 'skiing',              fr: 'le ski' },
+          { en: 'basketball',          fr: 'le basket' },
+          { en: 'shopping',            fr: 'le shopping' }
+        ]
+      },
+      {
+        id: 'dates', name: 'Days & Months', emoji: '\uD83D\uDCC5',
+        words: [
+          { en: 'Monday',              fr: 'lundi' },
+          { en: 'Tuesday',             fr: 'mardi' },
+          { en: 'Wednesday',           fr: 'mercredi' },
+          { en: 'Thursday',            fr: 'jeudi' },
+          { en: 'Friday',              fr: 'vendredi' },
+          { en: 'Saturday',            fr: 'samedi' },
+          { en: 'Sunday',              fr: 'dimanche' },
+          { en: 'January',             fr: 'janvier' },
+          { en: 'February',            fr: 'f\u00e9vrier' },
+          { en: 'March',               fr: 'mars' },
+          { en: 'April',               fr: 'avril' },
+          { en: 'May',                 fr: 'mai' },
+          { en: 'June',                fr: 'juin' },
+          { en: 'July',                fr: 'juillet' },
+          { en: 'August',              fr: 'ao\u00fbt' },
+          { en: 'September',           fr: 'septembre' },
+          { en: 'October',             fr: 'octobre' },
+          { en: 'November',            fr: 'novembre' },
+          { en: 'December',            fr: 'd\u00e9cembre' },
+          { en: 'spring',              fr: 'le printemps' },
+          { en: 'summer',              fr: "l'\u00e9t\u00e9" },
+          { en: 'autumn',              fr: "l'automne" },
+          { en: 'winter',              fr: "l'hiver" }
+        ]
+      },
+      {
+        id: 'weather', name: 'Weather', emoji: '\uD83C\uDF24\uFE0F',
+        words: [
+          { en: "it's fine / nice",    fr: 'il fait beau' },
+          { en: "it's bad weather",    fr: 'il fait mauvais' },
+          { en: "it's hot",            fr: 'il fait chaud' },
+          { en: "it's cold",           fr: 'il fait froid' },
+          { en: "it's windy",          fr: 'il y a du vent' },
+          { en: "it's raining",        fr: 'il pleut' },
+          { en: "it's snowing",        fr: 'il neige' },
+          { en: "it's sunny",          fr: 'il y a du soleil' },
+          { en: "it's cloudy",         fr: 'il y a des nuages' },
+          { en: "it's foggy",          fr: 'il y a du brouillard' },
+          { en: "it's freezing",       fr: 'il g\u00e8le' },
+          { en: 'the sun',             fr: 'le soleil' },
+          { en: 'the snow',            fr: 'la neige' },
+          { en: 'the rain',            fr: 'la pluie' },
+          { en: 'the cloud',           fr: 'le nuage' },
+          { en: 'the wind',            fr: 'le vent' },
+          { en: 'the weather',         fr: 'la m\u00e9t\u00e9o' }
+        ]
+      },
+      {
+        id: 'body', name: 'Body Parts', emoji: '\uD83E\uDDD0',
+        words: [
+          { en: 'head',                fr: 'la t\u00eate' },
+          { en: 'face',                fr: 'le visage' },
+          { en: 'eye',                 fr: ["l'\u0153il", "l'oeil"] },
+          { en: 'nose',                fr: 'le nez' },
+          { en: 'mouth',               fr: 'la bouche' },
+          { en: 'ear',                 fr: "l'oreille" },
+          { en: 'neck',                fr: 'le cou' },
+          { en: 'shoulder',            fr: "l'\u00e9paule" },
+          { en: 'arm',                 fr: 'le bras' },
+          { en: 'hand',                fr: 'la main' },
+          { en: 'finger',              fr: 'le doigt' },
+          { en: 'stomach',             fr: 'le ventre' },
+          { en: 'back',                fr: 'le dos' },
+          { en: 'leg',                 fr: 'la jambe' },
+          { en: 'foot',                fr: 'le pied' },
+          { en: 'hair',                fr: 'les cheveux' },
+          { en: 'teeth',               fr: 'les dents' },
+          { en: 'knee',                fr: 'le genou' },
+          { en: 'thumb',               fr: 'le pouce' }
+        ]
+      },
+      {
+        id: 'colours', name: 'Colours', emoji: '\uD83C\uDF08',
+        words: [
+          { en: 'white',               fr: 'blanc' },
+          { en: 'black',               fr: 'noir' },
+          { en: 'red',                 fr: 'rouge' },
+          { en: 'green',               fr: 'vert' },
+          { en: 'blue',                fr: 'bleu' },
+          { en: 'yellow',              fr: 'jaune' },
+          { en: 'orange',              fr: 'orange' },
+          { en: 'purple',              fr: 'violet' },
+          { en: 'pink',                fr: 'rose' },
+          { en: 'grey',                fr: 'gris' },
+          { en: 'brown',               fr: 'marron' },
+          { en: 'dark blue / navy',    fr: 'bleu marine' },
+          { en: 'light blue',          fr: 'bleu clair' },
+          { en: 'dark green',          fr: 'vert fonc\u00e9' }
+        ]
+      },
+      {
+        id: 'countries', name: 'Countries', emoji: '\uD83C\uDF0D',
+        words: [
+          { en: 'France',              fr: 'la France' },
+          { en: 'England',             fr: "l'Angleterre" },
+          { en: 'Scotland',            fr: "l'\u00c9cosse" },
+          { en: 'Wales',               fr: 'le Pays de Galles' },
+          { en: 'Ireland',             fr: "l'Irlande" },
+          { en: 'Spain',               fr: "l'Espagne" },
+          { en: 'Italy',               fr: "l'Italie" },
+          { en: 'Germany',             fr: "l'Allemagne" },
+          { en: 'Belgium',             fr: 'la Belgique' },
+          { en: 'Switzerland',         fr: 'la Suisse' },
+          { en: 'USA',                 fr: 'les \u00c9tats-Unis' },
+          { en: 'Canada',              fr: 'le Canada' },
+          { en: 'Australia',           fr: "l'Australie" },
+          { en: 'Morocco',             fr: 'le Maroc' },
+          { en: 'Senegal',             fr: 'le S\u00e9n\u00e9gal' }
+        ]
+      },
+      {
+        id: 'home', name: 'Home', emoji: '\uD83C\uDFE0',
+        words: [
+          { en: 'bedroom',             fr: 'la chambre' },
+          { en: 'living room',         fr: 'le salon' },
+          { en: 'dining room',         fr: 'la salle \u00e0 manger' },
+          { en: 'kitchen',             fr: 'la cuisine' },
+          { en: 'bathroom',            fr: 'la salle de bains' },
+          { en: 'garage',              fr: 'le garage' },
+          { en: 'attic',               fr: 'le grenier' },
+          { en: 'cellar',              fr: 'la cave' },
+          { en: 'garden',              fr: 'le jardin' },
+          { en: 'entrance hall',       fr: "l'entr\u00e9e" },
+          { en: 'toilet',              fr: 'les toilettes' },
+          { en: 'study',               fr: 'le bureau' },
+          { en: 'stairs',              fr: "l'escalier" },
+          { en: 'window',              fr: 'la fen\u00eatre' },
+          { en: 'door',                fr: 'la porte' },
+          { en: 'ground floor',        fr: 'le rez-de-chauss\u00e9e' },
+          { en: 'first floor',         fr: 'le premier \u00e9tage' }
+        ]
+      }
+    ];
+
+    var ACCENTS = ['\u00e9','\u00e8','\u00ea','\u00eb','\u00e0','\u00e2','\u00e4',
+                   '\u00e7','\u00f9','\u00fb','\u00fc','\u00f4','\u00f6',
+                   '\u00ee','\u00ef','\u0153'];
+
+    var NUM_Q = 10;
+
+    // ─── STATE ─────────────────────────────────────────────────────────────────
+    var sel = {};        // topic id → bool
+    var pool = [];       // flat word list for active topics
+    var questions = [];  // this test's words
+    var currentQ = 0;
+    var score = 0;
+    var answers = [];    // {word, given, ok}
+    var submitted = false;
+
+    // ─── UTILITIES ─────────────────────────────────────────────────────────────
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+      return a;
+    }
+
+    function norm(s) {
+      return s.trim().toLowerCase()
+        .replace(/\u2019/g, "'")   // right single quote → apostrophe
+        .replace(/\u2018/g, "'");
+    }
+
+    function stripDiacritics(s) {
+      return s.normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\u0153/g, 'oe')
+        .replace(/\u00e6/g, 'ae');
+    }
+
+    function check(given, word) {
+      var forms = Array.isArray(word.fr) ? word.fr : [word.fr];
+      var g = norm(given);
+      for (var i = 0; i < forms.length; i++) {
+        if (g === norm(forms[i])) return 'correct';
+      }
+      // Close if matches once accents removed
+      var gStrip = stripDiacritics(g);
+      for (var j = 0; j < forms.length; j++) {
+        if (gStrip === stripDiacritics(norm(forms[j]))) return 'close';
+      }
+      return 'wrong';
+    }
+
+    function primary(word) {
+      return Array.isArray(word.fr) ? word.fr[0] : word.fr;
+    }
+
+    function esc(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ─── POOL ──────────────────────────────────────────────────────────────────
+    function buildPool() {
+      pool = [];
+      TOPICS.forEach(function (t) {
+        if (sel[t.id]) {
+          t.words.forEach(function (w) {
+            pool.push({ en: w.en, fr: w.fr, topicName: t.name, topicEmoji: t.emoji });
+          });
+        }
+      });
+    }
+
+    // ─── SETUP UI ──────────────────────────────────────────────────────────────
+    function renderGrid() {
+      var grid = document.getElementById('st-topic-grid');
+      grid.innerHTML = '';
+      TOPICS.forEach(function (t) {
+        var btn = document.createElement('button');
+        btn.className = 'st-topic-btn' + (sel[t.id] ? ' sel' : '');
+        btn.dataset.id = t.id;
+        btn.innerHTML =
+          '<span class="tb-emoji">' + t.emoji + '</span>' +
+          '<span class="tb-name">'  + t.name  + '</span>' +
+          '<span class="tb-count">' + t.words.length + ' words</span>';
+        btn.addEventListener('click', function () {
+          sel[t.id] = !sel[t.id];
+          btn.classList.toggle('sel', sel[t.id]);
+          updateSetup();
+        });
+        grid.appendChild(btn);
+      });
+    }
+
+    function updateSetup() {
+      buildPool();
+      var n = pool.length;
+      document.getElementById('st-word-count').textContent =
+        n + ' word' + (n !== 1 ? 's' : '') + ' in pool';
+      document.getElementById('st-start-btn').disabled = n === 0;
+      document.getElementById('st-start-hint').style.display = n > 0 ? 'none' : '';
+      var allOn = TOPICS.every(function (t) { return sel[t.id]; });
+      document.getElementById('st-sel-all').textContent = allOn ? 'Deselect all' : 'Select all';
+    }
+
+    // ─── ACCENT BAR ────────────────────────────────────────────────────────────
+    function buildAccentBar() {
+      var bar = document.getElementById('st-accents');
+      ACCENTS.forEach(function (ch) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'st-ab';
+        btn.textContent = ch;
+        btn.addEventListener('mousedown', function (e) {
+          e.preventDefault();
+          var inp = document.getElementById('st-answer');
+          var s = inp.selectionStart, end = inp.selectionEnd;
+          inp.value = inp.value.substring(0, s) + ch + inp.value.substring(end);
+          inp.selectionStart = inp.selectionEnd = s + 1;
+          inp.focus();
+        });
+        bar.appendChild(btn);
+      });
+    }
+
+    // ─── TEST ──────────────────────────────────────────────────────────────────
+    function startTest() {
+      buildPool();
+      var n = Math.min(NUM_Q, pool.length);
+      questions = shuffle(pool).slice(0, n);
+      currentQ = 0; score = 0; answers = [];
+      showScreen('st-test');
+      renderQ();
+    }
+
+    function renderQ() {
+      submitted = false;
+      var q = questions[currentQ];
+      var total = questions.length;
+
+      document.getElementById('st-q-label').textContent =
+        'Question ' + (currentQ + 1) + ' of ' + total;
+      document.getElementById('st-q-score').textContent = score + ' correct';
+      document.getElementById('st-prog-fill').style.width =
+        (currentQ / total * 100) + '%';
+      document.getElementById('st-q-badge').textContent =
+        q.topicEmoji + '\u00a0' + q.topicName;
+      document.getElementById('st-q-word').textContent = q.en;
+
+      var inp = document.getElementById('st-answer');
+      inp.value = ''; inp.className = ''; inp.disabled = false;
+      inp.placeholder = 'Type the French here\u2026';
+      setTimeout(function () { inp.focus(); }, 50);
+
+      document.getElementById('st-feedback').className = 'st-feedback';
+      document.getElementById('st-feedback').textContent = '';
+      document.getElementById('st-submit').textContent = 'Submit';
+      document.getElementById('st-reveal').style.display = '';
+    }
+
+    function doSubmit() {
+      if (submitted) {
+        // Already answered — advance
+        currentQ++;
+        if (currentQ >= questions.length) { showResults(); }
+        else { renderQ(); }
+        return;
+      }
+
+      submitted = true;
+      var q = questions[currentQ];
+      var given = document.getElementById('st-answer').value;
+      var result = check(given, q);
+      var correct = primary(q);
+      var inp = document.getElementById('st-answer');
+      var fb  = document.getElementById('st-feedback');
+
+      inp.disabled = true;
+      document.getElementById('st-reveal').style.display = 'none';
+      var isLast = (currentQ + 1 >= questions.length);
+      document.getElementById('st-submit').textContent = isLast ? 'See Results \u2192' : 'Next \u2192';
+
+      if (result === 'correct') {
+        score++;
+        inp.className = 'ans-ok';
+        fb.className = 'st-feedback ok';
+        fb.textContent = '\u2713 Correct!';
+        answers.push({ word: q, given: given, ok: true });
+      } else if (result === 'close') {
+        inp.className = 'ans-bad';
+        fb.className = 'st-feedback near';
+        fb.textContent = '\u2717 Almost \u2014 check your accents. The answer is: ' + correct;
+        answers.push({ word: q, given: given, ok: false });
+      } else {
+        inp.className = 'ans-bad';
+        fb.className = 'st-feedback bad';
+        fb.textContent = given.trim()
+          ? '\u2717 Incorrect \u2014 the answer is: ' + correct
+          : '\u2717 No answer \u2014 it was: ' + correct;
+        answers.push({ word: q, given: given, ok: false });
+      }
+    }
+
+    function doReveal() {
+      submitted = true;
+      var q = questions[currentQ];
+      var correct = primary(q);
+      var inp = document.getElementById('st-answer');
+      var fb  = document.getElementById('st-feedback');
+
+      inp.value = correct;
+      inp.className = 'ans-bad';
+      inp.disabled = true;
+      document.getElementById('st-reveal').style.display = 'none';
+      var isLast = (currentQ + 1 >= questions.length);
+      document.getElementById('st-submit').textContent = isLast ? 'See Results \u2192' : 'Next \u2192';
+
+      fb.className = 'st-feedback bad';
+      fb.textContent = '\u2717 Revealed \u2014 the answer is: ' + correct;
+      answers.push({ word: q, given: '', ok: false, revealed: true });
+    }
+
+    // ─── RESULTS ───────────────────────────────────────────────────────────────
+    function showResults() {
+      showScreen('st-results');
+      var total = questions.length;
+      var pct = Math.round(score / total * 100);
+
+      document.getElementById('st-score-n').textContent = score + '/' + total;
+
+      var msg, sub;
+      if (score === total)    { msg = 'Parfait\u00a0! \uD83C\uDF1F';  sub = 'Perfect score \u2014 outstanding spelling!'; }
+      else if (pct >= 80)     { msg = 'Tr\u00e8s bien\u00a0! \u2B50'; sub = 'Great work. Review the ones you missed.'; }
+      else if (pct >= 60)     { msg = 'Bien\u00a0!';                   sub = 'Good effort \u2014 keep practising those tricky accents.'; }
+      else if (pct >= 40)     { msg = 'Pas mal\u00a0!';                sub = 'Getting there \u2014 try again to improve your score.'; }
+      else                    { msg = 'Keep going!';                   sub = 'Spelling takes practice \u2014 have another go.'; }
+
+      document.getElementById('st-score-msg').textContent = msg;
+      document.getElementById('st-score-sub').textContent = sub;
+
+      var box = document.getElementById('st-score-box');
+      if (pct >= 80)      { box.style.borderColor = '#86efac'; box.style.background = '#f0fdf4'; }
+      else if (pct >= 60) { box.style.borderColor = '#fde68a'; box.style.background = '#fefce8'; }
+      else                { box.style.borderColor = '#fca5a5'; box.style.background = '#fef2f2'; }
+
+      var ul = document.getElementById('st-results-ul');
+      ul.innerHTML = '';
+      answers.forEach(function (a) {
+        var li = document.createElement('li');
+        li.className = 'st-ri ' + (a.ok ? 'ok' : 'bad');
+        var correct = primary(a.word);
+        var givenHtml = a.ok
+          ? '<span class="st-ri-gave-ok">' + esc(a.given) + '</span>'
+          : (a.given.trim()
+              ? '<span class="st-ri-gave">You wrote: ' + esc(a.given) + '</span>'
+              : '<span class="st-ri-gave">Not answered</span>');
+        li.innerHTML =
+          '<div class="st-ri-icon">' + (a.ok ? '\u2713' : '\u2717') + '</div>' +
+          '<div>' +
+            '<div class="st-ri-en">' + esc(a.word.en) + '</div>' +
+            '<div class="st-ri-fr">' + esc(correct) + '</div>' +
+          '</div>' +
+          '<div class="st-ri-given">' + givenHtml + '</div>';
+        ul.appendChild(li);
+      });
+    }
+
+    // ─── SCREEN CONTROL ────────────────────────────────────────────────────────
+    function showScreen(id) {
+      ['st-setup', 'st-test', 'st-results'].forEach(function (s) {
+        document.getElementById(s).classList.toggle('active', s === id);
+      });
+    }
+
+    // ─── INIT ──────────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+      TOPICS.forEach(function (t) { sel[t.id] = true; });
+      renderGrid();
+      buildAccentBar();
+      updateSetup();
+
+      document.getElementById('st-sel-all').addEventListener('click', function () {
+        var allOn = TOPICS.every(function (t) { return sel[t.id]; });
+        TOPICS.forEach(function (t) { sel[t.id] = !allOn; });
+        renderGrid();
+        updateSetup();
+      });
+
+      document.getElementById('st-start-btn').addEventListener('click', startTest);
+      document.getElementById('st-submit').addEventListener('click', doSubmit);
+      document.getElementById('st-reveal').addEventListener('click', doReveal);
+
+      document.getElementById('st-answer').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') doSubmit();
+      });
+
+      document.getElementById('st-retry').addEventListener('click', function () {
+        var box = document.getElementById('st-score-box');
+        box.style.borderColor = ''; box.style.background = '';
+        showScreen('st-setup');
+      });
+    });
+
+  }());
+  </script>
+
+</body>
+</html>
