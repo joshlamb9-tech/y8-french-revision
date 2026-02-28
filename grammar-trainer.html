@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grammar Trainer | Year 8 French Revision</title>
+  <link rel="stylesheet" href="styles-v2.css">
+  <style>
+    /* ─── GRAMMAR TRAINER ─── */
+    .gt-screen { display: none; }
+    .gt-screen.active { display: block; }
+
+    /* Setup grid */
+    .gt-option-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+      margin: 10px 0 20px;
+    }
+    .gt-opt-btn {
+      padding: 12px 14px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Dosis', sans-serif;
+      font-size: 14px; font-weight: 700;
+      color: var(--text);
+      text-align: center;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+      line-height: 1.3;
+    }
+    .gt-opt-btn .go-sub { display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+    .gt-opt-btn:hover { border-color: #a78bfa; background: #f5f3ff; }
+    .gt-opt-btn.sel { border-color: #7c3aed; background: #ede9fe; color: #4c1d95; }
+    .gt-opt-btn.sel .go-sub { color: #7c3aed; }
+
+    /* Level selector */
+    .gt-level-row {
+      display: flex; gap: 12px; margin: 10px 0 24px; flex-wrap: wrap;
+    }
+    .gt-level-btn {
+      flex: 1; min-width: 200px;
+      padding: 18px 20px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      cursor: pointer;
+      font-family: 'Dosis', sans-serif;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .gt-level-btn .lb-num {
+      font-size: 11px; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 4px;
+    }
+    .gt-level-btn .lb-title {
+      font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 2px;
+    }
+    .gt-level-btn .lb-desc {
+      font-size: 12px; font-weight: 600; color: var(--text-muted); line-height: 1.4;
+    }
+    .gt-level-btn:hover { border-color: #a78bfa; background: #f5f3ff; }
+    .gt-level-btn.sel { border-color: #7c3aed; background: #ede9fe; }
+    .gt-level-btn.sel .lb-num { color: #7c3aed; }
+    .gt-level-btn.sel .lb-title { color: #4c1d95; }
+
+    /* Verb picker */
+    .gt-verb-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 8px;
+      margin: 10px 0 20px;
+      max-height: 240px; overflow-y: auto;
+      padding-right: 4px;
+    }
+    .gt-verb-btn {
+      padding: 10px 14px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Dosis', sans-serif;
+      font-size: 14px; font-weight: 700;
+      color: var(--text);
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .gt-verb-btn .vb-en { font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-top: 1px; }
+    .gt-verb-btn:hover { border-color: #a78bfa; background: #f5f3ff; }
+    .gt-verb-btn.active { border-color: #7c3aed; background: #ede9fe; color: #4c1d95; }
+
+    /* Session setup row */
+    .gt-setup-row {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px; margin-bottom: 6px;
+    }
+    .gt-verb-count { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+    .gt-sel-all {
+      background: none; border: none;
+      font-family: 'Dosis', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: #7c3aed; cursor: pointer;
+      text-decoration: underline; padding: 0;
+    }
+
+    /* ─── PRACTICE SCREEN ─── */
+    .gt-progress-wrap { margin-bottom: 24px; }
+    .gt-prog-meta {
+      display: flex; justify-content: space-between;
+      font-size: 12px; font-weight: 700;
+      color: var(--text-muted); margin-bottom: 6px;
+    }
+    .gt-prog-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .gt-prog-fill { height: 100%; background: #7c3aed; border-radius: 99px; transition: width 0.35s ease; }
+
+    .gt-verb-header {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px;
+      margin-bottom: 24px;
+    }
+    .gt-verb-title {
+      font-size: 28px; font-weight: 800; color: var(--text);
+    }
+    .gt-verb-title span { color: var(--text-muted); font-size: 16px; font-weight: 600; margin-left: 8px; }
+    .gt-verb-badges { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+    .gt-tense-badge {
+      padding: 4px 12px; border-radius: 99px;
+      font-size: 11px; font-weight: 800;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .tbadge-present { background: #dbeafe; color: #1e40af; }
+    .tbadge-pc      { background: #fce7f3; color: #9d174d; }
+    .tbadge-nf      { background: #dcfce7; color: #166534; }
+
+    .gt-type-badge {
+      padding: 4px 12px; border-radius: 99px;
+      font-size: 11px; font-weight: 800;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      background: #f1f5f9; color: #475569;
+    }
+
+    /* Conjugation table */
+    .gt-conj-table {
+      width: 100%; border-collapse: collapse; margin-bottom: 16px;
+    }
+    .gt-conj-table tr { border-bottom: 1.5px solid var(--border); }
+    .gt-conj-table tr:last-child { border-bottom: none; }
+    .gt-conj-table td {
+      padding: 10px 8px; vertical-align: middle;
+    }
+    .gt-pronoun {
+      font-size: 14px; font-weight: 700; color: var(--text-muted);
+      width: 90px; min-width: 90px;
+    }
+    .gt-input-cell { position: relative; }
+
+    /* Hint prefix */
+    .gt-hint-wrap {
+      display: flex; align-items: center;
+      border: 2.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--white);
+      overflow: hidden;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .gt-hint-wrap:focus-within { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
+    .gt-hint-wrap.row-ok  { border-color: #16a34a; background: #f0fdf4; box-shadow: none; }
+    .gt-hint-wrap.row-bad { border-color: #dc2626; background: #fef2f2; box-shadow: none; }
+    .gt-hint-prefix {
+      padding: 11px 10px 11px 14px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 17px; font-weight: 700;
+      color: #94a3b8; background: #f8fafc;
+      border-right: 1.5px solid var(--border);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .gt-hint-wrap.row-ok  .gt-hint-prefix { background: #dcfce7; color: #16a34a; border-right-color: #86efac; }
+    .gt-hint-wrap.row-bad .gt-hint-prefix { background: #fee2e2; color: #ef4444; border-right-color: #fca5a5; }
+    .gt-row-input {
+      flex: 1;
+      font-family: 'Dosis', sans-serif;
+      font-size: 17px; font-weight: 700;
+      padding: 11px 14px;
+      border: none; background: transparent;
+      outline: none; color: var(--text);
+      min-width: 0;
+    }
+    .gt-hint-wrap.row-ok  .gt-row-input { color: #166534; }
+    .gt-hint-wrap.row-bad .gt-row-input { color: #991b1b; }
+
+    /* No-hint mode */
+    .gt-nohint-input {
+      width: 100%; box-sizing: border-box;
+      font-family: 'Dosis', sans-serif;
+      font-size: 17px; font-weight: 700;
+      padding: 11px 14px;
+      border: 2.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--white); color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .gt-nohint-input:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
+    .gt-nohint-input.row-ok  { border-color: #16a34a; background: #f0fdf4; color: #166534; box-shadow: none; }
+    .gt-nohint-input.row-bad { border-color: #dc2626; background: #fef2f2; color: #991b1b; box-shadow: none; }
+
+    /* Feedback cell */
+    .gt-fb-cell {
+      width: 140px; min-width: 120px; padding-left: 12px;
+      font-size: 13px; font-weight: 700; line-height: 1.3;
+    }
+    .gt-fb-cell .fb-ok  { color: #16a34a; }
+    .gt-fb-cell .fb-bad { color: #dc2626; }
+    .gt-fb-cell .fb-correct { display: block; font-size: 14px; font-weight: 800; color: #15803d; margin-top: 2px; }
+
+    /* Accent toolbar */
+    .gt-accent-bar {
+      display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px;
+      align-items: center;
+    }
+    .gt-accent-label { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-right: 4px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .gt-ab {
+      width: 34px; height: 34px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all 0.1s;
+      color: var(--text);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .gt-ab:hover { background: #ede9fe; border-color: #7c3aed; color: #4c1d95; }
+    .gt-ab.focused-ab { background: #ede9fe; border-color: #7c3aed; }
+
+    /* Submit row */
+    .gt-submit-row {
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 8px;
+    }
+    #gt-submit {
+      padding: 13px 28px;
+      background: #7c3aed; color: #fff;
+      border: none; border-radius: 10px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 16px; font-weight: 800;
+      cursor: pointer; transition: background 0.15s;
+    }
+    #gt-submit:hover { background: #6d28d9; }
+    #gt-submit:disabled { background: #c4b5fd; cursor: default; }
+    #gt-next {
+      padding: 13px 24px;
+      background: var(--white); color: #7c3aed;
+      border: 2px solid #7c3aed;
+      border-radius: 10px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 16px; font-weight: 800;
+      cursor: pointer; transition: all 0.15s;
+      display: none;
+    }
+    #gt-next:hover { background: #ede9fe; }
+    .gt-reveal-btn {
+      background: none; border: none;
+      font-family: 'Dosis', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: var(--text-muted); cursor: pointer;
+      text-decoration: underline; padding: 0;
+    }
+    .gt-reveal-btn:hover { color: var(--text); }
+
+    /* Results */
+    .gt-score-box {
+      display: flex; align-items: center; gap: 24px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px; padding: 28px 32px;
+      margin-bottom: 28px;
+    }
+    .gt-score-n { font-size: 56px; font-weight: 800; line-height: 1; color: #7c3aed; flex-shrink: 0; }
+    .gt-score-msg { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .gt-score-sub { font-size: 14px; color: var(--text-muted); }
+    .gt-results-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+    .gt-res-card {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .gt-res-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-bottom: 1.5px solid var(--border);
+    }
+    .gt-res-header.perfect { background: #f0fdf4; border-color: #86efac; }
+    .gt-res-header.mixed   { background: #fefce8; border-color: #fde68a; }
+    .gt-res-header.wrong   { background: #fef2f2; border-color: #fca5a5; }
+    .gt-res-icon {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900; flex-shrink: 0;
+    }
+    .gt-res-header.perfect .gt-res-icon { background: #16a34a; color: #fff; }
+    .gt-res-header.mixed   .gt-res-icon { background: #d97706; color: #fff; }
+    .gt-res-header.wrong   .gt-res-icon { background: #dc2626; color: #fff; }
+    .gt-res-verb { font-size: 17px; font-weight: 800; color: var(--text); }
+    .gt-res-tense { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-left: 4px; }
+    .gt-res-rows { padding: 8px 16px 12px; }
+    .gt-res-row {
+      display: grid; grid-template-columns: 80px 1fr 1fr; gap: 8px;
+      padding: 5px 0; border-bottom: 1px solid var(--border); align-items: center;
+      font-size: 13px;
+    }
+    .gt-res-row:last-child { border-bottom: none; }
+    .gt-res-pron { font-weight: 700; color: var(--text-muted); }
+    .gt-res-given.ok  { color: #16a34a; font-weight: 700; }
+    .gt-res-given.bad { color: #dc2626; font-weight: 700; text-decoration: line-through; }
+    .gt-res-correct   { color: #15803d; font-weight: 800; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
+        </div>
+      </a>
+      <nav class="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="grammar.html" class="hn-link">Grammar</a>
+        <a href="checklist.html" class="hn-link">Checklist</a>
+        <a href="past-papers.html" class="hn-link">Past Papers</a>
+        <a href="spelling-test.html" class="hn-link">Spelling Test</a>
+        <a href="grammar-trainer.html" class="hn-link active">Grammar Trainer</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <div class="page-banner-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Grammar Trainer</span>
+      </div>
+      <div class="hero-kicker kicker-purple">
+        <div class="kicker-dot"></div>
+        Interactive Practice
+      </div>
+      <h1 class="hero-title" style="margin-top:12px;">&#127299; Grammar Trainer</h1>
+      <p class="hero-desc">Practise conjugating French verbs &mdash; choose your tense, verb type, and difficulty level</p>
+    </div>
+  </div>
+
+  <main class="content-wrap">
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 1 — SETUP
+    ════════════════════════════════════════════ -->
+    <div id="gt-setup" class="gt-screen active">
+
+      <h2 style="font-size:20px;font-weight:800;margin:0 0 4px;">1. Choose a Tense</h2>
+      <p style="font-size:14px;color:var(--text-muted);margin:0 0 0;">Select which tense you want to practise.</p>
+      <div class="gt-option-row" id="gt-tense-row">
+        <button class="gt-opt-btn sel" data-tense="present">
+          &#128336; Présent
+          <span class="go-sub">-er / -ir / -re &amp; irregulars</span>
+        </button>
+        <button class="gt-opt-btn" data-tense="pc">
+          &#9194;&#65039; Passé Composé
+          <span class="go-sub">avoir &amp; être verbs</span>
+        </button>
+        <button class="gt-opt-btn" data-tense="nf">
+          &#9193;&#65039; Futur Proche
+          <span class="go-sub">aller + infinitif</span>
+        </button>
+      </div>
+
+      <h2 style="font-size:20px;font-weight:800;margin:8px 0 4px;">2. Choose a Level</h2>
+      <p style="font-size:14px;color:var(--text-muted);margin:0 0 0;">How much support do you want?</p>
+      <div class="gt-level-row" id="gt-level-row">
+        <button class="gt-level-btn sel" data-level="1">
+          <div class="lb-num">Level 1 &mdash; Supported</div>
+          <div class="lb-title">Stem given &mdash; type the ending</div>
+          <div class="lb-desc">The start of each form is shown as a hint. You fill in the ending (or auxiliary verb).</div>
+        </button>
+        <button class="gt-level-btn" data-level="2">
+          <div class="lb-num">Level 2 &mdash; Independent</div>
+          <div class="lb-title">No hints &mdash; type the full form</div>
+          <div class="lb-desc">Blank inputs only. You must recall and write every form from memory.</div>
+        </button>
+      </div>
+
+      <h2 style="font-size:20px;font-weight:800;margin:8px 0 4px;">3. Select Verbs</h2>
+      <p style="font-size:14px;color:var(--text-muted);margin:0 0 8px;">Click to select/deselect. You need at least one verb to start.</p>
+
+      <div class="gt-setup-row">
+        <span class="gt-verb-count" id="gt-verb-count">0 verbs selected</span>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <button class="gt-sel-all" id="gt-filter-all"  data-filter="all" >All</button>
+          <button class="gt-sel-all" id="gt-filter-er"   data-filter="er"  >-ER</button>
+          <button class="gt-sel-all" id="gt-filter-ir"   data-filter="ir"  >-IR</button>
+          <button class="gt-sel-all" id="gt-filter-re"   data-filter="re"  >-RE</button>
+          <button class="gt-sel-all" id="gt-filter-irreg" data-filter="irreg">Irregular</button>
+        </div>
+      </div>
+      <div class="gt-verb-row" id="gt-verb-grid"></div>
+
+      <div style="margin-top:8px;">
+        <button class="btn btn-primary" id="gt-start-btn" style="background:#7c3aed;color:#fff;border:none;padding:14px 32px;border-radius:10px;font-family:'Dosis',sans-serif;font-size:16px;font-weight:800;cursor:pointer;" disabled>
+          Start Practice &#8594;
+        </button>
+      </div>
+
+    </div><!-- /setup -->
+
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 2 — PRACTICE
+    ════════════════════════════════════════════ -->
+    <div id="gt-practice" class="gt-screen">
+
+      <div class="gt-progress-wrap">
+        <div class="gt-prog-meta">
+          <span id="gt-prog-label">Verb 1 of 5</span>
+          <span id="gt-prog-pct">0%</span>
+        </div>
+        <div class="gt-prog-bar"><div class="gt-prog-fill" id="gt-prog-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="gt-verb-header">
+        <div>
+          <div class="gt-verb-title" id="gt-inf-display"></div>
+        </div>
+        <div class="gt-verb-badges">
+          <span class="gt-tense-badge" id="gt-tense-badge"></span>
+          <span class="gt-type-badge"  id="gt-type-badge"></span>
+          <span class="level-badge level-both" id="gt-level-badge"></span>
+        </div>
+      </div>
+
+      <!-- Accent toolbar -->
+      <div class="gt-accent-bar" id="gt-accent-bar">
+        <span class="gt-accent-label">Accents</span>
+      </div>
+
+      <!-- Conjugation table -->
+      <table class="gt-conj-table" id="gt-conj-table">
+        <tbody id="gt-table-body"></tbody>
+      </table>
+
+      <div class="gt-submit-row">
+        <button id="gt-submit">Check &#10003;</button>
+        <button id="gt-next">Next &#8594;</button>
+        <button class="gt-reveal-btn" id="gt-reveal">Reveal answers</button>
+      </div>
+
+    </div><!-- /practice -->
+
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 3 — RESULTS
+    ════════════════════════════════════════════ -->
+    <div id="gt-results" class="gt-screen">
+      <div class="gt-score-box" id="gt-score-box">
+        <div class="gt-score-n" id="gt-score-n">0%</div>
+        <div>
+          <div class="gt-score-msg" id="gt-score-msg"></div>
+          <div class="gt-score-sub" id="gt-score-sub"></div>
+        </div>
+      </div>
+      <div class="gt-results-list" id="gt-results-list"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-outline" id="gt-retry-btn" style="cursor:pointer;">&#8635; Try Again (same verbs)</button>
+        <button class="btn btn-ghost"   id="gt-new-btn"   style="cursor:pointer;">&#8592; New Session</button>
+      </div>
+    </div><!-- /results -->
+
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem or want to request a feature? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ═══════════════════════════════════════════
+     VERB DATA
+  ════════════════════════════════════════════ */
+  var PRONOUNS = ['je', 'tu', 'il/elle', 'nous', 'vous', 'ils/elles'];
+
+  // present: [je,tu,il,nous,vous,ils]
+  // pc_aux: 'avoir'|'être'
+  // pc_part: past participle (masculine singular)
+  // être past participle agrees: add e (f), s (m pl), es (f pl) - we accept masculine only for simplicity
+  var VERBS = [
+    // ─── Regular -ER ───
+    { inf:'parler',     en:'to speak',      type:'er',
+      present:['parle','parles','parle','parlons','parlez','parlent'],
+      pc_aux:'avoir', pc_part:'parlé' },
+    { inf:'aimer',      en:'to like/love',  type:'er',
+      present:['aime','aimes','aime','aimons','aimez','aiment'],
+      pc_aux:'avoir', pc_part:'aimé' },
+    { inf:'habiter',    en:'to live',       type:'er',
+      present:['habite','habites','habite','habitons','habitez','habitent'],
+      pc_aux:'avoir', pc_part:'habité' },
+    { inf:'regarder',   en:'to watch',      type:'er',
+      present:['regarde','regardes','regarde','regardons','regardez','regardent'],
+      pc_aux:'avoir', pc_part:'regardé' },
+    { inf:'écouter',    en:'to listen to',  type:'er',
+      present:['écoute','écoutes','écoute','écoutons','écoutez','écoutent'],
+      pc_aux:'avoir', pc_part:'écouté' },
+    { inf:'jouer',      en:'to play',       type:'er',
+      present:['joue','joues','joue','jouons','jouez','jouent'],
+      pc_aux:'avoir', pc_part:'joué' },
+    { inf:'travailler', en:'to work',       type:'er',
+      present:['travaille','travailles','travaille','travaillons','travaillez','travaillent'],
+      pc_aux:'avoir', pc_part:'travaillé' },
+    { inf:'manger',     en:'to eat',        type:'er',
+      present:['mange','manges','mange','mangeons','mangez','mangent'],
+      pc_aux:'avoir', pc_part:'mangé' },
+    // ─── Regular -IR ───
+    { inf:'finir',      en:'to finish',     type:'ir',
+      present:['finis','finis','finit','finissons','finissez','finissent'],
+      pc_aux:'avoir', pc_part:'fini' },
+    { inf:'choisir',    en:'to choose',     type:'ir',
+      present:['choisis','choisis','choisit','choisissons','choisissez','choisissent'],
+      pc_aux:'avoir', pc_part:'choisi' },
+    { inf:'réussir',    en:'to succeed',    type:'ir',
+      present:['réussis','réussis','réussit','réussissons','réussissez','réussissent'],
+      pc_aux:'avoir', pc_part:'réussi' },
+    { inf:'obéir',      en:'to obey',       type:'ir',
+      present:['obéis','obéis','obéit','obéissons','obéissez','obéissent'],
+      pc_aux:'avoir', pc_part:'obéi' },
+    // ─── Regular -RE ───
+    { inf:'vendre',     en:'to sell',       type:'re',
+      present:['vends','vends','vend','vendons','vendez','vendent'],
+      pc_aux:'avoir', pc_part:'vendu' },
+    { inf:'attendre',   en:'to wait for',   type:'re',
+      present:['attends','attends','attend','attendons','attendez','attendent'],
+      pc_aux:'avoir', pc_part:'attendu' },
+    { inf:'répondre',   en:'to answer',     type:'re',
+      present:['réponds','réponds','répond','répondons','répondez','répondent'],
+      pc_aux:'avoir', pc_part:'répondu' },
+    // ─── Irregular ───
+    { inf:'être',       en:'to be',         type:'irreg',
+      present:['suis','es','est','sommes','êtes','sont'],
+      pc_aux:'avoir', pc_part:'été' },
+    { inf:'avoir',      en:'to have',       type:'irreg',
+      present:['ai','as','a','avons','avez','ont'],
+      pc_aux:'avoir', pc_part:'eu' },
+    { inf:'aller',      en:'to go',         type:'irreg',
+      present:['vais','vas','va','allons','allez','vont'],
+      pc_aux:'être',  pc_part:'allé' },
+    { inf:'faire',      en:'to do/make',    type:'irreg',
+      present:['fais','fais','fait','faisons','faites','font'],
+      pc_aux:'avoir', pc_part:'fait' },
+    { inf:'pouvoir',    en:'to be able to', type:'irreg',
+      present:['peux','peux','peut','pouvons','pouvez','peuvent'],
+      pc_aux:'avoir', pc_part:'pu' },
+    { inf:'vouloir',    en:'to want',       type:'irreg',
+      present:['veux','veux','veut','voulons','voulez','veulent'],
+      pc_aux:'avoir', pc_part:'voulu' },
+    { inf:'savoir',     en:'to know',       type:'irreg',
+      present:['sais','sais','sait','savons','savez','savent'],
+      pc_aux:'avoir', pc_part:'su' },
+    { inf:'venir',      en:'to come',       type:'irreg',
+      present:['viens','viens','vient','venons','venez','viennent'],
+      pc_aux:'être',  pc_part:'venu' },
+    { inf:'prendre',    en:'to take',       type:'irreg',
+      present:['prends','prends','prend','prenons','prenez','prennent'],
+      pc_aux:'avoir', pc_part:'pris' },
+    { inf:'voir',       en:'to see',        type:'irreg',
+      present:['vois','vois','voit','voyons','voyez','voient'],
+      pc_aux:'avoir', pc_part:'vu' },
+    { inf:'partir',     en:'to leave',      type:'irreg',
+      present:['pars','pars','part','partons','partez','partent'],
+      pc_aux:'être',  pc_part:'parti' },
+    { inf:'sortir',     en:'to go out',     type:'irreg',
+      present:['sors','sors','sort','sortons','sortez','sortent'],
+      pc_aux:'être',  pc_part:'sorti' }
+  ];
+
+  // Auxiliary verb conjugations (present) for PC and NF
+  var AVOIR_PRES  = ['ai','as','a','avons','avez','ont'];
+  var ETRE_PRES   = ['suis','es','est','sommes','êtes','sont'];
+  var ALLER_PRES  = ['vais','vas','va','allons','allez','vont'];
+
+  /* ═══════════════════════════════════════════
+     STATE
+  ════════════════════════════════════════════ */
+  var state = {
+    tense:      'present',
+    level:      1,
+    queue:      [],   // verb objects shuffled
+    qIdx:       0,
+    results:    [],   // { verb, tense, rows:[{pron,correct,given,ok}] }
+    activeInput: null,
+    submitted:  false,
+    revealed:   false
+  };
+
+  /* ═══════════════════════════════════════════
+     UTILITY
+  ════════════════════════════════════════════ */
+  function norm(s) {
+    return s.trim().toLowerCase()
+      .replace(/\u2019/g, "'").replace(/\u2018/g, "'");
+  }
+  function stripDiacritics(s) {
+    return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/\u0153/g, 'oe').replace(/\u00e6/g, 'ae');
+  }
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  // Get the 6 correct forms for a verb+tense
+  function getForms(verb, tense) {
+    if (tense === 'present') return verb.present.slice();
+    if (tense === 'pc') {
+      var aux = verb.pc_aux === 'avoir' ? AVOIR_PRES : ETRE_PRES;
+      return aux.map(function(a){ return a + ' ' + verb.pc_part; });
+    }
+    // near future
+    return ALLER_PRES.map(function(a){ return a + ' ' + verb.inf; });
+  }
+
+  // Get the hint prefix for a given row (level 1)
+  function getHint(verb, tense, rowIdx) {
+    if (tense === 'present') {
+      var form = verb.present[rowIdx];
+      if (verb.type === 'er' || verb.type === 'ir' || verb.type === 're') {
+        return verb.inf.slice(0, -2); // stem
+      }
+      // irregular: show ~half the form
+      return form.substring(0, Math.max(1, Math.ceil(form.length / 2)));
+    }
+    if (tense === 'pc') {
+      var aux = verb.pc_aux === 'avoir' ? AVOIR_PRES : ETRE_PRES;
+      return aux[rowIdx] + ' '; // show auxiliary, type participle
+    }
+    // near future: show aller form, type infinitive
+    return ALLER_PRES[rowIdx] + ' ';
+  }
+
+  // What the student types in level 1 (the suffix portion)
+  function getSuffix(verb, tense, rowIdx) {
+    var full = getForms(verb, tense)[rowIdx];
+    var hint = getHint(verb, tense, rowIdx);
+    // suffix = full form minus the hint prefix
+    if (full.toLowerCase().startsWith(hint.toLowerCase())) {
+      return full.slice(hint.length);
+    }
+    return full; // fallback
+  }
+
+  // Normalised check: accept with or without accents
+  function checkAnswer(given, correct) {
+    var g = norm(given);
+    var c = norm(correct);
+    if (g === c) return 'correct';
+    if (stripDiacritics(g) === stripDiacritics(c)) return 'close';
+    return 'wrong';
+  }
+
+  /* ═══════════════════════════════════════════
+     ACCENT TOOLBAR
+  ════════════════════════════════════════════ */
+  var ACCENTS = ['é','è','ê','ë','à','â','ä','ç','ù','û','ü','ô','ö','î','ï','œ'];
+
+  function buildAccentBar() {
+    var bar = document.getElementById('gt-accent-bar');
+    bar.innerHTML = '<span class="gt-accent-label">Accents</span>';
+    ACCENTS.forEach(function(ch) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'gt-ab';
+      btn.textContent = ch;
+      btn.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        var inp = state.activeInput;
+        if (!inp) {
+          // Find first empty input
+          var inputs = document.querySelectorAll('.gt-row-input, .gt-nohint-input');
+          if (inputs.length) inp = inputs[0];
+        }
+        if (!inp || inp.disabled) return;
+        var s = inp.selectionStart, end = inp.selectionEnd;
+        inp.value = inp.value.substring(0, s) + ch + inp.value.substring(end);
+        inp.selectionStart = inp.selectionEnd = s + 1;
+        inp.focus();
+      });
+      bar.appendChild(btn);
+    });
+  }
+
+  function trackFocus() {
+    document.addEventListener('focusin', function(e) {
+      if (e.target.matches('.gt-row-input, .gt-nohint-input')) {
+        state.activeInput = e.target;
+      }
+    });
+  }
+
+  /* ═══════════════════════════════════════════
+     SETUP SCREEN
+  ════════════════════════════════════════════ */
+  var selectedVerbs = new Set();
+
+  function buildVerbGrid(filter) {
+    var grid = document.getElementById('gt-verb-grid');
+    grid.innerHTML = '';
+    var filtered = filter === 'all' ? VERBS : VERBS.filter(function(v){ return v.type === filter; });
+    filtered.forEach(function(verb) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'gt-verb-btn' + (selectedVerbs.has(verb.inf) ? ' active' : '');
+      btn.dataset.inf = verb.inf;
+      btn.innerHTML = '<strong>' + verb.inf + '</strong><span class="vb-en">' + verb.en + '</span>';
+      btn.addEventListener('click', function() {
+        if (selectedVerbs.has(verb.inf)) {
+          selectedVerbs.delete(verb.inf);
+          btn.classList.remove('active');
+        } else {
+          selectedVerbs.add(verb.inf);
+          btn.classList.add('active');
+        }
+        updateVerbCount();
+      });
+      grid.appendChild(btn);
+    });
+  }
+
+  function updateVerbCount() {
+    var n = selectedVerbs.size;
+    document.getElementById('gt-verb-count').textContent = n + ' verb' + (n !== 1 ? 's' : '') + ' selected';
+    document.getElementById('gt-start-btn').disabled = n === 0;
+  }
+
+  function initSetup() {
+    // Tense selection
+    document.querySelectorAll('[data-tense]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-tense]').forEach(function(b){ b.classList.remove('sel'); });
+        btn.classList.add('sel');
+        state.tense = btn.dataset.tense;
+      });
+    });
+
+    // Level selection
+    document.querySelectorAll('[data-level]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-level]').forEach(function(b){ b.classList.remove('sel'); });
+        btn.classList.add('sel');
+        state.level = parseInt(btn.dataset.level, 10);
+      });
+    });
+
+    // Filter buttons — select all matching filter, deselect rest
+    document.querySelectorAll('[data-filter]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var filter = btn.dataset.filter;
+        // Reset selectedVerbs to match this filter
+        selectedVerbs.clear();
+        var filtered = filter === 'all' ? VERBS : VERBS.filter(function(v){ return v.type === filter; });
+        filtered.forEach(function(v){ selectedVerbs.add(v.inf); });
+        buildVerbGrid(filter);
+        updateVerbCount();
+      });
+    });
+
+    // Default: select all -ER verbs
+    VERBS.filter(function(v){ return v.type === 'er'; }).forEach(function(v){ selectedVerbs.add(v.inf); });
+    buildVerbGrid('er');
+    // Mark the ER filter button as active
+    document.querySelector('[data-filter="er"]').style.fontWeight = '900';
+    updateVerbCount();
+
+    document.getElementById('gt-start-btn').addEventListener('click', startSession);
+  }
+
+  /* ═══════════════════════════════════════════
+     PRACTICE SCREEN
+  ════════════════════════════════════════════ */
+  function startSession() {
+    var chosen = VERBS.filter(function(v){ return selectedVerbs.has(v.inf); });
+    state.queue   = shuffle(chosen);
+    state.qIdx    = 0;
+    state.results = [];
+    showScreen('gt-practice');
+    buildAccentBar();
+    renderVerb();
+  }
+
+  function renderVerb() {
+    var verb  = state.queue[state.qIdx];
+    var tense = state.tense;
+    state.submitted = false;
+    state.revealed  = false;
+
+    // Progress
+    var total = state.queue.length;
+    var done  = state.qIdx;
+    var pct   = total ? Math.round((done / total) * 100) : 0;
+    document.getElementById('gt-prog-label').textContent = 'Verb ' + (done + 1) + ' of ' + total;
+    document.getElementById('gt-prog-pct').textContent   = pct + '%';
+    document.getElementById('gt-prog-fill').style.width  = pct + '%';
+
+    // Header
+    document.getElementById('gt-inf-display').innerHTML =
+      verb.inf + ' <span>— ' + verb.en + '</span>';
+
+    var tenseLabels = { present:'Présent', pc:'Passé Composé', nf:'Futur Proche' };
+    var tenseClasses= { present:'tbadge-present', pc:'tbadge-pc', nf:'tbadge-nf' };
+    var typeLabels  = { er:'Regular -ER', ir:'Regular -IR', re:'Regular -RE', irreg:'Irregular' };
+
+    var tb = document.getElementById('gt-tense-badge');
+    tb.textContent  = tenseLabels[tense];
+    tb.className    = 'gt-tense-badge ' + tenseClasses[tense];
+    document.getElementById('gt-type-badge').textContent  = typeLabels[verb.type];
+    document.getElementById('gt-level-badge').textContent = 'Level ' + state.level;
+
+    // Build rows
+    var tbody = document.getElementById('gt-table-body');
+    tbody.innerHTML = '';
+    var forms = getForms(verb, tense);
+
+    PRONOUNS.forEach(function(pron, i) {
+      var tr = document.createElement('tr');
+      var tdPron = document.createElement('td');
+      tdPron.className = 'gt-pronoun';
+      tdPron.textContent = pron;
+      tr.appendChild(tdPron);
+
+      var tdInput = document.createElement('td');
+      tdInput.className = 'gt-input-cell';
+
+      if (state.level === 1) {
+        var hint = getHint(verb, tense, i);
+        var wrap = document.createElement('div');
+        wrap.className = 'gt-hint-wrap';
+        wrap.dataset.row = i;
+
+        var prefix = document.createElement('span');
+        prefix.className = 'gt-hint-prefix';
+        prefix.textContent = hint;
+        wrap.appendChild(prefix);
+
+        var inp = document.createElement('input');
+        inp.type = 'text';
+        inp.className = 'gt-row-input';
+        inp.autocomplete = 'off';
+        inp.autocorrect = 'off';
+        inp.autocapitalize = 'off';
+        inp.spellcheck = false;
+        inp.dataset.row = i;
+        inp.dataset.correct = getSuffix(verb, tense, i);
+        inp.dataset.full = forms[i];
+        inp.placeholder = '…';
+        inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') submitAnswers(); });
+        wrap.appendChild(inp);
+        tdInput.appendChild(wrap);
+      } else {
+        var inp2 = document.createElement('input');
+        inp2.type = 'text';
+        inp2.className = 'gt-nohint-input';
+        inp2.autocomplete = 'off';
+        inp2.autocorrect = 'off';
+        inp2.autocapitalize = 'off';
+        inp2.spellcheck = false;
+        inp2.dataset.row = i;
+        inp2.dataset.correct = forms[i];
+        inp2.dataset.full    = forms[i];
+        inp2.placeholder = '…';
+        inp2.addEventListener('keydown', function(e){ if (e.key === 'Enter') submitAnswers(); });
+        tdInput.appendChild(inp2);
+      }
+      tr.appendChild(tdInput);
+
+      var tdFb = document.createElement('td');
+      tdFb.className = 'gt-fb-cell';
+      tdFb.dataset.row = i;
+      tr.appendChild(tdFb);
+
+      tbody.appendChild(tr);
+    });
+
+    // Focus first input
+    var first = tbody.querySelector('input');
+    if (first) { setTimeout(function(){ first.focus(); state.activeInput = first; }, 50); }
+
+    // Buttons
+    document.getElementById('gt-submit').disabled = false;
+    document.getElementById('gt-submit').style.display = '';
+    document.getElementById('gt-next').style.display = 'none';
+    document.getElementById('gt-reveal').style.display = '';
+  }
+
+  function submitAnswers() {
+    if (state.submitted) return;
+    state.submitted = true;
+
+    document.getElementById('gt-submit').disabled = true;
+    document.getElementById('gt-next').style.display = '';
+
+    var verb  = state.queue[state.qIdx];
+    var tense = state.tense;
+    var forms = getForms(verb, tense);
+
+    var rowResults = [];
+    var inputs = document.querySelectorAll('#gt-table-body input');
+
+    inputs.forEach(function(inp) {
+      var i       = parseInt(inp.dataset.row, 10);
+      var correct = inp.dataset.correct;  // what they needed to type
+      var full    = inp.dataset.full;     // full correct form
+      var given   = inp.value;
+      var res     = checkAnswer(given, correct);
+      var ok      = (res === 'correct' || res === 'close');
+
+      inp.disabled = true;
+
+      // Style the input wrapper or input
+      if (state.level === 1) {
+        var wrap = inp.closest('.gt-hint-wrap');
+        if (ok)  wrap.classList.add('row-ok');
+        else     wrap.classList.add('row-bad');
+      } else {
+        if (ok)  inp.classList.add('row-ok');
+        else     inp.classList.add('row-bad');
+      }
+
+      // Feedback cell
+      var fbCell = document.querySelector('[data-row="' + i + '"].gt-fb-cell');
+      if (ok) {
+        fbCell.innerHTML = '<span class="fb-ok">' + (res === 'close' ? '&#10003; (check accents)' : '&#10003; Correct') + '</span>';
+      } else {
+        fbCell.innerHTML = '<span class="fb-bad">&#10007; Wrong</span><span class="fb-correct">' + full + '</span>';
+      }
+
+      rowResults.push({ pron: PRONOUNS[i], correct: full, given: given, ok: ok });
+    });
+
+    // Store result
+    state.results.push({ verb: verb, tense: tense, rows: rowResults });
+
+    document.getElementById('gt-next').textContent =
+      state.qIdx < state.queue.length - 1 ? 'Next \u2192' : 'See Results \u2192';
+  }
+
+  function revealAnswers() {
+    if (state.submitted || state.revealed) return;
+    state.revealed = true;
+
+    var verb  = state.queue[state.qIdx];
+    var tense = state.tense;
+    var forms = getForms(verb, tense);
+
+    var inputs = document.querySelectorAll('#gt-table-body input');
+    var rowResults = [];
+
+    inputs.forEach(function(inp) {
+      var i    = parseInt(inp.dataset.row, 10);
+      var full = inp.dataset.full;
+      inp.value    = full;
+      inp.disabled = true;
+      if (state.level === 1) {
+        var wrap = inp.closest('.gt-hint-wrap');
+        wrap.classList.add('row-bad');
+      } else {
+        inp.classList.add('row-bad');
+      }
+      var fbCell = document.querySelector('[data-row="' + i + '"].gt-fb-cell');
+      fbCell.innerHTML = '<span class="fb-bad">Revealed</span>';
+      rowResults.push({ pron: PRONOUNS[i], correct: full, given: '', ok: false });
+    });
+
+    state.submitted = true;
+    state.results.push({ verb: verb, tense: tense, rows: rowResults });
+
+    document.getElementById('gt-submit').disabled = true;
+    document.getElementById('gt-reveal').style.display = 'none';
+    document.getElementById('gt-next').style.display = '';
+    document.getElementById('gt-next').textContent =
+      state.qIdx < state.queue.length - 1 ? 'Next \u2192' : 'See Results \u2192';
+  }
+
+  function nextVerb() {
+    state.qIdx++;
+    if (state.qIdx < state.queue.length) {
+      renderVerb();
+    } else {
+      showResults();
+    }
+  }
+
+  /* ═══════════════════════════════════════════
+     RESULTS SCREEN
+  ════════════════════════════════════════════ */
+  function showResults() {
+    showScreen('gt-results');
+
+    var totalRows = 0, correctRows = 0;
+    state.results.forEach(function(r) {
+      r.rows.forEach(function(row) {
+        totalRows++;
+        if (row.ok) correctRows++;
+      });
+    });
+    var pct = totalRows ? Math.round((correctRows / totalRows) * 100) : 0;
+
+    var scoreEl = document.getElementById('gt-score-n');
+    scoreEl.textContent = pct + '%';
+    scoreEl.style.color = pct >= 80 ? '#16a34a' : pct >= 60 ? '#d97706' : '#dc2626';
+
+    var msgs = {
+      high:  ['Parfait!', 'Excellent work — you really know your conjugations!'],
+      mid:   ['Bien fait!', 'Good effort. Keep practising the ones you missed.'],
+      low:   ['Keep going!', 'Don\'t give up — repetition is how you learn this stuff!']
+    };
+    var tier = pct >= 80 ? 'high' : pct >= 60 ? 'mid' : 'low';
+    document.getElementById('gt-score-msg').textContent = msgs[tier][0];
+    document.getElementById('gt-score-sub').textContent = correctRows + ' / ' + totalRows + ' forms correct — ' + msgs[tier][1];
+
+    var tenseLabels = { present:'Présent', pc:'Passé composé', nf:'Futur proche' };
+
+    var list = document.getElementById('gt-results-list');
+    list.innerHTML = '';
+
+    state.results.forEach(function(res) {
+      var correct = res.rows.filter(function(r){ return r.ok; }).length;
+      var total   = res.rows.length;
+      var cls     = correct === total ? 'perfect' : correct > 0 ? 'mixed' : 'wrong';
+      var icon    = correct === total ? '&#10003;' : correct > 0 ? '~' : '&#10007;';
+
+      var card = document.createElement('div');
+      card.className = 'gt-res-card';
+
+      var hdr = document.createElement('div');
+      hdr.className = 'gt-res-header ' + cls;
+      hdr.innerHTML =
+        '<div class="gt-res-icon">' + icon + '</div>' +
+        '<span class="gt-res-verb">' + res.verb.inf + '</span>' +
+        '<span class="gt-res-tense">(' + tenseLabels[res.tense] + ')</span>' +
+        '<span style="margin-left:auto;font-size:13px;font-weight:700;color:var(--text-muted)">' + correct + '/' + total + '</span>';
+      card.appendChild(hdr);
+
+      var rows = document.createElement('div');
+      rows.className = 'gt-res-rows';
+      res.rows.forEach(function(row) {
+        var r = document.createElement('div');
+        r.className = 'gt-res-row';
+        r.innerHTML =
+          '<span class="gt-res-pron">' + row.pron + '</span>' +
+          '<span class="gt-res-given ' + (row.ok ? 'ok' : 'bad') + '">' +
+            (row.given ? row.given : '<em style="color:#94a3b8">—</em>') +
+          '</span>' +
+          (row.ok ? '' : '<span class="gt-res-correct">' + row.correct + '</span>');
+        rows.appendChild(r);
+      });
+      card.appendChild(rows);
+      list.appendChild(card);
+    });
+  }
+
+  /* ═══════════════════════════════════════════
+     SCREEN SWITCHING
+  ════════════════════════════════════════════ */
+  function showScreen(id) {
+    document.querySelectorAll('.gt-screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  /* ═══════════════════════════════════════════
+     WIRE UP BUTTONS
+  ════════════════════════════════════════════ */
+  document.getElementById('gt-submit').addEventListener('click', submitAnswers);
+  document.getElementById('gt-next').addEventListener('click', nextVerb);
+  document.getElementById('gt-reveal').addEventListener('click', revealAnswers);
+
+  document.getElementById('gt-retry-btn').addEventListener('click', function() {
+    // Same verbs, reset
+    state.qIdx    = 0;
+    state.results = [];
+    state.queue   = shuffle(state.queue);
+    showScreen('gt-practice');
+    renderVerb();
+  });
+
+  document.getElementById('gt-new-btn').addEventListener('click', function() {
+    showScreen('gt-setup');
+  });
+
+  /* ═══════════════════════════════════════════
+     INIT
+  ════════════════════════════════════════════ */
+  initSetup();
+  trackFocus();
+
+})();
+</script>
+
+</body>
+</html>
