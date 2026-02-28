@@ -1106,3 +1106,18 @@ footer .report-problem a:hover { color: var(--text); }
   .vocab-table td { color: black; }
   .checklist li   { border: 1px solid #ccc; }
 }
+
+/* Disable decorative motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .topic-tile,
+  .grammar-hub-card,
+  .skill-card,
+  .sp-topic-card,
+  .rag-btn,
+  .btn,
+  .cp-bar {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
