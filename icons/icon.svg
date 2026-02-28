@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <clipPath id="clip">
+    <rect width="512" height="512" rx="80"/>
+  </clipPath>
+  <!-- French tricolor background -->
+  <g clip-path="url(#clip)">
+    <rect x="0"   y="0" width="171" height="512" fill="#002395"/>
+    <rect x="171" y="0" width="170" height="512" fill="#FFFFFF"/>
+    <rect x="341" y="0" width="171" height="512" fill="#ED2939"/>
+  </g>
+  <!-- "FR" text -->
+  <text
+    x="256" y="330"
+    font-family="system-ui, -apple-system, Georgia, serif"
+    font-size="240"
+    font-weight="900"
+    fill="white"
+    text-anchor="middle"
+    stroke="#00000033"
+    stroke-width="6"
+  >FR</text>
+</svg>

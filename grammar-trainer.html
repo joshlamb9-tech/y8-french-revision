@@ -318,6 +318,20 @@
     .gt-res-given.bad { color: #dc2626; font-weight: 700; text-decoration: line-through; }
     .gt-res-correct   { color: #15803d; font-weight: 800; }
   </style>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#003B72">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CE French">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/y8-french-revision/sw.js');
+      });
+    }
+  </script>
 </head>
 <body>
 
