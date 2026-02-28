@@ -278,7 +278,7 @@
 
         <div class="st-controls">
           <span class="st-word-count" id="st-word-count">Loading&hellip;</span>
-          <button class="st-sel-all" id="st-sel-all">Deselect all</button>
+          <button class="st-sel-all" id="st-sel-all">Select all</button>
         </div>
 
         <div class="st-topic-grid" id="st-topic-grid"></div>
@@ -944,7 +944,7 @@
 
     // ─── INIT ──────────────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
-      TOPICS.forEach(function (t) { sel[t.id] = true; });
+      TOPICS.forEach(function (t) { sel[t.id] = false; });
       renderGrid();
       buildAccentBar();
       updateSetup();
