@@ -915,7 +915,7 @@
     state.submitted = true;
 
     document.getElementById('gt-submit').disabled = true;
-    document.getElementById('gt-next').style.display = '';
+    document.getElementById('gt-next').style.display = 'inline-block';
 
     var verb  = state.queue[state.qIdx];
     var tense = state.tense;
@@ -994,7 +994,7 @@
 
     document.getElementById('gt-submit').disabled = true;
     document.getElementById('gt-reveal').style.display = 'none';
-    document.getElementById('gt-next').style.display = '';
+    document.getElementById('gt-next').style.display = 'inline-block';
     document.getElementById('gt-next').textContent =
       state.qIdx < state.queue.length - 1 ? 'Next \u2192' : 'See Results \u2192';
   }
