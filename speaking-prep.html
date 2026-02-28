@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speaking Prep | Year 8 French Revision</title>
+  <link rel="stylesheet" href="styles-v2.css">
+  <style>
+    /* ─── SPEAKING PREP ─── */
+    .sp-screen { display: none; }
+    .sp-screen.active { display: block; }
+
+    /* ─── TOPIC PICKER ─── */
+    .sp-topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 14px;
+      margin: 20px 0 28px;
+    }
+    .sp-topic-card {
+      display: flex; flex-direction: column;
+      padding: 22px 20px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      cursor: pointer; text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.15s, transform 0.12s, box-shadow 0.15s;
+      user-select: none;
+    }
+    .sp-topic-card:hover {
+      border-color: #a78bfa;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(124,58,237,0.1);
+    }
+    .sp-topic-icon {
+      font-size: 32px; line-height: 1; margin-bottom: 12px;
+    }
+    .sp-topic-name {
+      font-size: 17px; font-weight: 800; margin-bottom: 3px; color: var(--text);
+    }
+    .sp-topic-fr {
+      font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;
+    }
+    .sp-topic-count {
+      font-size: 12px; font-weight: 700;
+      color: #7c3aed;
+      background: #ede9fe; border-radius: 99px;
+      padding: 2px 10px; display: inline-block; width: fit-content;
+    }
+
+    .sp-how-box {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+    }
+    .sp-how-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px; margin-top: 14px;
+    }
+    .sp-how-step {
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .sp-step-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #7c3aed; color: #fff;
+      font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .sp-step-text { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.4; }
+
+    /* ─── PRACTICE SCREEN ─── */
+    .sp-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .sp-back-btn {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 8px; padding: 6px 12px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: var(--text-muted); cursor: pointer;
+      transition: all 0.12s;
+    }
+    .sp-back-btn:hover { border-color: #7c3aed; color: #7c3aed; }
+    .sp-header-title { font-size: 18px; font-weight: 800; color: var(--text); }
+    .sp-header-fr    { font-size: 14px; font-weight: 600; color: var(--text-muted); }
+
+    /* Progress */
+    .sp-prog-wrap { margin-bottom: 24px; }
+    .sp-prog-meta {
+      display: flex; justify-content: space-between;
+      font-size: 12px; font-weight: 700;
+      color: var(--text-muted); margin-bottom: 6px;
+    }
+    .sp-prog-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .sp-prog-fill { height: 100%; background: #7c3aed; border-radius: 99px; transition: width 0.35s ease; }
+
+    /* Score mini badges */
+    .sp-score-row {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;
+    }
+    .sp-badge {
+      display: flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 99px;
+      font-size: 13px; font-weight: 700;
+    }
+    .sp-badge.got  { background: #f0fdf4; color: #166534; border: 1.5px solid #86efac; }
+    .sp-badge.meh  { background: #fefce8; color: #92400e; border: 1.5px solid #fde68a; }
+    .sp-badge.no   { background: #fef2f2; color: #991b1b; border: 1.5px solid #fca5a5; }
+
+    /* Card */
+    .sp-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+    .sp-card-hint {
+      font-size: 11px; font-weight: 800;
+      color: var(--text-muted); letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .sp-card-en {
+      font-size: clamp(20px, 4vw, 30px);
+      font-weight: 800; line-height: 1.3;
+      color: var(--text); margin-bottom: 0;
+    }
+
+    /* Attempt input */
+    .sp-attempt-wrap { margin: 18px 0 16px; }
+    .sp-attempt-label {
+      font-size: 11px; font-weight: 800;
+      color: var(--text-muted); letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    .sp-attempt-input {
+      width: 100%; box-sizing: border-box;
+      font-family: 'Dosis', sans-serif;
+      font-size: 17px; font-weight: 700;
+      padding: 13px 16px;
+      border: 2.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--white); color: var(--text);
+      outline: none; resize: vertical; min-height: 56px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .sp-attempt-input:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
+
+    /* Accent bar */
+    .sp-accent-bar {
+      display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px;
+      align-items: center;
+    }
+    .sp-accent-label { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-right: 4px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .sp-ab {
+      width: 34px; height: 34px;
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 7px; font-family: 'Dosis', sans-serif;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all 0.1s;
+      color: var(--text);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sp-ab:hover { background: #ede9fe; border-color: #7c3aed; color: #4c1d95; }
+
+    /* Reveal */
+    .sp-reveal-btn {
+      padding: 13px 28px;
+      background: #7c3aed; color: #fff;
+      border: none; border-radius: 10px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 16px; font-weight: 800;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .sp-reveal-btn:hover { background: #6d28d9; }
+
+    /* Answer panel */
+    .sp-answer-panel {
+      background: #f8fafc;
+      border: 2px solid #c7d2fe;
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin: 16px 0 20px;
+      display: none;
+    }
+    .sp-answer-panel.visible { display: block; }
+    .sp-answer-label {
+      font-size: 11px; font-weight: 800;
+      color: #6366f1; letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+    .sp-answer-fr {
+      font-size: 22px; font-weight: 800;
+      color: var(--text); line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .sp-answer-note {
+      font-size: 12px; font-weight: 600;
+      color: var(--text-muted); line-height: 1.5;
+    }
+
+    /* Self-mark buttons */
+    .sp-mark-row {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .sp-mark-btn {
+      flex: 1; min-width: 100px; max-width: 180px;
+      padding: 13px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: var(--white);
+      font-family: 'Dosis', sans-serif;
+      font-size: 14px; font-weight: 800;
+      cursor: pointer; transition: all 0.15s;
+      text-align: center; color: var(--text);
+    }
+    .sp-mark-btn:hover { border-color: #a78bfa; background: #f5f3ff; }
+    .sp-mark-btn.mark-got { border-color: #16a34a; background: #f0fdf4; color: #166534; }
+    .sp-mark-btn.mark-close { border-color: #d97706; background: #fefce8; color: #92400e; }
+    .sp-mark-btn.mark-no { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
+    .sp-mark-label { font-size: 11px; display: block; font-weight: 600; margin-top: 2px; opacity: 0.75; }
+
+    /* ─── RESULTS SCREEN ─── */
+    .sp-res-score-box {
+      display: flex; align-items: center; gap: 24px;
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 16px; padding: 28px 32px; margin-bottom: 28px;
+    }
+    .sp-res-n { font-size: 56px; font-weight: 800; line-height: 1; flex-shrink: 0; }
+    .sp-res-msg { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .sp-res-sub { font-size: 14px; color: var(--text-muted); }
+
+    .sp-res-section { margin-bottom: 24px; }
+    .sp-res-section-title {
+      font-size: 14px; font-weight: 800;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 12px; padding-bottom: 6px;
+      border-bottom: 2px solid var(--border);
+    }
+    .sp-res-section-title.ok   { color: #16a34a; border-color: #86efac; }
+    .sp-res-section-title.meh  { color: #d97706; border-color: #fde68a; }
+    .sp-res-section-title.no   { color: #dc2626; border-color: #fca5a5; }
+
+    .sp-res-cards { display: flex; flex-direction: column; gap: 8px; }
+    .sp-res-card {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 12px 16px;
+    }
+    .sp-res-card .rc-en { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 3px; }
+    .sp-res-card .rc-fr { font-size: 15px; font-weight: 800; color: var(--text); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
+        </div>
+      </a>
+      <nav class="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="grammar.html" class="hn-link">Grammar</a>
+        <a href="checklist.html" class="hn-link">Checklist</a>
+        <a href="past-papers.html" class="hn-link">Past Papers</a>
+        <a href="spelling-test.html" class="hn-link">Spelling Test</a>
+        <a href="grammar-trainer.html" class="hn-link">Grammar Trainer</a>
+        <a href="speaking-prep.html" class="hn-link active">Speaking Prep</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <div class="page-banner-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Speaking Prep</span>
+      </div>
+      <div class="hero-kicker kicker-green">
+        <div class="kicker-dot"></div>
+        Speaking Exam
+      </div>
+      <h1 class="hero-title" style="margin-top:12px;">&#127908; Speaking Prep</h1>
+      <p class="hero-desc">Practise translating English phrases into French &mdash; the kind of things you&rsquo;ll need to say in your speaking exam</p>
+    </div>
+  </div>
+
+  <main class="content-wrap">
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 1 — TOPIC PICKER
+    ════════════════════════════════════════════ -->
+    <div id="sp-pick" class="sp-screen active">
+
+      <div class="sp-how-box">
+        <strong style="font-size:15px;">How it works</strong>
+        <div class="sp-how-steps">
+          <div class="sp-how-step">
+            <div class="sp-step-num">1</div>
+            <div class="sp-step-text">Pick a topic and read the English phrase</div>
+          </div>
+          <div class="sp-how-step">
+            <div class="sp-step-num">2</div>
+            <div class="sp-step-text">Say it aloud in French &mdash; or type it if you want to practise writing too</div>
+          </div>
+          <div class="sp-how-step">
+            <div class="sp-step-num">3</div>
+            <div class="sp-step-text">Reveal the answer and compare</div>
+          </div>
+          <div class="sp-how-step">
+            <div class="sp-step-num">4</div>
+            <div class="sp-step-text">Mark yourself honestly &mdash; those you miss go on your review list</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 style="font-size:20px;font-weight:800;margin:0 0 6px;">Choose a Topic</h2>
+      <p style="font-size:14px;color:var(--text-muted);margin:0 0 4px;">Pick the topic you want to practise. Tackle one at a time &mdash; 25 minutes, then a break.</p>
+      <div class="sp-topic-grid" id="sp-topic-grid"></div>
+
+    </div><!-- /pick -->
+
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 2 — PRACTICE
+    ════════════════════════════════════════════ -->
+    <div id="sp-practice" class="sp-screen">
+
+      <div class="sp-header">
+        <button class="sp-back-btn" id="sp-back-btn">&#8592; Topics</button>
+        <div>
+          <div class="sp-header-title" id="sp-header-title"></div>
+          <div class="sp-header-fr" id="sp-header-fr"></div>
+        </div>
+      </div>
+
+      <div class="sp-prog-wrap">
+        <div class="sp-prog-meta">
+          <span id="sp-prog-label">1 of 12</span>
+          <span id="sp-prog-pct">0%</span>
+        </div>
+        <div class="sp-prog-bar"><div class="sp-prog-fill" id="sp-prog-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="sp-score-row">
+        <div class="sp-badge got"><span>&#10003;</span> <span id="sp-count-got">0</span> Got it</div>
+        <div class="sp-badge meh"><span>~</span> <span id="sp-count-meh">0</span> Almost</div>
+        <div class="sp-badge no"><span>&#10007;</span> <span id="sp-count-no">0</span> Need review</div>
+      </div>
+
+      <!-- Phrase card -->
+      <div class="sp-card" id="sp-card">
+        <div class="sp-card-hint">Translate into French</div>
+        <div class="sp-card-en" id="sp-card-en"></div>
+      </div>
+
+      <!-- Optional attempt input -->
+      <div class="sp-attempt-wrap">
+        <div class="sp-attempt-label">Your attempt (optional)</div>
+        <textarea class="sp-attempt-input" id="sp-attempt" rows="2" placeholder="Type your French here, or just say it aloud&#8230;"></textarea>
+      </div>
+
+      <!-- Accent bar -->
+      <div class="sp-accent-bar" id="sp-accent-bar">
+        <span class="sp-accent-label">Accents</span>
+      </div>
+
+      <!-- Reveal button -->
+      <button class="sp-reveal-btn" id="sp-reveal-btn">Reveal French &#128065;&#65039;</button>
+
+      <!-- Answer panel (hidden until reveal) -->
+      <div class="sp-answer-panel" id="sp-answer-panel">
+        <div class="sp-answer-label">&#127468;&#127479; French</div>
+        <div class="sp-answer-fr" id="sp-answer-fr"></div>
+        <div class="sp-answer-note" id="sp-answer-note"></div>
+      </div>
+
+      <!-- Self-mark buttons (hidden until reveal) -->
+      <div class="sp-mark-row" id="sp-mark-row" style="display:none;">
+        <button class="sp-mark-btn mark-got"   data-mark="got">
+          &#10003; Got it
+          <span class="sp-mark-label">Said it correctly</span>
+        </button>
+        <button class="sp-mark-btn mark-close" data-mark="close">
+          ~ Almost
+          <span class="sp-mark-label">Minor errors</span>
+        </button>
+        <button class="sp-mark-btn mark-no"    data-mark="no">
+          &#10007; Need review
+          <span class="sp-mark-label">Missed it</span>
+        </button>
+      </div>
+
+    </div><!-- /practice -->
+
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 3 — RESULTS
+    ════════════════════════════════════════════ -->
+    <div id="sp-results" class="sp-screen">
+      <div class="sp-res-score-box">
+        <div class="sp-res-n" id="sp-res-n"></div>
+        <div>
+          <div class="sp-res-msg" id="sp-res-msg"></div>
+          <div class="sp-res-sub" id="sp-res-sub"></div>
+        </div>
+      </div>
+      <div id="sp-res-body"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+        <button class="btn btn-outline" id="sp-retry-btn" style="cursor:pointer;">&#8635; Same topic again</button>
+        <button class="btn btn-ghost"   id="sp-topics-btn" style="cursor:pointer;">&#8592; Choose topic</button>
+      </div>
+    </div><!-- /results -->
+
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem or want to request a feature? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ══════════════════════════════════════════════
+     PHRASE DATA
+  ══════════════════════════════════════════════ */
+  var TOPICS = [
+    {
+      id: 'family',
+      name: 'My Family',
+      fr: 'Ma famille',
+      icon: '&#129489;',
+      phrases: [
+        { en: "I have a brother and a sister.",
+          fr: "J'ai un frère et une sœur.",
+          note: "frère = brother | sœur = sister (note the œ ligature)" },
+        { en: "My mother is 45 years old.",
+          fr: "Ma mère a quarante-cinq ans.",
+          note: "Use 'avoir' for age in French, never 'être'" },
+        { en: "My father works in an office.",
+          fr: "Mon père travaille dans un bureau.",
+          note: "travailler = to work | bureau = office" },
+        { en: "I get on well with my brother.",
+          fr: "Je m'entends bien avec mon frère.",
+          note: "s'entendre avec = to get on with — this is a reflexive verb" },
+        { en: "My sister is quite tall and has brown hair.",
+          fr: "Ma sœur est assez grande et elle a les cheveux bruns.",
+          note: "les cheveux = hair (plural in French) | brun = dark brown" },
+        { en: "I am an only child — I have no brothers or sisters.",
+          fr: "Je suis fils/fille unique — je n'ai ni frère ni sœur.",
+          note: "fils unique (boy) / fille unique (girl) | ne…ni…ni = neither…nor" },
+        { en: "My parents are very kind and funny.",
+          fr: "Mes parents sont très gentils et drôles.",
+          note: "gentil(s) = kind | drôle(s) = funny" },
+        { en: "My grandmother lives with us.",
+          fr: "Ma grand-mère habite avec nous.",
+          note: "grand-mère = grandmother | habiter = to live" },
+        { en: "I have a dog called Max. He is very energetic.",
+          fr: "J'ai un chien qui s'appelle Max. Il est très énergique.",
+          note: "qui s'appelle = who is called (relative clause + reflexive)" },
+        { en: "My older brother is 17 and he is very sporty.",
+          fr: "Mon frère aîné a dix-sept ans et il est très sportif.",
+          note: "aîné = older (sibling) | sportif = sporty" },
+        { en: "At weekends my whole family has dinner together.",
+          fr: "Le week-end toute ma famille dîne ensemble.",
+          note: "toute = all/whole | dîner = to have dinner | ensemble = together" },
+        { en: "My parents are divorced but I live with my mother.",
+          fr: "Mes parents sont divorcés mais j'habite avec ma mère.",
+          note: "divorcé(s) = divorced — adjective agrees with parents (plural)" }
+      ]
+    },
+    {
+      id: 'home',
+      name: 'My Home',
+      fr: 'Chez moi',
+      icon: '&#127968;',
+      phrases: [
+        { en: "I live in a detached house in a quiet village.",
+          fr: "J'habite dans une maison individuelle dans un village tranquille.",
+          note: "maison individuelle = detached house | tranquille = quiet/peaceful" },
+        { en: "My house has eight rooms.",
+          fr: "Ma maison a huit pièces.",
+          note: "pièce = room (general) | Use 'avoir' not 'être' here" },
+        { en: "In my bedroom there is a bed, a desk and a wardrobe.",
+          fr: "Dans ma chambre il y a un lit, un bureau et une armoire.",
+          note: "chambre = bedroom | lit = bed | bureau = desk | armoire = wardrobe" },
+        { en: "My house is near a forest and a lake.",
+          fr: "Ma maison est près d'une forêt et d'un lac.",
+          note: "près de = near | forêt = forest | lac = lake" },
+        { en: "The kitchen is quite small but the garden is huge.",
+          fr: "La cuisine est assez petite mais le jardin est immense.",
+          note: "cuisine = kitchen | immense = huge/vast" },
+        { en: "I share a bedroom with my younger sister.",
+          fr: "Je partage une chambre avec ma petite sœur.",
+          note: "partager = to share | petite sœur = younger sister" },
+        { en: "My bedroom is upstairs at the end of the corridor.",
+          fr: "Ma chambre est en haut au bout du couloir.",
+          note: "en haut = upstairs | au bout du = at the end of the | couloir = corridor" },
+        { en: "There is a big garden behind the house with a swimming pool.",
+          fr: "Il y a un grand jardin derrière la maison avec une piscine.",
+          note: "derrière = behind | piscine = swimming pool" },
+        { en: "I love my bedroom because it is big and bright.",
+          fr: "J'adore ma chambre parce qu'elle est grande et lumineuse.",
+          note: "lumineux/lumineuse = bright/full of light" },
+        { en: "On the ground floor there is a living room, a kitchen and a dining room.",
+          fr: "Au rez-de-chaussée il y a un salon, une cuisine et une salle à manger.",
+          note: "rez-de-chaussée = ground floor | salon = living room | salle à manger = dining room" },
+        { en: "My town has a sports centre, a cinema and a shopping centre.",
+          fr: "Ma ville a un centre sportif, un cinéma et un centre commercial.",
+          note: "centre sportif = sports centre | centre commercial = shopping centre" },
+        { en: "I would like to have a bigger bedroom.",
+          fr: "Je voudrais avoir une chambre plus grande.",
+          note: "je voudrais = I would like | plus grande = bigger (adjective agrees)" }
+      ]
+    },
+    {
+      id: 'school',
+      name: 'My School',
+      fr: 'Mon école',
+      icon: '&#127979;',
+      phrases: [
+        { en: "My favourite subject is French because it is useful.",
+          fr: "Ma matière préférée est le français parce que c'est utile.",
+          note: "matière préférée = favourite subject | utile = useful" },
+        { en: "I find maths quite difficult but very interesting.",
+          fr: "Je trouve les maths assez difficiles mais très intéressantes.",
+          note: "trouver = to find | difficult(es) agrees with maths (f. plural)" },
+        { en: "School starts at eight thirty and finishes at four o'clock.",
+          fr: "L'école commence à huit heures et demie et finit à seize heures.",
+          note: "et demie = half past | Use 24-hour clock for finit = finishes" },
+        { en: "We have six lessons a day and each lesson is forty minutes long.",
+          fr: "Nous avons six cours par jour et chaque cours dure quarante minutes.",
+          note: "cours = lesson | par jour = per day | durer = to last" },
+        { en: "I don't like PE because it is exhausting.",
+          fr: "Je n'aime pas l'EPS parce que c'est épuisant.",
+          note: "EPS = éducation physique et sportive | épuisant = exhausting" },
+        { en: "My history teacher is very strict but also fair.",
+          fr: "Mon professeur d'histoire est très strict mais aussi juste.",
+          note: "professeur de + subject | juste = fair/just" },
+        { en: "I think science is more interesting than geography.",
+          fr: "Je pense que les sciences sont plus intéressantes que la géographie.",
+          note: "plus…que = more…than | Don't forget 'que' for the comparison" },
+        { en: "I eat lunch in the canteen with my friends.",
+          fr: "Je déjeune à la cantine avec mes amis.",
+          note: "déjeuner = to have lunch | cantine = school canteen" },
+        { en: "Last year I worked very hard and I passed all my exams.",
+          fr: "L'année dernière j'ai travaillé très dur et j'ai réussi tous mes examens.",
+          note: "Passé composé: travailler → travaillé | réussir → réussi | l'année dernière = last year" },
+        { en: "Next term we are going to study the French Revolution.",
+          fr: "Le trimestre prochain nous allons étudier la Révolution française.",
+          note: "trimestre = term | aller + infinitif for near future | étudier = to study" },
+        { en: "I prefer English to history because the teacher explains things clearly.",
+          fr: "Je préfère l'anglais à l'histoire parce que le professeur explique clairement.",
+          note: "préférer X à Y = to prefer X to Y | clairement = clearly" },
+        { en: "I would like to become a doctor, so science is very important for me.",
+          fr: "Je voudrais devenir médecin, donc les sciences sont très importantes pour moi.",
+          note: "devenir médecin = to become a doctor (no article!) | donc = therefore/so" }
+      ]
+    },
+    {
+      id: 'freetime',
+      name: 'Free Time',
+      fr: 'Mon temps libre',
+      icon: '&#9917;',
+      phrases: [
+        { en: "In my free time I play rugby and I also go swimming.",
+          fr: "Dans mon temps libre je joue au rugby et je vais aussi à la piscine.",
+          note: "jouer au + sport | aller à la piscine = to go swimming" },
+        { en: "I really love listening to music — I listen to it every day.",
+          fr: "J'adore vraiment écouter de la musique — je l'écoute tous les jours.",
+          note: "tous les jours = every day | je l'écoute = I listen to it (object pronoun)" },
+        { en: "At weekends I usually go cycling in the countryside.",
+          fr: "Le week-end je fais généralement du vélo à la campagne.",
+          note: "faire du vélo = to go cycling | généralement = usually | campagne = countryside" },
+        { en: "I think football is exciting but I prefer rugby.",
+          fr: "Je pense que le football est passionnant mais je préfère le rugby.",
+          note: "passionnant = exciting/thrilling — great opinion word for speaking exams" },
+        { en: "I play the guitar and I am in a band with my friends.",
+          fr: "Je joue de la guitare et je fais partie d'un groupe avec mes amis.",
+          note: "jouer de la + instrument | faire partie de = to be a member of/be in" },
+        { en: "Last weekend I went to the cinema and watched a great film.",
+          fr: "Le week-end dernier je suis allé(e) au cinéma et j'ai regardé un super film.",
+          note: "aller uses être in passé composé: je suis allé(e) | regarder uses avoir: j'ai regardé" },
+        { en: "I don't often watch TV — I prefer reading.",
+          fr: "Je ne regarde pas souvent la télévision — je préfère lire.",
+          note: "ne…pas wraps the verb | souvent = often | lire = to read" },
+        { en: "My favourite hobby is gaming but my parents think I spend too much time on it.",
+          fr: "Mon passe-temps préféré est les jeux vidéo mais mes parents pensent que je passe trop de temps dessus.",
+          note: "passe-temps = hobby | trop de = too much | dessus = on it" },
+        { en: "Next Saturday I am going to play tennis with my friend.",
+          fr: "Samedi prochain je vais jouer au tennis avec mon ami(e).",
+          note: "Near future: aller + infinitif | jouer au tennis (sport uses au)" },
+        { en: "I go to a drama club on Wednesdays — I find it really fun.",
+          fr: "Je vais à un club de théâtre le mercredi — je trouve ça vraiment amusant.",
+          note: "le mercredi = on Wednesdays (regular habit) | amusant = fun/amusing" },
+        { en: "Last summer I went on holiday to Spain and I swam in the sea every day.",
+          fr: "L'été dernier je suis allé(e) en vacances en Espagne et j'ai nagé dans la mer tous les jours.",
+          note: "en Espagne (feminine country uses en) | nager → nagé | la mer = the sea" },
+        { en: "I would like to try skiing because it looks very exciting.",
+          fr: "Je voudrais essayer le ski parce que ça a l'air très passionnant.",
+          note: "avoir l'air = to look/seem | essayer = to try — great structure for speaking exams" }
+      ]
+    }
+  ];
+
+  /* ══════════════════════════════════════════════
+     STATE
+  ══════════════════════════════════════════════ */
+  var state = {
+    topicIdx:  0,
+    phraseIdx: 0,
+    results:   [],   // { phrase, mark: 'got'|'close'|'no' }
+    revealed:  false
+  };
+
+  /* ══════════════════════════════════════════════
+     ACCENT TOOLBAR
+  ══════════════════════════════════════════════ */
+  var ACCENTS = ['é','è','ê','ë','à','â','ä','ç','ù','û','ü','ô','ö','î','ï','œ'];
+
+  function buildAccentBar() {
+    var bar = document.getElementById('sp-accent-bar');
+    bar.innerHTML = '<span class="sp-accent-label">Accents</span>';
+    ACCENTS.forEach(function(ch) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sp-ab';
+      btn.textContent = ch;
+      btn.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        var inp = document.getElementById('sp-attempt');
+        var s = inp.selectionStart, end = inp.selectionEnd;
+        inp.value = inp.value.substring(0, s) + ch + inp.value.substring(end);
+        inp.selectionStart = inp.selectionEnd = s + 1;
+        inp.focus();
+      });
+      bar.appendChild(btn);
+    });
+  }
+
+  /* ══════════════════════════════════════════════
+     TOPIC PICKER
+  ══════════════════════════════════════════════ */
+  function buildTopicGrid() {
+    var grid = document.getElementById('sp-topic-grid');
+    grid.innerHTML = '';
+    TOPICS.forEach(function(topic, idx) {
+      var card = document.createElement('div');
+      card.className = 'sp-topic-card';
+      card.innerHTML =
+        '<div class="sp-topic-icon">' + topic.icon + '</div>' +
+        '<div class="sp-topic-name">' + topic.name + '</div>' +
+        '<div class="sp-topic-fr">'   + topic.fr   + '</div>' +
+        '<div class="sp-topic-count">' + topic.phrases.length + ' phrases</div>';
+      card.addEventListener('click', function() { startTopic(idx); });
+      grid.appendChild(card);
+    });
+  }
+
+  /* ══════════════════════════════════════════════
+     PRACTICE
+  ══════════════════════════════════════════════ */
+  function startTopic(idx) {
+    state.topicIdx  = idx;
+    state.phraseIdx = 0;
+    state.results   = [];
+    showScreen('sp-practice');
+    buildAccentBar();
+    var topic = TOPICS[idx];
+    document.getElementById('sp-header-title').textContent = topic.name;
+    document.getElementById('sp-header-fr').textContent    = topic.fr;
+    renderPhrase();
+  }
+
+  function renderPhrase() {
+    var topic  = TOPICS[state.topicIdx];
+    var phrase = topic.phrases[state.phraseIdx];
+    state.revealed = false;
+
+    var total = topic.phrases.length;
+    var done  = state.phraseIdx;
+    var pct   = Math.round((done / total) * 100);
+    document.getElementById('sp-prog-label').textContent = (done + 1) + ' of ' + total;
+    document.getElementById('sp-prog-pct').textContent   = pct + '%';
+    document.getElementById('sp-prog-fill').style.width  = pct + '%';
+
+    updateScoreBadges();
+
+    document.getElementById('sp-card-en').textContent    = phrase.en;
+    document.getElementById('sp-attempt').value          = '';
+    document.getElementById('sp-answer-fr').textContent  = phrase.fr;
+    document.getElementById('sp-answer-note').textContent = phrase.note || '';
+
+    document.getElementById('sp-answer-panel').classList.remove('visible');
+    document.getElementById('sp-mark-row').style.display = 'none';
+    document.getElementById('sp-reveal-btn').style.display = 'inline-block';
+    document.getElementById('sp-attempt').disabled = false;
+
+    setTimeout(function(){ document.getElementById('sp-attempt').focus(); }, 50);
+  }
+
+  function revealAnswer() {
+    if (state.revealed) return;
+    state.revealed = true;
+    document.getElementById('sp-answer-panel').classList.add('visible');
+    document.getElementById('sp-mark-row').style.display = 'flex';
+    document.getElementById('sp-reveal-btn').style.display = 'none';
+    document.getElementById('sp-attempt').disabled = true;
+  }
+
+  function markPhrase(mark) {
+    var topic  = TOPICS[state.topicIdx];
+    var phrase = topic.phrases[state.phraseIdx];
+    state.results.push({ phrase: phrase, mark: mark });
+
+    updateScoreBadges();
+
+    state.phraseIdx++;
+    if (state.phraseIdx < topic.phrases.length) {
+      renderPhrase();
+    } else {
+      showResults();
+    }
+  }
+
+  function updateScoreBadges() {
+    var got   = state.results.filter(function(r){ return r.mark === 'got';   }).length;
+    var close = state.results.filter(function(r){ return r.mark === 'close'; }).length;
+    var no    = state.results.filter(function(r){ return r.mark === 'no';    }).length;
+    document.getElementById('sp-count-got').textContent = got;
+    document.getElementById('sp-count-meh').textContent = close;
+    document.getElementById('sp-count-no').textContent  = no;
+  }
+
+  /* ══════════════════════════════════════════════
+     RESULTS
+  ══════════════════════════════════════════════ */
+  function showResults() {
+    showScreen('sp-results');
+    var total = state.results.length;
+    var got   = state.results.filter(function(r){ return r.mark === 'got';   }).length;
+    var close = state.results.filter(function(r){ return r.mark === 'close'; }).length;
+    var no    = state.results.filter(function(r){ return r.mark === 'no';    }).length;
+
+    var pct = Math.round((got / total) * 100);
+    var scoreEl = document.getElementById('sp-res-n');
+    scoreEl.textContent = pct + '%';
+    scoreEl.style.color = pct >= 80 ? '#16a34a' : pct >= 60 ? '#d97706' : '#dc2626';
+
+    var msgs = [
+      ['Parfait!',    'Outstanding — you know this topic inside out!'],
+      ['Très bien!',  'Really solid work. A bit more practice on the ones you missed.'],
+      ['Bien fait!',  'Good effort. Focus on your review list before the exam.'],
+      ['Keep going!', 'This topic needs more work — use the phrases below to practise.']
+    ];
+    var tier = pct >= 90 ? 0 : pct >= 70 ? 1 : pct >= 50 ? 2 : 3;
+    document.getElementById('sp-res-msg').textContent = msgs[tier][0];
+    document.getElementById('sp-res-sub').textContent = got + ' confident, ' + close + ' almost, ' + no + ' to review — ' + msgs[tier][1];
+
+    var body = document.getElementById('sp-res-body');
+    body.innerHTML = '';
+
+    function makeSection(title, cls, items) {
+      if (!items.length) return;
+      var sec = document.createElement('div');
+      sec.className = 'sp-res-section';
+      var t = document.createElement('div');
+      t.className = 'sp-res-section-title ' + cls;
+      t.textContent = title + ' (' + items.length + ')';
+      sec.appendChild(t);
+      var cards = document.createElement('div');
+      cards.className = 'sp-res-cards';
+      items.forEach(function(r) {
+        var c = document.createElement('div');
+        c.className = 'sp-res-card';
+        c.innerHTML = '<div class="rc-en">' + r.phrase.en + '</div>' +
+                      '<div class="rc-fr">' + r.phrase.fr + '</div>';
+        cards.appendChild(c);
+      });
+      sec.appendChild(cards);
+      body.appendChild(sec);
+    }
+
+    makeSection('&#10003; Got it', 'ok',
+      state.results.filter(function(r){ return r.mark === 'got'; }));
+    makeSection('~ Almost there', 'meh',
+      state.results.filter(function(r){ return r.mark === 'close'; }));
+    makeSection('&#10007; Need more practice', 'no',
+      state.results.filter(function(r){ return r.mark === 'no'; }));
+  }
+
+  /* ══════════════════════════════════════════════
+     SCREEN SWITCHING
+  ══════════════════════════════════════════════ */
+  function showScreen(id) {
+    document.querySelectorAll('.sp-screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  /* ══════════════════════════════════════════════
+     WIRE UP
+  ══════════════════════════════════════════════ */
+  document.getElementById('sp-back-btn').addEventListener('click', function() {
+    showScreen('sp-pick');
+  });
+  document.getElementById('sp-reveal-btn').addEventListener('click', revealAnswer);
+
+  document.querySelectorAll('[data-mark]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      markPhrase(btn.dataset.mark);
+    });
+  });
+
+  document.getElementById('sp-retry-btn').addEventListener('click', function() {
+    startTopic(state.topicIdx);
+  });
+  document.getElementById('sp-topics-btn').addEventListener('click', function() {
+    showScreen('sp-pick');
+  });
+
+  // Allow Enter in textarea to reveal (Shift+Enter = new line)
+  document.getElementById('sp-attempt').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (!state.revealed) revealAnswer();
+    }
+  });
+
+  /* ══════════════════════════════════════════════
+     INIT
+  ══════════════════════════════════════════════ */
+  buildTopicGrid();
+  buildAccentBar();
+
+})();
+</script>
+
+</body>
+</html>
