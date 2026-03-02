@@ -1,0 +1,159 @@
+{
+  "id": "personal-information",
+  "title": "Personal Information",
+  "topic": "personal-information",
+  "columns": [
+    {
+      "id": 1,
+      "header": "Subject",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "Je m'appelle", "en": "I am called"},
+        {"fr": "Mon frère s'appelle", "en": "My brother is called"},
+        {"fr": "Ma sœur s'appelle", "en": "My sister is called"},
+        {"fr": "Mon père s'appelle", "en": "My father is called"},
+        {"fr": "Ma mère s'appelle", "en": "My mother is called"}
+      ]
+    },
+    {
+      "id": 2,
+      "header": "Name + age",
+      "complexity": "simple",
+      "optional": false,
+      "items": [
+        {"fr": "Luc et j'ai douze ans", "en": "Luc and I am twelve"},
+        {"fr": "Marc et j'ai treize ans", "en": "Marc and I am thirteen"},
+        {"fr": "Sophie et j'ai onze ans", "en": "Sophie and I am eleven"},
+        {"fr": "Isabelle et j'ai quatorze ans", "en": "Isabelle and I am fourteen"},
+        {"fr": "Pierre et il a dix ans", "en": "Pierre and he is ten"},
+        {"fr": "Marie et elle a quinze ans", "en": "Marie and she is fifteen"},
+        {"fr": "Corinne et elle a seize ans", "en": "Corinne and she is sixteen"}
+      ]
+    },
+    {
+      "id": 3,
+      "header": "Origin",
+      "complexity": "simple",
+      "optional": true,
+      "items": [
+        {"fr": "Je suis de Paris", "en": "I am from Paris"},
+        {"fr": "Je suis de Londres", "en": "I am from London"},
+        {"fr": "Je suis d'Édimbourg", "en": "I am from Edinburgh"},
+        {"fr": "Je suis de Bordeaux", "en": "I am from Bordeaux"},
+        {"fr": "Je suis de Marseille", "en": "I am from Marseille"},
+        {"fr": "Il est de Toulouse", "en": "He is from Toulouse"},
+        {"fr": "Elle est de Biarritz", "en": "She is from Biarritz"}
+      ]
+    },
+    {
+      "id": 4,
+      "header": "Where I live",
+      "complexity": "medium",
+      "optional": true,
+      "items": [
+        {"fr": "J'habite dans une petite maison", "en": "I live in a small house"},
+        {"fr": "J'habite dans un grand appartement", "en": "I live in a big flat"},
+        {"fr": "J'habite dans une jolie maison", "en": "I live in a pretty house"},
+        {"fr": "J'habite dans le centre", "en": "I live in the centre"},
+        {"fr": "J'habite à la campagne", "en": "I live in the countryside"},
+        {"fr": "Il habite dans la banlieue", "en": "He lives in the suburbs"},
+        {"fr": "Elle habite sur la côte", "en": "She lives on the coast"}
+      ]
+    },
+    {
+      "id": 5,
+      "header": "Appearance",
+      "complexity": "medium",
+      "optional": false,
+      "items": [
+        {"fr": "J'ai les cheveux blonds et courts", "en": "I have short blond hair"},
+        {"fr": "J'ai les cheveux bruns et longs", "en": "I have long dark brown hair"},
+        {"fr": "J'ai les cheveux noirs et raides", "en": "I have straight black hair"},
+        {"fr": "J'ai les cheveux roux et bouclés", "en": "I have curly red hair"},
+        {"fr": "J'ai les cheveux châtains et mi-longs", "en": "I have medium-length brown hair"},
+        {"fr": "Il a les cheveux blonds et en épis", "en": "He has spiky blond hair"},
+        {"fr": "Elle a les cheveux noirs et ondulés", "en": "She has wavy black hair"}
+      ]
+    },
+    {
+      "id": 6,
+      "header": "Eyes",
+      "complexity": "medium",
+      "optional": true,
+      "items": [
+        {"fr": "et les yeux bleus", "en": "and blue eyes"},
+        {"fr": "et les yeux verts", "en": "and green eyes"},
+        {"fr": "et les yeux marron", "en": "and brown eyes"},
+        {"fr": "et les yeux noirs", "en": "and black eyes"}
+      ]
+    },
+    {
+      "id": 7,
+      "header": "Personality",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "Je suis grand et amusant", "en": "I am tall and fun"},
+        {"fr": "Je suis petite et sympa", "en": "I am short and nice"},
+        {"fr": "Je suis timide mais généreux", "en": "I am shy but generous"},
+        {"fr": "Je suis bavarde et intelligente", "en": "I am talkative and intelligent"},
+        {"fr": "Il est grand et très sportif", "en": "He is tall and very sporty"},
+        {"fr": "Elle est petite et assez timide", "en": "She is short and quite shy"},
+        {"fr": "Il est amusant mais un peu têtu", "en": "He is fun but a bit stubborn"},
+        {"fr": "Elle est généreuse et très sympa", "en": "She is generous and very nice"}
+      ]
+    },
+    {
+      "id": 8,
+      "header": "Family opinion",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "Je m'entends bien avec mon père parce qu'il est sympa", "en": "I get on well with my father because he is nice"},
+        {"fr": "Je m'entends bien avec ma sœur parce qu'elle est amusante", "en": "I get on well with my sister because she is fun"},
+        {"fr": "Je m'entends mal avec mon frère parce qu'il est têtu", "en": "I get on badly with my brother because he is stubborn"},
+        {"fr": "Je m'entends bien avec ma mère car elle est patiente", "en": "I get on well with my mother as she is patient"},
+        {"fr": "Je ne m'entends pas bien avec ma tante car elle est ennuyeuse", "en": "I don't get on well with my aunt as she is boring"},
+        {"fr": "Dans ma famille il y a cinq personnes", "en": "In my family there are five people"},
+        {"fr": "Dans ma famille il y a quatre personnes", "en": "In my family there are four people"}
+      ]
+    },
+    {
+      "id": 9,
+      "header": "Birthday",
+      "complexity": "advanced",
+      "optional": true,
+      "items": [
+        {"fr": "Mon anniversaire est le quinze janvier", "en": "My birthday is the fifteenth of January"},
+        {"fr": "Mon anniversaire est le premier mars", "en": "My birthday is the first of March"},
+        {"fr": "Mon anniversaire est le vingt juin", "en": "My birthday is the twentieth of June"},
+        {"fr": "Mon anniversaire est le trois septembre", "en": "My birthday is the third of September"},
+        {"fr": "Son anniversaire est le douze avril", "en": "His/Her birthday is the twelfth of April"},
+        {"fr": "Son anniversaire est le vingt-cinq décembre", "en": "His/Her birthday is the twenty-fifth of December"}
+      ]
+    }
+  ],
+  "rules": {
+    "difficulty": {
+      "1-star": {
+        "minColumns": 2,
+        "maxColumns": 3,
+        "excludeComplexity": ["advanced"],
+        "optionalColumnsMax": 0
+      },
+      "2-star": {
+        "minColumns": 3,
+        "maxColumns": 5,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 1
+      },
+      "3-star": {
+        "minColumns": 4,
+        "maxColumns": 7,
+        "excludeComplexity": [],
+        "optionalColumnsMax": 3
+      }
+    }
+  }
+}
