@@ -20,6 +20,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Vocab quiz: dynamically load vocab-quiz.js on pages with vocab tables
+  if (document.querySelectorAll('.vocab-table').length > 0) {
+    var vqs = document.createElement('script');
+    vqs.src = (window.location.pathname.indexOf('/topics/') !== -1 ? '../' : '') + 'js/vocab-quiz.js';
+    document.head.appendChild(vqs);
+  }
+
   // Inline PDF viewer for sentence builder links
   // Intercepts .resource-link clicks, extracts Drive file ID, embeds preview iframe
   var resourceLinks = document.querySelectorAll('.resource-link');

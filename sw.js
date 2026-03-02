@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ce-french-v1';
+const CACHE_NAME = 'ce-french-v3';
 
 const PRECACHE_URLS = [
   '/y8-french-revision/',
@@ -11,6 +11,9 @@ const PRECACHE_URLS = [
   '/y8-french-revision/past-papers.html',
   '/y8-french-revision/speaking-prep.html',
   '/y8-french-revision/spelling-test.html',
+  '/y8-french-revision/vocab-challenge.html',
+  '/y8-french-revision/js/nav.js',
+  '/y8-french-revision/js/vocab-quiz.js',
   '/y8-french-revision/js/sentence-generator.js',
   '/y8-french-revision/js/ui-controller.js',
   '/y8-french-revision/icons/icon.svg',
@@ -57,7 +60,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+      Promise.all(keys.filter(k => k.startsWith('ce-french-') && k !== CACHE_NAME).map(k => caches.delete(k)))
     )
   );
   self.clients.claim();
