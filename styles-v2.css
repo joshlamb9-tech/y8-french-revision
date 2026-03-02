@@ -1165,10 +1165,30 @@ footer .report-problem a:hover { color: var(--text); }
 }
 
 /* ─── VOCAB QUIZ ─── */
+.vq-table-wrap { position: relative; }
+
 .vocab-table.quiz-active {
-  opacity: 0.25;
+  opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s;
+}
+
+.vq-table-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--white);
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.vq-overlay-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
 }
 
 .vq-btn {

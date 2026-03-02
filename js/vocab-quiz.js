@@ -377,12 +377,22 @@
       if (pairs.length < 2) return;
       var heading = getSectionHeading(table);
 
+      // Wrap table so we can position an overlay on top of it
+      var wrap = el('div', 'vq-table-wrap');
+      table.parentNode.insertBefore(wrap, table);
+      wrap.appendChild(table);
+
       var triggerBtn = el('button', 'vq-btn', 'Test on this area &#9654;');
-      table.parentNode.insertBefore(triggerBtn, table.nextSibling);
+      wrap.parentNode.insertBefore(triggerBtn, wrap.nextSibling);
 
       triggerBtn.addEventListener('click', function () {
         triggerBtn.style.display = 'none';
         table.classList.add('quiz-active');
+
+        // Cover the table with an overlay pane
+        var overlay = el('div', 'vq-table-overlay',
+          '<span class="vq-overlay-label">\uD83D\uDCDD Quiz in progress</span>');
+        wrap.appendChild(overlay);
 
         // Build panel
         var panel = el('div', 'vq-panel');
@@ -394,8 +404,8 @@
         panel.appendChild(header);
         var card = el('div', 'vq-card');
         panel.appendChild(card);
-        // Insert panel between table and (hidden) button
-        table.parentNode.insertBefore(panel, triggerBtn);
+        // Insert panel between wrap and (hidden) button
+        wrap.parentNode.insertBefore(panel, triggerBtn);
 
         // Build question queue
         var quizCount = Math.min(8, Math.max(4, pairs.length));
@@ -412,6 +422,7 @@
           if (idx >= quizCount) {
             var finBtn = showResults(panel, results);
             finBtn.addEventListener('click', function () {
+              overlay.remove();
               panel.remove();
               table.classList.remove('quiz-active');
               triggerBtn.style.display = '';
