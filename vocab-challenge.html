@@ -332,7 +332,7 @@
           <button class="vc-mode-btn" id="btn-unsupported">&#9998; Without support</button>
         </div>
         <div class="vc-mode-note" id="mode-note">
-          <strong>With support:</strong> A word bank showing all valid answers will be visible. You still have to choose the right words and spell them correctly.
+          <strong>With support:</strong> 8 English hints will be shown. You need to write the correct French word for each &mdash; choose from the hints and spell carefully.
         </div>
 
         <h2 style="margin-bottom:8px;">Choose a Category</h2>
@@ -356,7 +356,7 @@
 
         <!-- Word bank (shown in supported mode only) -->
         <div id="vc-bank-wrap" style="display:none;">
-          <div class="vc-bank-label">Word Bank</div>
+          <div class="vc-bank-label">English Hints</div>
           <div class="vc-word-bank" id="vc-word-bank"></div>
         </div>
 
@@ -413,30 +413,30 @@
         prompt: 'Name 6 places you might find in a French town.',
         emoji: '\uD83C\uDFD9\uFE0F',
         words: [
-          { fr: 'la mairie' },
-          { fr: 'la biblioth\u00e8que' },
-          { fr: "l'\u00e9glise" },
-          { fr: 'le cin\u00e9ma' },
-          { fr: 'le march\u00e9' },
-          { fr: 'la piscine' },
-          { fr: 'la gare' },
-          { fr: 'le supermarch\u00e9' },
-          { fr: 'le parc' },
-          { fr: 'le mus\u00e9e' },
-          { fr: 'la poste' },
-          { fr: "l'h\u00f4pital" },
-          { fr: 'le stade' },
-          { fr: 'le ch\u00e2teau' },
-          { fr: 'la pharmacie' },
-          { fr: 'la boulangerie' },
-          { fr: 'la boucherie' },
-          { fr: 'le caf\u00e9' },
-          { fr: 'le restaurant' },
-          { fr: "l'h\u00f4tel" },
-          { fr: 'la banque' },
-          { fr: 'le magasin' },
-          { fr: 'le centre-ville' },
-          { fr: 'le centre sportif' }
+          { fr: 'la mairie', en: 'town hall' },
+          { fr: 'la biblioth\u00e8que', en: 'library' },
+          { fr: "l'\u00e9glise", en: 'church' },
+          { fr: 'le cin\u00e9ma', en: 'cinema' },
+          { fr: 'le march\u00e9', en: 'market' },
+          { fr: 'la piscine', en: 'swimming pool' },
+          { fr: 'la gare', en: 'train station' },
+          { fr: 'le supermarch\u00e9', en: 'supermarket' },
+          { fr: 'le parc', en: 'park' },
+          { fr: 'le mus\u00e9e', en: 'museum' },
+          { fr: 'la poste', en: 'post office' },
+          { fr: "l'h\u00f4pital", en: 'hospital' },
+          { fr: 'le stade', en: 'stadium' },
+          { fr: 'le ch\u00e2teau', en: 'castle' },
+          { fr: 'la pharmacie', en: 'pharmacy' },
+          { fr: 'la boulangerie', en: 'bakery' },
+          { fr: 'la boucherie', en: "butcher's" },
+          { fr: 'le caf\u00e9', en: 'café' },
+          { fr: 'le restaurant', en: 'restaurant' },
+          { fr: "l'h\u00f4tel", en: 'hotel' },
+          { fr: 'la banque', en: 'bank' },
+          { fr: 'le magasin', en: 'shop' },
+          { fr: 'le centre-ville', en: 'town centre' },
+          { fr: 'le centre sportif', en: 'sports centre' }
         ]
       },
       {
@@ -445,26 +445,26 @@
         prompt: 'Name 6 things you could buy at a French market.',
         emoji: '\uD83D\uDED2',
         words: [
-          { fr: 'des pommes' },
-          { fr: 'des fraises' },
-          { fr: 'des tomates' },
-          { fr: 'des carottes' },
-          { fr: 'des pommes de terre' },
-          { fr: 'du fromage' },
-          { fr: 'du pain' },
-          { fr: 'des l\u00e9gumes' },
-          { fr: 'des fruits' },
-          { fr: 'de la viande' },
-          { fr: 'du poulet' },
-          { fr: 'du poisson' },
-          { fr: 'des olives' },
-          { fr: 'du miel' },
-          { fr: 'des fleurs' },
-          { fr: 'des oignons' },
-          { fr: 'du beurre' },
-          { fr: 'de l\'ail' },
-          { fr: 'des champignons' },
-          { fr: 'des cerises' }
+          { fr: 'des pommes', en: 'apples' },
+          { fr: 'des fraises', en: 'strawberries' },
+          { fr: 'des tomates', en: 'tomatoes' },
+          { fr: 'des carottes', en: 'carrots' },
+          { fr: 'des pommes de terre', en: 'potatoes' },
+          { fr: 'du fromage', en: 'cheese' },
+          { fr: 'du pain', en: 'bread' },
+          { fr: 'des l\u00e9gumes', en: 'vegetables' },
+          { fr: 'des fruits', en: 'fruit' },
+          { fr: 'de la viande', en: 'meat' },
+          { fr: 'du poulet', en: 'chicken' },
+          { fr: 'du poisson', en: 'fish' },
+          { fr: 'des olives', en: 'olives' },
+          { fr: 'du miel', en: 'honey' },
+          { fr: 'des fleurs', en: 'flowers' },
+          { fr: 'des oignons', en: 'onions' },
+          { fr: 'du beurre', en: 'butter' },
+          { fr: "de l'ail", en: 'garlic' },
+          { fr: 'des champignons', en: 'mushrooms' },
+          { fr: 'des cerises', en: 'cherries' }
         ]
       },
       {
@@ -473,26 +473,26 @@
         prompt: 'Name 6 animals in French.',
         emoji: '\uD83D\uDC3E',
         words: [
-          { fr: 'un chien' },
-          { fr: 'un chat' },
-          { fr: 'un cheval' },
-          { fr: 'un lapin' },
-          { fr: 'un cochon d\'Inde' },
-          { fr: 'un hamster' },
-          { fr: 'un oiseau' },
-          { fr: 'un poisson' },
-          { fr: 'une vache' },
-          { fr: 'un mouton' },
-          { fr: 'une ch\u00e8vre' },
-          { fr: 'un cochon' },
-          { fr: 'un serpent' },
-          { fr: 'une tortue' },
-          { fr: 'une souris' },
-          { fr: 'un lion' },
-          { fr: 'un \u00e9l\u00e9phant' },
-          { fr: 'un singe' },
-          { fr: 'une girafe' },
-          { fr: 'un tigre' }
+          { fr: 'un chien', en: 'dog' },
+          { fr: 'un chat', en: 'cat' },
+          { fr: 'un cheval', en: 'horse' },
+          { fr: 'un lapin', en: 'rabbit' },
+          { fr: "un cochon d'Inde", en: 'guinea pig' },
+          { fr: 'un hamster', en: 'hamster' },
+          { fr: 'un oiseau', en: 'bird' },
+          { fr: 'un poisson', en: 'fish' },
+          { fr: 'une vache', en: 'cow' },
+          { fr: 'un mouton', en: 'sheep' },
+          { fr: 'une ch\u00e8vre', en: 'goat' },
+          { fr: 'un cochon', en: 'pig' },
+          { fr: 'un serpent', en: 'snake' },
+          { fr: 'une tortue', en: 'tortoise' },
+          { fr: 'une souris', en: 'mouse' },
+          { fr: 'un lion', en: 'lion' },
+          { fr: 'un \u00e9l\u00e9phant', en: 'elephant' },
+          { fr: 'un singe', en: 'monkey' },
+          { fr: 'une girafe', en: 'giraffe' },
+          { fr: 'un tigre', en: 'tiger' }
         ]
       },
       {
@@ -501,24 +501,24 @@
         prompt: 'Name 6 presents someone might give or receive.',
         emoji: '\uD83C\uDF81',
         words: [
-          { fr: 'un livre' },
-          { fr: 'un jeu vid\u00e9o' },
-          { fr: 'un v\u00e9lo' },
-          { fr: 'des bonbons' },
-          { fr: 'un parfum' },
-          { fr: 'des fleurs' },
-          { fr: 'une montre' },
-          { fr: 'un portable' },
-          { fr: 'un sac' },
-          { fr: 'des chaussures' },
-          { fr: 'de l\'argent' },
-          { fr: 'une carte' },
-          { fr: 'un bracelet' },
-          { fr: 'des chocolats' },
-          { fr: 'un appareil photo' },
-          { fr: 'des v\u00eatements' },
-          { fr: 'un collier' },
-          { fr: 'une peluche' }
+          { fr: 'un livre', en: 'book' },
+          { fr: 'un jeu vid\u00e9o', en: 'video game' },
+          { fr: 'un v\u00e9lo', en: 'bicycle' },
+          { fr: 'des bonbons', en: 'sweets' },
+          { fr: 'un parfum', en: 'perfume' },
+          { fr: 'des fleurs', en: 'flowers' },
+          { fr: 'une montre', en: 'watch' },
+          { fr: 'un portable', en: 'mobile phone' },
+          { fr: 'un sac', en: 'bag' },
+          { fr: 'des chaussures', en: 'shoes' },
+          { fr: "de l'argent", en: 'money' },
+          { fr: 'une carte', en: 'card' },
+          { fr: 'un bracelet', en: 'bracelet' },
+          { fr: 'des chocolats', en: 'chocolates' },
+          { fr: 'un appareil photo', en: 'camera' },
+          { fr: 'des v\u00eatements', en: 'clothes' },
+          { fr: 'un collier', en: 'necklace' },
+          { fr: 'une peluche', en: 'soft toy' }
         ]
       },
       {
@@ -527,26 +527,26 @@
         prompt: 'Name 6 items of clothing in French.',
         emoji: '\uD83D\uDC55',
         words: [
-          { fr: 'un pantalon' },
-          { fr: 'un jean' },
-          { fr: 'une jupe' },
-          { fr: 'une robe' },
-          { fr: 'un t-shirt' },
-          { fr: 'un pull' },
-          { fr: 'une veste' },
-          { fr: 'un manteau' },
-          { fr: 'des chaussures' },
-          { fr: 'des chaussettes' },
-          { fr: 'un chapeau' },
-          { fr: 'une cravate' },
-          { fr: 'un short' },
-          { fr: 'une chemise' },
-          { fr: 'un sweat' },
-          { fr: 'des baskets' },
-          { fr: 'une \u00e9charpe' },
-          { fr: 'des gants' },
-          { fr: 'un imperméable' },
-          { fr: 'un pyjama' }
+          { fr: 'un pantalon', en: 'trousers' },
+          { fr: 'un jean', en: 'jeans' },
+          { fr: 'une jupe', en: 'skirt' },
+          { fr: 'une robe', en: 'dress' },
+          { fr: 'un t-shirt', en: 't-shirt' },
+          { fr: 'un pull', en: 'jumper' },
+          { fr: 'une veste', en: 'jacket' },
+          { fr: 'un manteau', en: 'coat' },
+          { fr: 'des chaussures', en: 'shoes' },
+          { fr: 'des chaussettes', en: 'socks' },
+          { fr: 'un chapeau', en: 'hat' },
+          { fr: 'une cravate', en: 'tie' },
+          { fr: 'un short', en: 'shorts' },
+          { fr: 'une chemise', en: 'shirt' },
+          { fr: 'un sweat', en: 'sweatshirt' },
+          { fr: 'des baskets', en: 'trainers' },
+          { fr: 'une \u00e9charpe', en: 'scarf' },
+          { fr: 'des gants', en: 'gloves' },
+          { fr: 'un imperméable', en: 'raincoat' },
+          { fr: 'un pyjama', en: 'pyjamas' }
         ]
       },
       {
@@ -555,23 +555,23 @@
         prompt: 'Name 6 school subjects in French.',
         emoji: '\uD83D\uDCDA',
         words: [
-          { fr: 'le fran\u00e7ais' },
-          { fr: "l'anglais" },
-          { fr: 'les maths' },
-          { fr: 'les sciences' },
-          { fr: "l'histoire" },
-          { fr: 'la g\u00e9ographie' },
-          { fr: "l'informatique" },
-          { fr: 'la musique' },
-          { fr: "l'EPS" },
-          { fr: 'le dessin' },
-          { fr: 'la technologie' },
-          { fr: 'le latin' },
-          { fr: "l'allemand" },
-          { fr: "l'espagnol" },
-          { fr: 'le th\u00e9\u00e2tre' },
-          { fr: 'la religion' },
-          { fr: 'la biologie' }
+          { fr: 'le fran\u00e7ais', en: 'French' },
+          { fr: "l'anglais", en: 'English' },
+          { fr: 'les maths', en: 'maths' },
+          { fr: 'les sciences', en: 'science' },
+          { fr: "l'histoire", en: 'history' },
+          { fr: 'la g\u00e9ographie', en: 'geography' },
+          { fr: "l'informatique", en: 'computing' },
+          { fr: 'la musique', en: 'music' },
+          { fr: "l'EPS", en: 'PE' },
+          { fr: 'le dessin', en: 'art' },
+          { fr: 'la technologie', en: 'technology' },
+          { fr: 'le latin', en: 'Latin' },
+          { fr: "l'allemand", en: 'German' },
+          { fr: "l'espagnol", en: 'Spanish' },
+          { fr: 'le th\u00e9\u00e2tre', en: 'drama' },
+          { fr: 'la religion', en: 'religion' },
+          { fr: 'la biologie', en: 'biology' }
         ]
       },
       {
@@ -580,25 +580,25 @@
         prompt: 'Name 6 sports or hobbies in French.',
         emoji: '\u26BD',
         words: [
-          { fr: 'le football' },
-          { fr: 'le rugby' },
-          { fr: 'le tennis' },
-          { fr: 'la natation' },
-          { fr: 'le cyclisme' },
-          { fr: 'la lecture' },
-          { fr: 'la musique' },
-          { fr: 'le dessin' },
-          { fr: 'la danse' },
-          { fr: 'les jeux vid\u00e9o' },
-          { fr: 'la t\u00e9l\u00e9vision' },
-          { fr: 'la cuisine' },
-          { fr: 'la randonn\u00e9e' },
-          { fr: "l'\u00e9quitation" },
-          { fr: 'le ski' },
-          { fr: 'le basket' },
-          { fr: 'le shopping' },
-          { fr: 'la gymnastique' },
-          { fr: 'le v\u00e9lo' }
+          { fr: 'le football', en: 'football' },
+          { fr: 'le rugby', en: 'rugby' },
+          { fr: 'le tennis', en: 'tennis' },
+          { fr: 'la natation', en: 'swimming' },
+          { fr: 'le cyclisme', en: 'cycling' },
+          { fr: 'la lecture', en: 'reading' },
+          { fr: 'la musique', en: 'music' },
+          { fr: 'le dessin', en: 'drawing' },
+          { fr: 'la danse', en: 'dancing' },
+          { fr: 'les jeux vid\u00e9o', en: 'video games' },
+          { fr: 'la t\u00e9l\u00e9vision', en: 'television' },
+          { fr: 'la cuisine', en: 'cooking' },
+          { fr: 'la randonn\u00e9e', en: 'hiking' },
+          { fr: "l'\u00e9quitation", en: 'horse riding' },
+          { fr: 'le ski', en: 'skiing' },
+          { fr: 'le basket', en: 'basketball' },
+          { fr: 'le shopping', en: 'shopping' },
+          { fr: 'la gymnastique', en: 'gymnastics' },
+          { fr: 'le v\u00e9lo', en: 'cycling' }
         ]
       },
       {
@@ -607,20 +607,19 @@
         prompt: 'Name 6 types of transport in French.',
         emoji: '\uD83D\uDE82',
         words: [
-          { fr: 'le train' },
-          { fr: 'le bus' },
-          { fr: 'la voiture' },
-          { fr: "l'avion" },
-          { fr: 'le bateau' },
-          { fr: 'le v\u00e9lo' },
-          { fr: 'le m\u00e9tro' },
-          { fr: 'le taxi' },
-          { fr: 'le tramway' },
-          { fr: 'la moto' },
-          { fr: 'le car' },
-          { fr: "l'autobus" },
-          { fr: "l'h\u00e9licopt\u00e8re" },
-          { fr: 'le bateau' }
+          { fr: 'le train', en: 'train' },
+          { fr: 'le bus', en: 'bus' },
+          { fr: 'la voiture', en: 'car' },
+          { fr: "l'avion", en: 'plane' },
+          { fr: 'le bateau', en: 'boat' },
+          { fr: 'le v\u00e9lo', en: 'bicycle' },
+          { fr: 'le m\u00e9tro', en: 'underground' },
+          { fr: 'le taxi', en: 'taxi' },
+          { fr: 'le tramway', en: 'tram' },
+          { fr: 'la moto', en: 'motorbike' },
+          { fr: 'le car', en: 'coach' },
+          { fr: "l'autobus", en: 'bus' },
+          { fr: "l'h\u00e9licopt\u00e8re", en: 'helicopter' }
         ]
       },
       {
@@ -629,29 +628,29 @@
         prompt: 'Name 6 foods or drinks in French.',
         emoji: '\uD83C\uDF54',
         words: [
-          { fr: 'le pain' },
-          { fr: 'le fromage' },
-          { fr: 'le beurre' },
-          { fr: 'la viande' },
-          { fr: 'le poulet' },
-          { fr: 'le poisson' },
-          { fr: 'les l\u00e9gumes' },
-          { fr: 'les fruits' },
-          { fr: 'la pomme' },
-          { fr: 'la fraise' },
-          { fr: 'la tomate' },
-          { fr: 'la carotte' },
-          { fr: 'le riz' },
-          { fr: 'les p\u00e2tes' },
-          { fr: 'la glace' },
-          { fr: 'le g\u00e2teau' },
-          { fr: 'le chocolat' },
-          { fr: 'le lait' },
-          { fr: 'le caf\u00e9' },
-          { fr: 'le th\u00e9' },
-          { fr: "l'eau" },
-          { fr: 'la limonade' },
-          { fr: 'le jus d\'orange' }
+          { fr: 'le pain', en: 'bread' },
+          { fr: 'le fromage', en: 'cheese' },
+          { fr: 'le beurre', en: 'butter' },
+          { fr: 'la viande', en: 'meat' },
+          { fr: 'le poulet', en: 'chicken' },
+          { fr: 'le poisson', en: 'fish' },
+          { fr: 'les l\u00e9gumes', en: 'vegetables' },
+          { fr: 'les fruits', en: 'fruit' },
+          { fr: 'la pomme', en: 'apple' },
+          { fr: 'la fraise', en: 'strawberry' },
+          { fr: 'la tomate', en: 'tomato' },
+          { fr: 'la carotte', en: 'carrot' },
+          { fr: 'le riz', en: 'rice' },
+          { fr: 'les p\u00e2tes', en: 'pasta' },
+          { fr: 'la glace', en: 'ice cream' },
+          { fr: 'le g\u00e2teau', en: 'cake' },
+          { fr: 'le chocolat', en: 'chocolate' },
+          { fr: 'le lait', en: 'milk' },
+          { fr: 'le caf\u00e9', en: 'coffee' },
+          { fr: 'le th\u00e9', en: 'tea' },
+          { fr: "l'eau", en: 'water' },
+          { fr: 'la limonade', en: 'lemonade' },
+          { fr: "le jus d'orange", en: 'orange juice' }
         ]
       },
       {
@@ -660,22 +659,22 @@
         prompt: 'Name 6 family members in French.',
         emoji: '\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67',
         words: [
-          { fr: 'le p\u00e8re' },
-          { fr: 'la m\u00e8re' },
-          { fr: 'le fr\u00e8re' },
-          { fr: 'la s\u0153ur' },
-          { fr: 'le grand-p\u00e8re' },
-          { fr: 'la grand-m\u00e8re' },
-          { fr: "l'oncle" },
-          { fr: 'la tante' },
-          { fr: 'le cousin' },
-          { fr: 'la cousine' },
-          { fr: 'le fils' },
-          { fr: 'la fille' },
-          { fr: 'le mari' },
-          { fr: 'la femme' },
-          { fr: 'les parents' },
-          { fr: 'les enfants' }
+          { fr: 'le p\u00e8re', en: 'father' },
+          { fr: 'la m\u00e8re', en: 'mother' },
+          { fr: 'le fr\u00e8re', en: 'brother' },
+          { fr: 'la s\u0153ur', en: 'sister' },
+          { fr: 'le grand-p\u00e8re', en: 'grandfather' },
+          { fr: 'la grand-m\u00e8re', en: 'grandmother' },
+          { fr: "l'oncle", en: 'uncle' },
+          { fr: 'la tante', en: 'aunt' },
+          { fr: 'le cousin', en: 'cousin' },
+          { fr: 'la cousine', en: 'cousin' },
+          { fr: 'le fils', en: 'son' },
+          { fr: 'la fille', en: 'daughter' },
+          { fr: 'le mari', en: 'husband' },
+          { fr: 'la femme', en: 'wife' },
+          { fr: 'les parents', en: 'parents' },
+          { fr: 'les enfants', en: 'children' }
         ]
       },
       {
@@ -684,24 +683,24 @@
         prompt: 'Name 6 parts of the body in French.',
         emoji: '\uD83E\uDDD0',
         words: [
-          { fr: 'la t\u00eate' },
-          { fr: 'le visage' },
-          { fr: "l'\u0153il" },
-          { fr: 'le nez' },
-          { fr: 'la bouche' },
-          { fr: "l'oreille" },
-          { fr: 'le cou' },
-          { fr: "l'\u00e9paule" },
-          { fr: 'le bras' },
-          { fr: 'la main' },
-          { fr: 'le doigt' },
-          { fr: 'le ventre' },
-          { fr: 'le dos' },
-          { fr: 'la jambe' },
-          { fr: 'le pied' },
-          { fr: 'les cheveux' },
-          { fr: 'les dents' },
-          { fr: 'le genou' }
+          { fr: 'la t\u00eate', en: 'head' },
+          { fr: 'le visage', en: 'face' },
+          { fr: "l'\u0153il", en: 'eye' },
+          { fr: 'le nez', en: 'nose' },
+          { fr: 'la bouche', en: 'mouth' },
+          { fr: "l'oreille", en: 'ear' },
+          { fr: 'le cou', en: 'neck' },
+          { fr: "l'\u00e9paule", en: 'shoulder' },
+          { fr: 'le bras', en: 'arm' },
+          { fr: 'la main', en: 'hand' },
+          { fr: 'le doigt', en: 'finger' },
+          { fr: 'le ventre', en: 'stomach' },
+          { fr: 'le dos', en: 'back' },
+          { fr: 'la jambe', en: 'leg' },
+          { fr: 'le pied', en: 'foot' },
+          { fr: 'les cheveux', en: 'hair' },
+          { fr: 'les dents', en: 'teeth' },
+          { fr: 'le genou', en: 'knee' }
         ]
       },
       {
@@ -710,18 +709,18 @@
         prompt: 'Name 6 rooms or areas you might find in a house.',
         emoji: '\uD83C\uDFE0',
         words: [
-          { fr: 'la chambre' },
-          { fr: 'le salon' },
-          { fr: 'la salle \u00e0 manger' },
-          { fr: 'la cuisine' },
-          { fr: 'la salle de bains' },
-          { fr: 'le garage' },
-          { fr: 'le grenier' },
-          { fr: 'la cave' },
-          { fr: 'le jardin' },
-          { fr: "l'entr\u00e9e" },
-          { fr: 'les toilettes' },
-          { fr: 'le bureau' }
+          { fr: 'la chambre', en: 'bedroom' },
+          { fr: 'le salon', en: 'living room' },
+          { fr: 'la salle \u00e0 manger', en: 'dining room' },
+          { fr: 'la cuisine', en: 'kitchen' },
+          { fr: 'la salle de bains', en: 'bathroom' },
+          { fr: 'le garage', en: 'garage' },
+          { fr: 'le grenier', en: 'attic' },
+          { fr: 'la cave', en: 'cellar' },
+          { fr: 'le jardin', en: 'garden' },
+          { fr: "l'entr\u00e9e", en: 'entrance hall' },
+          { fr: 'les toilettes', en: 'toilet' },
+          { fr: 'le bureau', en: 'study' }
         ]
       }
     ];
@@ -786,6 +785,51 @@
         var t = a[i]; a[i] = a[j]; a[j] = t;
       }
       return a;
+    }
+
+    // ─── SENSE CHECK ───────────────────────────────────────────────────────────
+    // Keywords checked against MyMemory English translation to validate answers
+    // not in the hardcoded word list.
+    var SENSE_KEYS = {
+      town:      ['hall', 'library', 'church', 'cinema', 'market', 'pool', 'station', 'supermarket', 'park', 'museum', 'post office', 'hospital', 'stadium', 'castle', 'pharmacy', 'bakery', 'butcher', 'cafe', 'caf\u00e9', 'restaurant', 'hotel', 'bank', 'shop', 'store', 'centre', 'center', 'square', 'bridge', 'tower', 'theatre', 'theater', 'sports'],
+      market:    ['apple', 'strawberr', 'tomato', 'carrot', 'potato', 'cheese', 'bread', 'vegetable', 'fruit', 'meat', 'chicken', 'fish', 'olive', 'honey', 'flower', 'onion', 'butter', 'garlic', 'mushroom', 'cherr', 'grape', 'pear', 'pepper', 'leek', 'salad', 'lettuce', 'courgette', 'eggplant', 'egg', 'cream', 'jam', 'bean', 'spinach'],
+      animals:   ['dog', 'cat', 'horse', 'rabbit', 'guinea pig', 'hamster', 'bird', 'fish', 'cow', 'sheep', 'goat', 'pig', 'snake', 'turtle', 'tortoise', 'mouse', 'rat', 'lion', 'elephant', 'monkey', 'giraffe', 'tiger', 'parrot', 'duck', 'hen', 'chicken', 'frog', 'spider', 'bear', 'wolf', 'fox', 'deer', 'donkey', 'crocodile', 'kangaroo', 'penguin', 'dolphin', 'whale', 'bee', 'butterfly'],
+      presents:  ['book', 'game', 'bicycle', 'bike', 'sweet', 'candy', 'perfume', 'flower', 'watch', 'phone', 'mobile', 'bag', 'shoe', 'money', 'card', 'bracelet', 'chocolate', 'camera', 'cloth', 'necklace', 'toy', 'teddy', 'scarf', 'glove', 'wallet', 'purse', 'jewel', 'present', 'gift'],
+      clothing:  ['trousers', 'jeans', 'skirt', 'dress', 'shirt', 'jumper', 'jacket', 'coat', 'shoe', 'boot', 'sock', 'hat', 'cap', 'tie', 'short', 'blouse', 'sweater', 'trainer', 'sneaker', 'scarf', 'glove', 'raincoat', 'pyjama', 'underwear', 'belt', 'legging', 'tights', 'cloth'],
+      school:    ['french', 'english', 'math', 'science', 'history', 'geography', 'computing', 'music', 'art', 'drawing', 'technology', 'latin', 'german', 'spanish', 'theatre', 'drama', 'religion', 'biology', 'physics', 'chemistry', 'subject', 'lesson', 'sport', 'physical'],
+      hobbies:   ['football', 'soccer', 'rugby', 'tennis', 'swimming', 'cycling', 'reading', 'music', 'drawing', 'dancing', 'game', 'television', 'cooking', 'hiking', 'horse', 'skiing', 'basketball', 'shopping', 'gymnastics', 'running', 'sport', 'hobby', 'art', 'painting', 'cinema', 'theatre', 'yoga', 'fishing', 'gardening', 'riding'],
+      transport: ['train', 'bus', 'car', 'plane', 'airplane', 'boat', 'bike', 'bicycle', 'metro', 'underground', 'subway', 'taxi', 'tram', 'motorbike', 'motorcycle', 'coach', 'helicopter', 'ship', 'ferry', 'scooter', 'truck', 'lorry'],
+      food:      ['bread', 'cheese', 'butter', 'meat', 'chicken', 'fish', 'vegetable', 'fruit', 'apple', 'strawberr', 'tomato', 'carrot', 'rice', 'pasta', 'ice cream', 'cake', 'chocolate', 'milk', 'coffee', 'tea', 'water', 'lemonade', 'juice', 'soup', 'salad', 'egg', 'ham', 'sausage', 'pizza', 'sandwich', 'biscuit', 'yogurt', 'cereal', 'banana', 'orange', 'grape', 'pear', 'steak', 'omelette'],
+      family:    ['father', 'mother', 'brother', 'sister', 'grandfather', 'grandmother', 'uncle', 'aunt', 'cousin', 'son', 'daughter', 'husband', 'wife', 'parent', 'child', 'baby', 'grandparent', 'family', 'nephew', 'niece', 'stepfather', 'stepmother', 'stepbrother', 'stepsister'],
+      body:      ['head', 'face', 'eye', 'nose', 'mouth', 'ear', 'neck', 'shoulder', 'arm', 'hand', 'finger', 'stomach', 'back', 'leg', 'foot', 'hair', 'teeth', 'knee', 'chest', 'toe', 'ankle', 'wrist', 'elbow', 'hip', 'lip', 'chin', 'forehead', 'thumb', 'cheek', 'throat'],
+      rooms:     ['bedroom', 'living room', 'lounge', 'sitting room', 'dining room', 'kitchen', 'bathroom', 'toilet', 'garage', 'attic', 'cellar', 'basement', 'garden', 'entrance', 'hall', 'office', 'study', 'room', 'landing', 'porch', 'terrace', 'balcony', 'conservatory']
+    };
+
+    // Translate `given` (French) to English via MyMemory, then check category keywords.
+    // Calls callback(accepted: boolean) when done (or times out after 5 s).
+    function senseCheck(given, catId, callback) {
+      var keys = SENSE_KEYS[catId];
+      if (!keys) { callback(false); return; }
+      var done = false;
+      var timer = setTimeout(function () {
+        if (!done) { done = true; callback(false); }
+      }, 5000);
+      fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(given.trim()) + '&langpair=fr|en')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+          var t = ((data.responseData && data.responseData.translatedText) || '').toLowerCase();
+          var ok = keys.some(function (k) { return t.indexOf(k) !== -1; });
+          callback(ok);
+        })
+        .catch(function () {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+          callback(false);
+        });
     }
 
     // ─── SETUP UI ──────────────────────────────────────────────────────────────
@@ -857,10 +901,10 @@
       if (supportMode) {
         var bank = document.getElementById('vc-word-bank');
         bank.innerHTML = '';
-        shuffle(currentCat.words).forEach(function (w) {
+        shuffle(currentCat.words).slice(0, 8).forEach(function (w) {
           var chip = document.createElement('span');
           chip.className = 'vc-chip';
-          chip.textContent = w.fr;
+          chip.textContent = w.en;
           bank.appendChild(chip);
         });
         bankWrap.style.display = '';
@@ -919,58 +963,77 @@
 
     // ─── CHECK ─────────────────────────────────────────────────────────────────
     function doCheck() {
-      var inputs = document.querySelectorAll('.vc-inp');
+      var checkBtn = document.getElementById('vc-check-btn');
+      checkBtn.disabled = true;
+      checkBtn.textContent = 'Checking\u2026';
+
+      var inputs = Array.prototype.slice.call(document.querySelectorAll('.vc-inp'));
       var cat = currentCat;
+      var used = {};
+      var results = new Array(inputs.length);
+      var pending = 0;
 
-      var used = {};     // fr → true (to detect duplicates)
-      var results = [];  // { given, status, matchedWord, note }
-      var score = 0;
+      function applyStyle(inp, status) {
+        inp.disabled = true;
+        if (status === 'ok')   inp.className = 'vc-inp inp-ok';
+        else if (status === 'near') inp.className = 'vc-inp inp-near';
+        else if (status === 'dup')  inp.className = 'vc-inp inp-dup';
+        else                        inp.className = 'vc-inp inp-bad';
+      }
 
-      inputs.forEach(function (inp) {
+      function tryFinish() {
+        if (pending > 0) return;
+        var score = 0;
+        results.forEach(function (r) { if (r && r.status === 'ok') score++; });
+        setTimeout(function () { showResults(score, results); }, 300);
+      }
+
+      inputs.forEach(function (inp, i) {
         var given = inp.value.trim();
-        var status, matchedWord, note;
 
         if (!given) {
-          status = 'bad';
-          note = 'No answer given';
-        } else {
-          var match = findMatch(given, cat);
-          if (!match) {
-            status = 'bad';
-            note = 'Not a valid answer for this category';
-          } else {
-            var wordKey = norm(match.word.fr);
-            if (used[wordKey]) {
-              status = 'dup';
-              note = 'Duplicate \u2014 already used \u201c' + match.word.fr + '\u201d';
-            } else {
-              used[wordKey] = true;
-              if (match.result === 'correct') {
-                status = 'ok';
-                score++;
-                note = null;
-              } else {
-                // near — right word, wrong accents
-                status = 'near';
-                note = 'Check your accents \u2014 correct spelling: ' + match.word.fr;
-              }
-            }
-          }
+          applyStyle(inp, 'bad');
+          results[i] = { given: given, status: 'bad', note: 'No answer given' };
+          return;
         }
 
-        inp.disabled = true;
-        inp.className = 'vc-inp inp-' + status.replace('bad', 'bad');
-        // Fix class names to match CSS
-        if (status === 'ok')   inp.className = 'vc-inp inp-ok';
-        if (status === 'near') inp.className = 'vc-inp inp-near';
-        if (status === 'bad')  inp.className = 'vc-inp inp-bad';
-        if (status === 'dup')  inp.className = 'vc-inp inp-dup';
-
-        results.push({ given: given, status: status, matchedWord: matchedWord, note: note });
+        var match = findMatch(given, cat);
+        if (match) {
+          var wordKey = norm(match.word.fr);
+          var status, note;
+          if (used[wordKey]) {
+            status = 'dup';
+            note = 'Duplicate \u2014 already used \u201c' + match.word.fr + '\u201d';
+          } else {
+            used[wordKey] = true;
+            if (match.result === 'correct') {
+              status = 'ok';
+              note = null;
+            } else {
+              status = 'near';
+              note = 'Check your accents \u2014 correct spelling: ' + match.word.fr;
+            }
+          }
+          applyStyle(inp, status);
+          results[i] = { given: given, status: status, note: note };
+        } else {
+          // Not in word list — try translation sense-check
+          pending++;
+          inp.disabled = true;
+          (function (inp, i, given) {
+            senseCheck(given, cat.id, function (accepted) {
+              pending--;
+              var status = accepted ? 'ok' : 'bad';
+              var note   = accepted ? null : 'Not a valid answer for this category';
+              applyStyle(inp, status);
+              results[i] = { given: given, status: status, note: note };
+              tryFinish();
+            });
+          })(inp, i, given);
+        }
       });
 
-      // Wait a moment so the input colours show before screen change
-      setTimeout(function () { showResults(score, results); }, 500);
+      tryFinish(); // resolves immediately if no async checks needed
     }
 
     // ─── RESULTS ───────────────────────────────────────────────────────────────
@@ -1053,14 +1116,14 @@
         supportMode = true;
         btnSupported.classList.add('active');
         btnUnsupported.classList.remove('active');
-        modeNote.innerHTML = '<strong>With support:</strong> A word bank showing all valid answers will be visible. You still have to choose the right words and spell them correctly.';
+        modeNote.innerHTML = '<strong>With support:</strong> 8 English hints will be shown. You need to write the correct French word for each &mdash; choose from the hints and spell carefully.';
       });
 
       btnUnsupported.addEventListener('click', function () {
         supportMode = false;
         btnUnsupported.classList.add('active');
         btnSupported.classList.remove('active');
-        modeNote.innerHTML = '<strong>Without support:</strong> No word bank. You must recall and spell everything from memory.';
+        modeNote.innerHTML = '<strong>Without support:</strong> No hints. You must recall and spell all words from memory.';
       });
 
       document.getElementById('vc-start-btn').addEventListener('click', startChallenge);
