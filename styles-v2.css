@@ -98,11 +98,59 @@ header {
   color: var(--text-mid);
   text-decoration: none;
   transition: all 0.15s;
+  white-space: nowrap;
 }
 .hn-link:hover { background: var(--bg); color: var(--text); }
 .hn-link.active {
   background: var(--text);
   color: var(--white);
+}
+
+/* ─── Dropdown groups ─── */
+.hn-group {
+  position: relative;
+}
+.hn-group-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.hn-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.hn-group.open > .hn-group-toggle .hn-arrow,
+.hn-group:focus-within > .hn-group-toggle .hn-arrow {
+  transform: rotate(180deg);
+}
+.hn-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+  padding: 6px;
+  min-width: 160px;
+  z-index: 200;
+  flex-direction: column;
+  gap: 2px;
+}
+.hn-group:hover > .hn-dropdown,
+.hn-group:focus-within > .hn-dropdown,
+.hn-group.open > .hn-dropdown {
+  display: flex;
+}
+.hn-dropdown .hn-link {
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  display: block;
 }
 
 /* ─── HERO / PAGE BANNER ─── */
@@ -1124,6 +1172,24 @@ footer .report-problem a:hover { color: var(--text); }
   }
   .header-nav.open { display: flex; }
   .hn-link { border-radius: 8px; padding: 12px 16px; font-size: 15px; }
+  /* Mobile dropdowns — expand inline */
+  .hn-group { position: static; }
+  .hn-dropdown {
+    display: none;
+    position: static;
+    transform: none;
+    box-shadow: none;
+    border: none;
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 2px 0 2px 12px;
+    min-width: unset;
+  }
+  .hn-group.open > .hn-dropdown { display: flex; }
+  .hn-group:hover > .hn-dropdown,
+  .hn-group:focus-within > .hn-dropdown { display: none; }
+  .hn-group.open > .hn-dropdown { display: flex; }
+  .hn-dropdown .hn-link { padding: 10px 14px; font-size: 14px; }
   .hero-inner    { padding: 32px 16px; }
   .page-wrap,
   .content-wrap  { padding: 32px 16px 60px; }
