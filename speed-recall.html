@@ -550,7 +550,111 @@
       .sr-big-score     { font-size: 56px; }
       .sr-question-card { padding: 24px 16px 18px; }
     }
+
+    /* ── Leaderboard ── */
+    .sr-submit-section {
+      margin: 20px 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .sr-submit-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sr-initials-input {
+      width: 72px;
+      padding: 8px 10px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      text-transform: uppercase;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--text);
+    }
+    .sr-initials-input:focus { outline: none; border-color: var(--text); }
+    .sr-submit-btn {
+      padding: 8px 18px;
+      background: var(--text);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .sr-submit-btn:hover { opacity: 0.85; }
+    .sr-submit-btn:disabled { opacity: 0.4; cursor: default; }
+    .sr-submit-msg { font-size: 13px; min-height: 18px; font-weight: 600; }
+    .sr-submit-msg.success { color: #16a34a; }
+    .sr-submit-msg.error   { color: #dc2626; }
+
+    .sr-leaderboard {
+      margin-top: 32px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .sr-lb-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px 10px;
+      border-bottom: 1.5px solid var(--border);
+    }
+    .sr-lb-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .sr-lb-tabs {
+      display: flex;
+      gap: 4px;
+    }
+    .sr-lb-tab {
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .sr-lb-tab.active { background: var(--text); color: var(--white); border-color: var(--text); }
+    .sr-lb-rows { padding: 6px 0; }
+    .sr-lb-row {
+      display: grid;
+      grid-template-columns: 32px 1fr auto;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      font-size: 14px;
+    }
+    .sr-lb-row:hover { background: var(--bg); }
+    .sr-lb-row.is-me { background: #eff6ff; font-weight: 700; }
+    .sr-lb-rank { color: var(--text-muted); font-weight: 700; font-size: 13px; }
+    .sr-lb-rank.top { color: var(--text); }
+    .sr-lb-initials { font-weight: 700; color: var(--text); }
+    .sr-lb-score { font-weight: 800; color: var(--text); font-size: 15px; }
+    .sr-lb-empty, .sr-lb-loading {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -726,6 +830,29 @@
       <div class="sr-missed-section" id="sr-missed-section" style="display:none;">
         <h3>Words to review</h3>
         <div class="sr-missed-list" id="sr-missed-list"></div>
+      </div>
+
+      <!-- Submit score -->
+      <div class="sr-submit-section" id="sr-submit-section">
+        <div class="sr-submit-row">
+          <input type="text" id="sr-initials" class="sr-initials-input" maxlength="4" placeholder="ABC" autocomplete="off" spellcheck="false">
+          <button class="sr-submit-btn" id="sr-submit-btn">Submit score</button>
+        </div>
+        <div class="sr-submit-msg" id="sr-submit-msg"></div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="sr-leaderboard" id="sr-leaderboard">
+        <div class="sr-lb-header">
+          <span class="sr-lb-title">&#127942; Top Scores — 21 days</span>
+          <div class="sr-lb-tabs">
+            <button class="sr-lb-tab active" data-mode="supported">Supported</button>
+            <button class="sr-lb-tab" data-mode="unsupported">Unsupported</button>
+          </div>
+        </div>
+        <div class="sr-lb-rows" id="sr-lb-rows">
+          <div class="sr-lb-loading">Loading&hellip;</div>
+        </div>
       </div>
 
       <div class="sr-btn-row">
@@ -1735,6 +1862,130 @@
     // ─── INIT ──────────────────────────────────────────────────────────────────
     renderTopicGrid();
     updateStartBtn();
+
+  }());
+  </script>
+
+  <script>
+  (function () {
+    'use strict';
+
+    var SUPABASE_URL  = 'https://dlcseuejvducbsjhqvze.supabase.co';
+    var SUPABASE_ANON = 'sb_publishable_k_59EUPnHNnJ534tF0vMvQ_Ams9wV9L';
+    var db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    var currentLbMode = 'supported';
+    var lastScore = 0;
+    var lastMode  = 'supported';
+    var lastInitials = '';
+
+    // ── Capture score when results screen shown ──────────────────────────────
+    // Hook into the existing showScreen function by watching DOM changes
+    var resultsEl = document.getElementById('sr-results');
+    var observer = new MutationObserver(function () {
+      if (resultsEl.classList.contains('active')) {
+        // Read score from DOM (set by main game script)
+        lastScore = parseInt(document.getElementById('sr-big-score').textContent, 10) || 0;
+        // Read mode from active tab in setup screen
+        var activeMode = document.querySelector('.sr-mode-btn.active');
+        lastMode = activeMode ? activeMode.dataset.mode : 'supported';
+        currentLbMode = lastMode;
+        // Sync leaderboard tabs to game mode
+        document.querySelectorAll('.sr-lb-tab').forEach(function (t) {
+          t.classList.toggle('active', t.dataset.mode === lastMode);
+        });
+        // Reset submit UI
+        document.getElementById('sr-submit-msg').textContent = '';
+        document.getElementById('sr-submit-msg').className = 'sr-submit-msg';
+        document.getElementById('sr-submit-btn').disabled = false;
+        // Load leaderboard
+        loadLeaderboard(lastMode);
+      }
+    });
+    observer.observe(resultsEl, { attributes: true, attributeFilter: ['class'] });
+
+    // ── Submit score ─────────────────────────────────────────────────────────
+    document.getElementById('sr-submit-btn').addEventListener('click', function () {
+      var initials = document.getElementById('sr-initials').value.trim().toUpperCase().replace(/[^A-Z]/g, '');
+      var msgEl = document.getElementById('sr-submit-msg');
+      if (!initials) {
+        msgEl.className = 'sr-submit-msg error';
+        msgEl.textContent = 'Enter your initials first.';
+        return;
+      }
+      if (lastScore === 0) {
+        msgEl.className = 'sr-submit-msg error';
+        msgEl.textContent = 'Score is 0 — nothing to submit!';
+        return;
+      }
+      this.disabled = true;
+      lastInitials = initials;
+      db.from('french_scores').insert({
+        initials: initials,
+        score: lastScore,
+        mode: lastMode
+      }).then(function (res) {
+        if (res.error) {
+          msgEl.className = 'sr-submit-msg error';
+          msgEl.textContent = 'Could not submit — try again.';
+          document.getElementById('sr-submit-btn').disabled = false;
+        } else {
+          msgEl.className = 'sr-submit-msg success';
+          msgEl.textContent = 'Score submitted! \u2713';
+          currentLbMode = lastMode;
+          document.querySelectorAll('.sr-lb-tab').forEach(function (t) {
+            t.classList.toggle('active', t.dataset.mode === lastMode);
+          });
+          loadLeaderboard(lastMode);
+        }
+      });
+    });
+
+    // ── Leaderboard tabs ─────────────────────────────────────────────────────
+    document.querySelectorAll('.sr-lb-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.sr-lb-tab').forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        currentLbMode = tab.dataset.mode;
+        loadLeaderboard(currentLbMode);
+      });
+    });
+
+    // ── Load leaderboard ─────────────────────────────────────────────────────
+    function loadLeaderboard(mode) {
+      var rowsEl = document.getElementById('sr-lb-rows');
+      rowsEl.innerHTML = '<div class="sr-lb-loading">Loading\u2026</div>';
+      db.rpc('get_french_leaderboard', { p_mode: mode })
+        .then(function (res) {
+          renderLeaderboard(res.data || []);
+        })
+        .catch(function () {
+          rowsEl.innerHTML = '<div class="sr-lb-empty">Could not load leaderboard.</div>';
+        });
+    }
+
+    function renderLeaderboard(rows) {
+      var el = document.getElementById('sr-lb-rows');
+      if (!rows.length) {
+        el.innerHTML = '<div class="sr-lb-empty">No scores yet \u2014 be the first!</div>';
+        return;
+      }
+      // Sort by score desc, take top 10
+      rows.sort(function (a, b) { return b.best_score - a.best_score; });
+      var top = rows.slice(0, 10);
+      var html = '';
+      top.forEach(function (row, i) {
+        var rank = i + 1;
+        var isMe = row.initials === lastInitials && row.best_score === lastScore;
+        var medal = rank === 1 ? '\uD83E\uDD47' : rank === 2 ? '\uD83E\uDD48' : rank === 3 ? '\uD83E\uDD49' : rank;
+        html += '<div class="sr-lb-row' + (isMe ? ' is-me' : '') + '">';
+        html += '<span class="sr-lb-rank' + (rank <= 3 ? ' top' : '') + '">' + medal + '</span>';
+        html += '<span class="sr-lb-initials">' + row.initials + '</span>';
+        html += '<span class="sr-lb-score">' + row.best_score + '</span>';
+        html += '</div>';
+      });
+      el.innerHTML = html;
+    }
 
   }());
   </script>
