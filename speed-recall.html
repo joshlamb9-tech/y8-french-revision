@@ -756,6 +756,20 @@
         Start &#9889;
       </button>
 
+      <!-- Leaderboard on setup screen -->
+      <div class="sr-leaderboard" id="sr-leaderboard-setup" style="margin-top: 32px;">
+        <div class="sr-lb-header">
+          <span class="sr-lb-title">&#127942; Top Scores — 21 days</span>
+          <div class="sr-lb-tabs">
+            <button class="sr-lb-tab active" data-mode="supported" data-board="setup">Supported</button>
+            <button class="sr-lb-tab" data-mode="unsupported" data-board="setup">Unsupported</button>
+          </div>
+        </div>
+        <div class="sr-lb-rows" id="sr-lb-rows-setup">
+          <div class="sr-lb-loading">Loading&hellip;</div>
+        </div>
+      </div>
+
     </div>
 
     <!-- ══ GAME ══════════════════════════════════════════════════════════ -->
@@ -1899,7 +1913,7 @@
         document.getElementById('sr-submit-msg').className = 'sr-submit-msg';
         document.getElementById('sr-submit-btn').disabled = false;
         // Load leaderboard
-        loadLeaderboard(lastMode);
+        loadLeaderboard(lastMode, "sr-lb-rows");
       }
     });
     observer.observe(resultsEl, { attributes: true, attributeFilter: ['class'] });
@@ -1936,36 +1950,50 @@
           document.querySelectorAll('.sr-lb-tab').forEach(function (t) {
             t.classList.toggle('active', t.dataset.mode === lastMode);
           });
-          loadLeaderboard(lastMode);
+          loadLeaderboard(lastMode, "sr-lb-rows");
         }
       });
     });
 
     // ── Leaderboard tabs ─────────────────────────────────────────────────────
-    document.querySelectorAll('.sr-lb-tab').forEach(function (tab) {
+    // Results screen tabs
+    document.querySelectorAll('#sr-leaderboard .sr-lb-tab').forEach(function (tab) {
       tab.addEventListener('click', function () {
-        document.querySelectorAll('.sr-lb-tab').forEach(function (t) { t.classList.remove('active'); });
+        document.querySelectorAll('#sr-leaderboard .sr-lb-tab').forEach(function (t) { t.classList.remove('active'); });
         tab.classList.add('active');
         currentLbMode = tab.dataset.mode;
-        loadLeaderboard(currentLbMode);
+        loadLeaderboard(currentLbMode, 'sr-lb-rows');
+      });
+    });
+    // Setup screen tabs
+    document.querySelectorAll('#sr-leaderboard-setup .sr-lb-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('#sr-leaderboard-setup .sr-lb-tab').forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        loadLeaderboard(tab.dataset.mode, 'sr-lb-rows-setup');
       });
     });
 
     // ── Load leaderboard ─────────────────────────────────────────────────────
-    function loadLeaderboard(mode) {
-      var rowsEl = document.getElementById('sr-lb-rows');
+    function loadLeaderboard(mode, rowsId) {
+      var rowsEl = document.getElementById(rowsId || 'sr-lb-rows');
+      if (!rowsEl) return;
       rowsEl.innerHTML = '<div class="sr-lb-loading">Loading\u2026</div>';
       db.rpc('get_french_leaderboard', { p_mode: mode })
         .then(function (res) {
-          renderLeaderboard(res.data || []);
+          renderLeaderboard(res.data || [], rowsId);
         })
         .catch(function () {
           rowsEl.innerHTML = '<div class="sr-lb-empty">Could not load leaderboard.</div>';
         });
     }
 
-    function renderLeaderboard(rows) {
-      var el = document.getElementById('sr-lb-rows');
+    // Load setup leaderboard on page load
+    loadLeaderboard('supported', 'sr-lb-rows-setup');
+
+    function renderLeaderboard(rows, rowsId) {
+      var el = document.getElementById(rowsId || 'sr-lb-rows');
+      if (!el) return;
       if (!rows.length) {
         el.innerHTML = '<div class="sr-lb-empty">No scores yet \u2014 be the first!</div>';
         return;
