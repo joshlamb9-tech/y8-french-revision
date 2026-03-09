@@ -922,6 +922,57 @@ header {
   letter-spacing: -0.01em;
 }
 
+/* ─── READING COMPREHENSION ─── */
+.narrator-label {
+  font-size: 14px;
+  color: var(--muted, #666);
+  margin: -4px 0 16px;
+  font-style: italic;
+}
+.reading-text {
+  background: var(--light, #f8f9fa);
+  border-left: 4px solid var(--primary, #003B72);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  line-height: 1.75;
+}
+.reading-questions {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+.reading-questions li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.answer-key {
+  border: 1px solid var(--border, #e0e0e0);
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+}
+.answer-key summary {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  background: var(--light, #f8f9fa);
+  user-select: none;
+}
+.answer-key summary:hover {
+  background: #eef0f2;
+}
+.answer-key .reading-answers {
+  padding: 12px 20px 12px 36px;
+  margin: 0;
+}
+.answer-key .reading-answers li {
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 /* ─── PRACTICE GENERATOR ─── */
 .practice-generator {
   background: var(--white);
