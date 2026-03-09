@@ -264,6 +264,48 @@
                     <a href="../grammar.html" class="button resource-link">Review Grammar</a>
                 </div>
             </div>
+
+            <!-- Random Sentence Practice Generator -->
+            <div class="practice-generator">
+                <h3>🎯 Random Sentence Practice</h3>
+                <p>Translate the sentence before time runs out! Write your answer on paper.</p>
+
+                <div class="difficulty-select">
+                    <button class="difficulty-btn active" data-level="1">⭐ Easy</button>
+                    <button class="difficulty-btn" data-level="2">⭐⭐ Medium</button>
+                    <button class="difficulty-btn" data-level="3">⭐⭐⭐ Hard</button>
+                </div>
+
+                <div class="timer-settings">
+                    <label>Countdown time:</label>
+                    <select id="timerDuration">
+                        <option value="10">10 seconds</option>
+                        <option value="15">15 seconds</option>
+                        <option value="20">20 seconds</option>
+                        <option value="30" selected>30 seconds</option>
+                    </select>
+                </div>
+
+                <button id="generateBtn" class="button">Generate Sentence</button>
+
+                <div id="sentenceDisplay" class="sentence-display hidden">
+                    <div class="english-sentence" id="englishSentence"></div>
+
+                    <div class="countdown-container">
+                        <div class="countdown-number" id="countdown"></div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+                    </div>
+
+                    <div class="french-answer hidden" id="frenchAnswer">
+                        <strong>Answer:</strong>
+                    </div>
+
+                    <button id="nextBtn" class="button hidden">Next Sentence</button>
+                </div>
+            </div>
+
         </div>
   </main>
 
@@ -271,6 +313,12 @@
     <span class="footer-brand">Mowden Hall School</span>
     <span>Found a problem or want to request a feature? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
   </footer>
+  <script src="../js/sentence-generator.js"></script>
+  <script src="../js/ui-controller.js"></script>
+  <script>
+    const controller = new UIController();
+    controller.init('home-local-area');
+  </script>
   <script src="../js/nav.js"></script>
 </body>
 </html>
