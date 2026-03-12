@@ -56,6 +56,82 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // ─── VOCAB SEARCH ──────────────────────────────────────────────────────────
+  (function () {
+    var header = document.querySelector('.header-inner');
+    if (!header) return;
+
+    // Detect path depth for data URL
+    var depth = (window.location.pathname.indexOf('/topics/') !== -1 ||
+                 window.location.pathname.indexOf('/grammar/') !== -1) ? '../' : '';
+
+    // Inject search widget into header
+    var wrap = document.createElement('div');
+    wrap.className = 'hs-wrap';
+    wrap.innerHTML =
+      '<div class="hs-input-wrap">' +
+        '<svg class="hs-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="18" y2="18"/></svg>' +
+        '<input class="hs-input" id="hs-input" type="search" placeholder="Search vocab\u2026" autocomplete="off" spellcheck="false">' +
+      '</div>' +
+      '<div class="hs-results" id="hs-results"></div>';
+    header.appendChild(wrap);
+
+    var inp     = document.getElementById('hs-input');
+    var resList = document.getElementById('hs-results');
+    var vocabData = null;
+
+    function normSearch(s) {
+      return s.toLowerCase()
+        .replace(/[éèêë]/g, 'e').replace(/[àâ]/g, 'a')
+        .replace(/[ùûü]/g, 'u').replace(/[ôö]/g, 'o')
+        .replace(/[îï]/g, 'i').replace(/ç/g, 'c').replace(/œ/g, 'oe');
+    }
+
+    function runSearch(q) {
+      q = q.trim();
+      if (!vocabData || !q) { resList.innerHTML = ''; resList.classList.remove('open'); return; }
+      var nq = normSearch(q);
+      var hits = vocabData.filter(function (e) {
+        return normSearch(e.fr).indexOf(nq) !== -1 || normSearch(e.en).indexOf(nq) !== -1;
+      }).slice(0, 8);
+      if (!hits.length) {
+        resList.innerHTML = '<div class="hs-no-results">No results for &ldquo;' + q + '&rdquo;</div>';
+      } else {
+        resList.innerHTML = hits.map(function (h) {
+          return '<a class="hs-result" href="' + depth + h.url + '">' +
+            '<span class="hs-fr">' + h.fr + '</span>' +
+            '<span class="hs-en">' + h.en + '</span>' +
+            '<span class="hs-topic">' + h.topic + '</span>' +
+          '</a>';
+        }).join('');
+      }
+      resList.classList.add('open');
+    }
+
+    // Lazy-load vocab data on first focus
+    inp.addEventListener('focus', function () {
+      if (vocabData) return;
+      fetch(depth + 'data/vocab-search.json')
+        .then(function (r) { return r.json(); })
+        .then(function (d) { vocabData = d; if (inp.value.trim()) runSearch(inp.value); })
+        .catch(function () {});
+    });
+
+    var timer;
+    inp.addEventListener('input', function () {
+      clearTimeout(timer);
+      timer = setTimeout(function () { runSearch(inp.value); }, 150);
+    });
+
+    inp.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { inp.value = ''; resList.innerHTML = ''; resList.classList.remove('open'); inp.blur(); }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!wrap.contains(e.target)) { resList.innerHTML = ''; resList.classList.remove('open'); }
+    });
+  }());
+
   // Vocab quiz: dynamically load vocab-quiz.js on pages with vocab tables
   if (document.querySelectorAll('.vocab-table').length > 0) {
     var vqs = document.createElement('script');
