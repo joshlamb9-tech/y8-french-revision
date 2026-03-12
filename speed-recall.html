@@ -1940,6 +1940,7 @@
         mode: lastMode
       }).then(function (res) {
         if (res.error) {
+          console.error('Supabase insert error:', JSON.stringify(res.error));
           msgEl.className = 'sr-submit-msg error';
           msgEl.textContent = 'Could not submit — try again.';
           document.getElementById('sr-submit-btn').disabled = false;
