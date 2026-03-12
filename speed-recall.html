@@ -1451,7 +1451,7 @@
           : norm(w.fr) !== norm(correctWord.fr);
       });
       var shuffled = shuffle(candidates);
-      var opts = shuffled.slice(0, 3);
+      var opts = shuffled.slice(0, 7);
       if (direction === 'fr-en') {
         return opts.map(function(w) { return w.en; });
       } else {
