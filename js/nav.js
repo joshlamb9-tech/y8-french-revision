@@ -91,13 +91,29 @@ document.addEventListener('DOMContentLoaded', function () {
       q = q.trim();
       if (!vocabData || !q) { resList.innerHTML = ''; resList.classList.remove('open'); return; }
       var nq = normSearch(q);
-      var hits = vocabData.filter(function (e) {
+      // Pages: match on name, desc, keywords
+      var pageHits = vocabData.filter(function (e) {
+        if (e.type !== 'page') return false;
+        return normSearch(e.name).indexOf(nq) !== -1 ||
+               normSearch(e.desc).indexOf(nq) !== -1 ||
+               normSearch(e.keywords || '').indexOf(nq) !== -1;
+      }).slice(0, 3);
+      // Vocab: match on fr or en
+      var vocabHits = vocabData.filter(function (e) {
+        if (e.type === 'page') return false;
         return normSearch(e.fr).indexOf(nq) !== -1 || normSearch(e.en).indexOf(nq) !== -1;
-      }).slice(0, 8);
+      }).slice(0, 6);
+      var hits = pageHits.concat(vocabHits);
       if (!hits.length) {
         resList.innerHTML = '<div class="hs-no-results">No results for &ldquo;' + q + '&rdquo;</div>';
       } else {
         resList.innerHTML = hits.map(function (h) {
+          if (h.type === 'page') {
+            return '<a class="hs-result hs-result--page" href="' + depth + h.url + '">' +
+              '<span class="hs-page-name">' + h.name + '</span>' +
+              '<span class="hs-page-desc">' + h.desc + '</span>' +
+            '</a>';
+          }
           return '<a class="hs-result" href="' + depth + h.url + '">' +
             '<span class="hs-fr">' + h.fr + '</span>' +
             '<span class="hs-en">' + h.en + '</span>' +
