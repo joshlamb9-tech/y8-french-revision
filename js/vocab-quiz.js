@@ -219,7 +219,7 @@
       var correctAns = isFrEn ? pair.en : pair.fr;
       var distKey = isFrEn ? 'en' : 'fr';
       var langLabel = isFrEn ? 'French \u2192 English' : 'English \u2192 French';
-      var distractors = getDistractors(pair, pool, distKey, 3);
+      var distractors = getDistractors(pair, pool, distKey, 7);
       if (distractors.length < 3) {
         return renderQuestion(card, pair, pool, isFrEn ? 'type-en' : 'type-fr', onAnswer);
       }
