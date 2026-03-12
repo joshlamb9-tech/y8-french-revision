@@ -759,11 +759,7 @@
       <!-- Leaderboard on setup screen -->
       <div class="sr-leaderboard" id="sr-leaderboard-setup" style="margin-top: 32px;">
         <div class="sr-lb-header">
-          <span class="sr-lb-title">&#127942; Top Scores — 21 days</span>
-          <div class="sr-lb-tabs">
-            <button class="sr-lb-tab active" data-mode="supported" data-board="setup">Supported</button>
-            <button class="sr-lb-tab" data-mode="unsupported" data-board="setup">Unsupported</button>
-          </div>
+          <span class="sr-lb-title" id="sr-lb-title-setup">&#127942; Top Scores</span>
         </div>
         <div class="sr-lb-rows" id="sr-lb-rows-setup">
           <div class="sr-lb-loading">Loading&hellip;</div>
@@ -858,11 +854,7 @@
       <!-- Leaderboard -->
       <div class="sr-leaderboard" id="sr-leaderboard">
         <div class="sr-lb-header">
-          <span class="sr-lb-title">&#127942; Top Scores — 21 days</span>
-          <div class="sr-lb-tabs">
-            <button class="sr-lb-tab active" data-mode="supported">Supported</button>
-            <button class="sr-lb-tab" data-mode="unsupported">Unsupported</button>
-          </div>
+          <span class="sr-lb-title" id="sr-lb-title-results">&#127942; Top Scores</span>
         </div>
         <div class="sr-lb-rows" id="sr-lb-rows">
           <div class="sr-lb-loading">Loading&hellip;</div>
@@ -1520,6 +1512,7 @@
             selectedIds.indexOf('all') === -1 && selectedIds.indexOf(id) !== -1);
         }
       });
+      if (window._sr && window._sr.onTopicChange) window._sr.onTopicChange();
     }
 
     function updateStartBtn() {
@@ -1871,11 +1864,27 @@
 
     document.getElementById('sr-change-settings').addEventListener('click', function() {
       showScreen('sr-setup');
+      if (window._sr && window._sr.onTopicChange) window._sr.onTopicChange();
     });
 
     // ─── INIT ──────────────────────────────────────────────────────────────────
     renderTopicGrid();
     updateStartBtn();
+
+    // ─── LEADERBOARD BRIDGE ─────────────────────────────────────────────────────
+    window._sr = {
+      getMode: function () {
+        if (selectedIds.indexOf('all') !== -1 || selectedIds.length > 1) return 'all';
+        return selectedIds[0];
+      },
+      getTopicName: function () {
+        var mode = window._sr.getMode();
+        if (mode === 'all') return 'All Topics';
+        var cat = CATEGORIES.filter(function (c) { return c.id === mode; })[0];
+        return cat ? cat.name : mode;
+      },
+      onTopicChange: null
+    };
 
   }());
   </script>
@@ -1888,32 +1897,44 @@
     var SUPABASE_ANON = 'sb_publishable_k_59EUPnHNnJ534tF0vMvQ_Ams9wV9L';
     var db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-    var currentLbMode = 'supported';
-    var lastScore = 0;
-    var lastMode  = 'supported';
+    var lastScore    = 0;
+    var lastMode     = 'all';
     var lastInitials = '';
 
+    // ── Load leaderboard ─────────────────────────────────────────────────────
+    function loadLeaderboard(mode, rowsId, titleId) {
+      var rowsEl = document.getElementById(rowsId || 'sr-lb-rows');
+      if (!rowsEl) return;
+      // Update title
+      var titleEl = document.getElementById(titleId || 'sr-lb-title-results');
+      if (titleEl) {
+        var topicName = (window._sr && window._sr.getMode() === mode)
+          ? window._sr.getTopicName()
+          : (mode === 'all' ? 'All Topics' : mode);
+        titleEl.textContent = '\u2764\ufe0f Top Scores \u2014 ' + topicName;
+      }
+      rowsEl.innerHTML = '<div class="sr-lb-loading">Loading\u2026</div>';
+      db.rpc('get_french_leaderboard', { p_mode: mode })
+        .then(function (res) {
+          renderLeaderboard(res.data || [], rowsId);
+        })
+        .catch(function () {
+          rowsEl.innerHTML = '<div class="sr-lb-empty">Could not load leaderboard.</div>';
+        });
+    }
+
     // ── Capture score when results screen shown ──────────────────────────────
-    // Hook into the existing showScreen function by watching DOM changes
     var resultsEl = document.getElementById('sr-results');
     var observer = new MutationObserver(function () {
       if (resultsEl.classList.contains('active')) {
-        // Read score from DOM (set by main game script)
         lastScore = parseInt(document.getElementById('sr-big-score').textContent, 10) || 0;
-        // Read mode from active tab in setup screen
-        var activeMode = document.querySelector('.sr-mode-btn.active');
-        lastMode = activeMode ? activeMode.dataset.mode : 'supported';
-        currentLbMode = lastMode;
-        // Sync leaderboard tabs to game mode
-        document.querySelectorAll('.sr-lb-tab').forEach(function (t) {
-          t.classList.toggle('active', t.dataset.mode === lastMode);
-        });
+        lastMode  = window._sr ? window._sr.getMode() : 'all';
         // Reset submit UI
         document.getElementById('sr-submit-msg').textContent = '';
         document.getElementById('sr-submit-msg').className = 'sr-submit-msg';
         document.getElementById('sr-submit-btn').disabled = false;
-        // Load leaderboard
-        loadLeaderboard(lastMode, "sr-lb-rows");
+        // Load topic leaderboard
+        loadLeaderboard(lastMode, 'sr-lb-rows', 'sr-lb-title-results');
       }
     });
     observer.observe(resultsEl, { attributes: true, attributeFilter: ['class'] });
@@ -1946,50 +1967,19 @@
         } else {
           msgEl.className = 'sr-submit-msg success';
           msgEl.textContent = 'Score submitted! \u2713';
-          currentLbMode = lastMode;
-          document.querySelectorAll('.sr-lb-tab').forEach(function (t) {
-            t.classList.toggle('active', t.dataset.mode === lastMode);
-          });
-          loadLeaderboard(lastMode, "sr-lb-rows");
+          loadLeaderboard(lastMode, 'sr-lb-rows', 'sr-lb-title-results');
         }
       });
     });
 
-    // ── Leaderboard tabs ─────────────────────────────────────────────────────
-    // Results screen tabs
-    document.querySelectorAll('#sr-leaderboard .sr-lb-tab').forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        document.querySelectorAll('#sr-leaderboard .sr-lb-tab').forEach(function (t) { t.classList.remove('active'); });
-        tab.classList.add('active');
-        currentLbMode = tab.dataset.mode;
-        loadLeaderboard(currentLbMode, 'sr-lb-rows');
-      });
-    });
-    // Setup screen tabs
-    document.querySelectorAll('#sr-leaderboard-setup .sr-lb-tab').forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        document.querySelectorAll('#sr-leaderboard-setup .sr-lb-tab').forEach(function (t) { t.classList.remove('active'); });
-        tab.classList.add('active');
-        loadLeaderboard(tab.dataset.mode, 'sr-lb-rows-setup');
-      });
-    });
-
-    // ── Load leaderboard ─────────────────────────────────────────────────────
-    function loadLeaderboard(mode, rowsId) {
-      var rowsEl = document.getElementById(rowsId || 'sr-lb-rows');
-      if (!rowsEl) return;
-      rowsEl.innerHTML = '<div class="sr-lb-loading">Loading\u2026</div>';
-      db.rpc('get_french_leaderboard', { p_mode: mode })
-        .then(function (res) {
-          renderLeaderboard(res.data || [], rowsId);
-        })
-        .catch(function () {
-          rowsEl.innerHTML = '<div class="sr-lb-empty">Could not load leaderboard.</div>';
-        });
-    }
+    // ── Setup leaderboard: refresh on topic change / returning to setup ───────
+    window._sr.onTopicChange = function () {
+      var mode = window._sr.getMode();
+      loadLeaderboard(mode, 'sr-lb-rows-setup', 'sr-lb-title-setup');
+    };
 
     // Load setup leaderboard on page load
-    loadLeaderboard('supported', 'sr-lb-rows-setup');
+    loadLeaderboard(window._sr ? window._sr.getMode() : 'all', 'sr-lb-rows-setup', 'sr-lb-title-setup');
 
     function renderLeaderboard(rows, rowsId) {
       var el = document.getElementById(rowsId || 'sr-lb-rows');
