@@ -1088,6 +1088,11 @@
     function startChallenge() {
       if (!currentCat) return;
 
+      // Reset check button
+      var checkBtn = document.getElementById('vc-check-btn');
+      checkBtn.disabled = false;
+      checkBtn.textContent = 'Check my answers \u2192';
+
       // Badges
       document.getElementById('vc-cat-badge').textContent =
         currentCat.emoji + '\u00a0' + currentCat.name;
