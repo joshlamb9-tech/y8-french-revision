@@ -667,9 +667,19 @@
   var state = {
     topicIdx:  0,
     phraseIdx: 0,
+    phrases:   [],   // shuffled phrase list for current session
     results:   [],   // { phrase, mark: 'got'|'close'|'no' }
     revealed:  false
   };
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
 
   /* ══════════════════════════════════════════════
      ACCENT TOOLBAR
@@ -721,6 +731,7 @@
   function startTopic(idx) {
     state.topicIdx  = idx;
     state.phraseIdx = 0;
+    state.phrases   = shuffle(TOPICS[idx].phrases);
     state.results   = [];
     showScreen('sp-practice');
     buildAccentBar();
@@ -731,11 +742,10 @@
   }
 
   function renderPhrase() {
-    var topic  = TOPICS[state.topicIdx];
-    var phrase = topic.phrases[state.phraseIdx];
+    var phrase = state.phrases[state.phraseIdx];
     state.revealed = false;
 
-    var total = topic.phrases.length;
+    var total = state.phrases.length;
     var done  = state.phraseIdx;
     var pct   = Math.round((done / total) * 100);
     document.getElementById('sp-prog-label').textContent = (done + 1) + ' of ' + total;
@@ -767,14 +777,13 @@
   }
 
   function markPhrase(mark) {
-    var topic  = TOPICS[state.topicIdx];
-    var phrase = topic.phrases[state.phraseIdx];
+    var phrase = state.phrases[state.phraseIdx];
     state.results.push({ phrase: phrase, mark: mark });
 
     updateScoreBadges();
 
     state.phraseIdx++;
-    if (state.phraseIdx < topic.phrases.length) {
+    if (state.phraseIdx < state.phrases.length) {
       renderPhrase();
     } else {
       showResults();
