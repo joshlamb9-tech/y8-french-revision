@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select the Correct Form | Year 8 French Revision</title>
+  <link rel="stylesheet" href="styles-v2.css">
+  <style>
+    .level-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #14532d; color: #86efac;
+      font-size: 12px; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 99px;
+      margin-bottom: 10px;
+    }
+    .level-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; }
+
+    /* ── PROGRESS ── */
+    .scf-prog-wrap { margin-bottom: 28px; }
+    .scf-prog-meta {
+      display: flex; justify-content: space-between;
+      font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .scf-prog-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .scf-prog-fill { height: 100%; background: #16a34a; border-radius: 99px; transition: width 0.35s ease; }
+
+    .scf-score-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #f0fdf4; color: #166534; border: 1.5px solid #86efac;
+      font-size: 14px; font-weight: 800;
+      padding: 5px 14px; border-radius: 99px; margin-bottom: 24px;
+    }
+
+    /* ── QUESTION CARD ── */
+    .scf-card {
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 16px; padding: 32px; margin-bottom: 24px;
+      transition: border-color 0.2s;
+    }
+    .scf-card.correct { border-color: #16a34a; background: #f0fdf4; }
+    .scf-card.wrong   { border-color: #dc2626; background: #fef2f2; }
+
+    .scf-q-num {
+      font-size: 11px; font-weight: 800; color: var(--text-muted);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px;
+    }
+    .scf-sentence {
+      font-size: clamp(17px, 3vw, 22px); font-weight: 700;
+      color: var(--text); line-height: 1.6; margin-bottom: 24px;
+    }
+    .scf-blank {
+      display: inline-block;
+      min-width: 120px; border-bottom: 3px solid #16a34a;
+      text-align: center; font-weight: 800;
+      color: #15803d; padding: 0 6px; margin: 0 4px;
+      vertical-align: bottom;
+    }
+    .scf-blank.unanswered { border-color: var(--border); color: transparent; }
+
+    /* ── OPTIONS ── */
+    .scf-options {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 0;
+    }
+    .scf-opt {
+      flex: 1; min-width: 90px;
+      padding: 14px 18px;
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 10px; font-family: 'Dosis', sans-serif;
+      font-size: 16px; font-weight: 800;
+      cursor: pointer; transition: all 0.15s;
+      text-align: center; color: var(--text);
+    }
+    .scf-opt:hover:not(:disabled) { border-color: #16a34a; background: #f0fdf4; color: #166534; }
+    .scf-opt:disabled { cursor: default; }
+    .scf-opt.correct  { border-color: #16a34a; background: #dcfce7; color: #166534; }
+    .scf-opt.wrong    { border-color: #dc2626; background: #fee2e2; color: #991b1b; }
+    .scf-opt.reveal   { border-color: #16a34a; background: #dcfce7; color: #166534; }
+
+    /* ── FEEDBACK ── */
+    .scf-feedback {
+      margin-top: 16px; padding: 12px 16px;
+      border-radius: 10px; font-size: 14px; font-weight: 600;
+      line-height: 1.5; display: none;
+    }
+    .scf-feedback.visible { display: block; }
+    .scf-feedback.correct { background: #f0fdf4; color: #166534; border: 1.5px solid #86efac; }
+    .scf-feedback.wrong   { background: #fef2f2; color: #991b1b; border: 1.5px solid #fca5a5; }
+
+    .scf-next-btn {
+      margin-top: 20px; padding: 13px 28px;
+      background: #16a34a; color: #fff;
+      border: none; border-radius: 10px;
+      font-family: 'Dosis', sans-serif; font-size: 16px; font-weight: 800;
+      cursor: pointer; transition: background 0.15s; display: none;
+    }
+    .scf-next-btn:hover { background: #15803d; }
+    .scf-next-btn.visible { display: inline-block; }
+
+    /* ── RESULTS ── */
+    .scf-res-score-box {
+      display: flex; align-items: center; gap: 24px;
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 16px; padding: 28px 32px; margin-bottom: 28px;
+    }
+    .scf-res-n { font-size: 56px; font-weight: 800; line-height: 1; flex-shrink: 0; }
+    .scf-res-msg { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .scf-res-sub { font-size: 14px; color: var(--text-muted); }
+
+    .scf-review-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .scf-review-card {
+      background: var(--white); border: 1.5px solid #fca5a5;
+      border-radius: 10px; padding: 14px 18px;
+    }
+    .scf-review-sentence { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .scf-review-answer   { font-size: 13px; font-weight: 800; color: #16a34a; margin-bottom: 3px; }
+    .scf-review-note     { font-size: 12px; color: var(--text-muted); }
+
+    .scf-correct-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+    .scf-correct-card {
+      background: #f0fdf4; border: 1.5px solid #86efac;
+      border-radius: 10px; padding: 12px 16px;
+      font-size: 14px; font-weight: 700; color: #166534;
+    }
+
+    .scf-section-title {
+      font-size: 13px; font-weight: 800; letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 12px; padding-bottom: 6px;
+      border-bottom: 2px solid var(--border);
+    }
+    .scf-section-title.ok  { color: #16a34a; border-color: #86efac; }
+    .scf-section-title.no  { color: #dc2626; border-color: #fca5a5; }
+
+    .scf-screen { display: none; }
+    .scf-screen.active { display: block; }
+
+    .scf-how-box {
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 14px; padding: 20px 24px; margin-bottom: 28px;
+    }
+    .scf-how-steps {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px; margin-top: 14px;
+    }
+    .scf-how-step { display: flex; align-items: flex-start; gap: 10px; }
+    .scf-step-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #16a34a; color: #fff;
+      font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .scf-step-text { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.4; }
+
+    .scf-start-btn {
+      padding: 14px 36px; background: #16a34a; color: #fff;
+      border: none; border-radius: 10px; font-family: 'Dosis', sans-serif;
+      font-size: 17px; font-weight: 800; cursor: pointer; transition: background 0.15s;
+    }
+    .scf-start-btn:hover { background: #15803d; }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#003B72">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/y8-french-revision/sw.js');
+      });
+    }
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GRSHMVBVGD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-GRSHMVBVGD");
+  </script>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
+        </div>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="header-nav" id="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="index.html" class="hn-link">Topics</a>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Grammar <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="grammar.html" class="hn-link">Grammar</a>
+            <a href="grammar-trainer.html" class="hn-link">Grammar Trainer</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Practice <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="vocab-challenge.html" class="hn-link">Vocab Challenge</a>
+            <a href="spelling-test.html" class="hn-link">Spelling Test</a>
+            <a href="speed-recall.html" class="hn-link">Speed Recall</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Exam Prep <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="speaking-prep.html" class="hn-link">Speaking Prep</a>
+            <a href="select-correct-form.html" class="hn-link">Select the Form <span style="font-size:10px;background:#dcfce7;color:#166534;border-radius:4px;padding:1px 5px;margin-left:4px;font-weight:800;">L1</span></a>
+            <a href="guided-translation.html" class="hn-link">Guided Translation <span style="font-size:10px;background:#e0e7ff;color:#1e1b4b;border-radius:4px;padding:1px 5px;margin-left:4px;font-weight:800;">L2</span></a>
+            <a href="past-papers.html" class="hn-link">Past Papers</a>
+            <a href="checklist.html" class="hn-link">Checklist</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <div class="page-banner-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Select the Correct Form</span>
+      </div>
+      <div class="level-badge"><div class="level-dot"></div>Level 1</div>
+      <h1 class="hero-title" style="margin-top:8px;">&#10003; Select the Correct Form</h1>
+      <p class="hero-desc">Choose the correct word to complete each French sentence &mdash; just like in the Level 1 exam</p>
+    </div>
+  </div>
+
+  <main class="content-wrap">
+
+    <!-- SCREEN 1 — INTRO -->
+    <div id="scf-intro" class="scf-screen active">
+      <div class="scf-how-box">
+        <strong style="font-size:15px;">How it works</strong>
+        <div class="scf-how-steps">
+          <div class="scf-how-step">
+            <div class="scf-step-num">1</div>
+            <div class="scf-step-text">Read the French sentence with a gap</div>
+          </div>
+          <div class="scf-how-step">
+            <div class="scf-step-num">2</div>
+            <div class="scf-step-text">Choose the correct word from the three options</div>
+          </div>
+          <div class="scf-how-step">
+            <div class="scf-step-num">3</div>
+            <div class="scf-step-text">Get instant feedback — green means correct, red means wrong</div>
+          </div>
+          <div class="scf-how-step">
+            <div class="scf-step-num">4</div>
+            <div class="scf-step-text">Read the grammar note to understand why</div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:15px;font-weight:600;color:var(--text-muted);margin:0 0 24px;">20 questions &mdash; shuffled every time. Each question tests one grammar rule: adjective agreement, verb forms, articles, or French homophones.</p>
+      <button class="scf-start-btn" id="scf-start-btn">Start &#8594;</button>
+    </div>
+
+    <!-- SCREEN 2 — PRACTICE -->
+    <div id="scf-practice" class="scf-screen">
+
+      <div class="scf-prog-wrap">
+        <div class="scf-prog-meta">
+          <span id="scf-prog-label">Question 1 of 20</span>
+          <span id="scf-prog-pct">0%</span>
+        </div>
+        <div class="scf-prog-bar"><div class="scf-prog-fill" id="scf-prog-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="scf-score-chip">
+        &#10003; <span id="scf-score">0</span> correct so far
+      </div>
+
+      <div class="scf-card" id="scf-card">
+        <div class="scf-q-num" id="scf-q-num">Question 1</div>
+        <div class="scf-sentence" id="scf-sentence"></div>
+        <div class="scf-options" id="scf-options"></div>
+        <div class="scf-feedback" id="scf-feedback"></div>
+      </div>
+
+      <button class="scf-next-btn" id="scf-next-btn">Next &#8594;</button>
+
+    </div>
+
+    <!-- SCREEN 3 — RESULTS -->
+    <div id="scf-results" class="scf-screen">
+      <div class="scf-res-score-box">
+        <div class="scf-res-n" id="scf-res-n"></div>
+        <div>
+          <div class="scf-res-msg" id="scf-res-msg"></div>
+          <div class="scf-res-sub" id="scf-res-sub"></div>
+        </div>
+      </div>
+      <div id="scf-res-body"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+        <button class="btn btn-outline" id="scf-retry-btn" style="cursor:pointer;">&#8635; Try again</button>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // Each question: sentence with {BLANK} placeholder, 3 options, correct answer index, grammar note
+  var ALL_QUESTIONS = [
+    {
+      sentence: "Mon anniversaire, c'est le premier {BLANK}.",
+      options: ["mai", "may", "mais"],
+      answer: 0,
+      note: "mai = the month May | mais = but | may is not a French word"
+    },
+    {
+      sentence: "Il est onze heures et {BLANK}.",
+      options: ["demy", "demi", "demie"],
+      answer: 2,
+      note: "demie agrees with heure (f.) in time expressions — il est… et demie"
+    },
+    {
+      sentence: "Ça coûte trente euros. C'est trop {BLANK}\u00a0!",
+      options: ["chère", "cher", "chers"],
+      answer: 1,
+      note: "c'est + adjective is impersonal → always masculine singular: cher"
+    },
+    {
+      sentence: "Les pommes sont {BLANK}.",
+      options: ["gros", "grosse", "grosses"],
+      answer: 2,
+      note: "pommes = feminine plural → grosses (gros → grosse → grosses)"
+    },
+    {
+      sentence: "Je préfère {BLANK} des nouvelles baskets.",
+      options: ["achète", "acheter", "achetez"],
+      answer: 1,
+      note: "préférer + infinitive | achète = I buy, achetez = you buy (pl.), acheter = to buy"
+    },
+    {
+      sentence: "Ma sœur est très {BLANK}.",
+      options: ["sportif", "sportive", "sportifs"],
+      answer: 1,
+      note: "sœur is feminine → sportive (sportif → sportive)"
+    },
+    {
+      sentence: "Nous {BLANK} au football le samedi.",
+      options: ["joue", "jouons", "jouent"],
+      answer: 1,
+      note: "nous → -ons ending: nous jouons | joue = il/elle, jouent = ils/elles"
+    },
+    {
+      sentence: "Il y a une {BLANK} église dans mon village.",
+      options: ["vieux", "vieille", "vieil"],
+      answer: 1,
+      note: "église is feminine → vieille (irregular: vieux → vieil before m. vowel → vieille f.)"
+    },
+    {
+      sentence: "Je mange {BLANK} pain au petit-déjeuner.",
+      options: ["du", "de la", "des"],
+      answer: 0,
+      note: "pain is masculine → du (de + le) | de la = feminine, des = plural"
+    },
+    {
+      sentence: "Mon frère {BLANK} très grand.",
+      options: ["est", "sont", "êtes"],
+      answer: 0,
+      note: "mon frère = il → est (3rd person singular) | sont = ils/elles, êtes = vous"
+    },
+    {
+      sentence: "Elle {BLANK} les dents après le dîner.",
+      options: ["se brosse", "me brosse", "te brosse"],
+      answer: 0,
+      note: "elle → se (3rd person reflexive) | se brosser les dents = to brush one's teeth"
+    },
+    {
+      sentence: "Les cours {BLANK} à neuf heures.",
+      options: ["commence", "commencent", "commencez"],
+      answer: 1,
+      note: "les cours = ils → -ent ending: commencent | commence = il/elle, commencez = vous"
+    },
+    {
+      sentence: "J'ai {BLANK} un bon film hier soir.",
+      options: ["regardé", "regarder", "regardait"],
+      answer: 0,
+      note: "passé composé with avoir → past participle: regardé | regarder = infinitive, regardait = imperfect"
+    },
+    {
+      sentence: "Mes parents sont très {BLANK}.",
+      options: ["gentil", "gentils", "gentille"],
+      answer: 1,
+      note: "parents = masculine plural → gentils | gentil (m.s.), gentille (f.s.), gentils (m.pl.)"
+    },
+    {
+      sentence: "Je {BLANK} à sept heures du matin.",
+      options: ["me lève", "te lève", "se lève"],
+      answer: 0,
+      note: "je → me (1st person reflexive) | se lever: je me lève, tu te lèves, il se lève"
+    },
+    {
+      sentence: "L'année {BLANK} je vais passer mes examens.",
+      options: ["prochain", "prochaine", "prochains"],
+      answer: 1,
+      note: "année is feminine → prochaine | prochain (m.s.), prochaine (f.s.)"
+    },
+    {
+      sentence: "Le trimestre {BLANK}, j'ai travaillé très dur.",
+      options: ["dernier", "dernière", "derniers"],
+      answer: 0,
+      note: "trimestre is masculine → dernier | dernier (m.s.), dernière (f.s.)"
+    },
+    {
+      sentence: "Mon professeur est très {BLANK}.",
+      options: ["strict", "stricte", "stricts"],
+      answer: 0,
+      note: "professeur is masculine singular → strict | stricte = feminine form"
+    },
+    {
+      sentence: "Après le petit-déjeuner, je {BLANK} une douche.",
+      options: ["prends", "prendre", "prenez"],
+      answer: 0,
+      note: "je → prends (irregular verb prendre) | prendre = infinitive, prenez = vous form"
+    },
+    {
+      sentence: "La chambre de mes parents est {BLANK} premier étage.",
+      options: ["au", "à la", "aux"],
+      answer: 0,
+      note: "étage is masculine → au (à + le) | au premier étage = on the first floor"
+    }
+  ];
+
+  var state = {
+    questions: [],
+    qIdx:      0,
+    score:     0,
+    results:   []
+  };
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function startGame() {
+    state.questions = shuffle(ALL_QUESTIONS);
+    state.qIdx = 0;
+    state.score = 0;
+    state.results = [];
+    showScreen('scf-practice');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    var q = state.questions[state.qIdx];
+    var total = state.questions.length;
+    var pct = Math.round((state.qIdx / total) * 100);
+
+    document.getElementById('scf-prog-label').textContent = 'Question ' + (state.qIdx + 1) + ' of ' + total;
+    document.getElementById('scf-prog-pct').textContent   = pct + '%';
+    document.getElementById('scf-prog-fill').style.width  = pct + '%';
+    document.getElementById('scf-score').textContent      = state.score;
+    document.getElementById('scf-q-num').textContent      = 'Question ' + (state.qIdx + 1);
+
+    // Reset card state
+    var card = document.getElementById('scf-card');
+    card.className = 'scf-card';
+
+    // Build sentence with blank
+    var sentenceEl = document.getElementById('scf-sentence');
+    var parts = q.sentence.split('{BLANK}');
+    sentenceEl.innerHTML = '';
+    var before = document.createTextNode(parts[0]);
+    var blank  = document.createElement('span');
+    blank.className = 'scf-blank unanswered';
+    blank.id = 'scf-blank';
+    blank.textContent = '\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0';
+    var after  = document.createTextNode(parts[1] || '');
+    sentenceEl.appendChild(before);
+    sentenceEl.appendChild(blank);
+    sentenceEl.appendChild(after);
+
+    // Build option buttons
+    var opts = document.getElementById('scf-options');
+    opts.innerHTML = '';
+    // Shuffle options but track which index is correct
+    var indices = [0, 1, 2];
+    var shuffledIdx = shuffle(indices);
+    shuffledIdx.forEach(function(origIdx) {
+      var btn = document.createElement('button');
+      btn.className = 'scf-opt';
+      btn.textContent = q.options[origIdx];
+      btn.dataset.idx = origIdx;
+      btn.addEventListener('click', function() { pickOption(origIdx, btn, q); });
+      opts.appendChild(btn);
+    });
+
+    // Reset feedback
+    var fb = document.getElementById('scf-feedback');
+    fb.className = 'scf-feedback';
+    fb.innerHTML = '';
+
+    document.getElementById('scf-next-btn').classList.remove('visible');
+  }
+
+  function pickOption(chosenIdx, btn, q) {
+    // Disable all options
+    var opts = document.querySelectorAll('.scf-opt');
+    opts.forEach(function(o) { o.disabled = true; });
+
+    var correct = (chosenIdx === q.answer);
+    var blank   = document.getElementById('scf-blank');
+    var card    = document.getElementById('scf-card');
+    var fb      = document.getElementById('scf-feedback');
+
+    blank.textContent = q.options[q.answer];
+    blank.classList.remove('unanswered');
+
+    if (correct) {
+      btn.classList.add('correct');
+      card.classList.add('correct');
+      fb.className = 'scf-feedback correct visible';
+      fb.innerHTML = '&#10003; Correct! <span style="font-weight:600;">' + q.note + '</span>';
+      state.score++;
+    } else {
+      btn.classList.add('wrong');
+      card.classList.add('wrong');
+      // Highlight correct answer
+      opts.forEach(function(o) {
+        if (parseInt(o.dataset.idx, 10) === q.answer) o.classList.add('reveal');
+      });
+      fb.className = 'scf-feedback wrong visible';
+      fb.innerHTML = '&#10007; The correct answer is <strong>' + q.options[q.answer] + '</strong>. ' +
+                     '<span style="font-weight:600;">' + q.note + '</span>';
+    }
+
+    state.results.push({ q: q, chosen: chosenIdx, correct: correct });
+    document.getElementById('scf-score').textContent = state.score;
+
+    var nextBtn = document.getElementById('scf-next-btn');
+    nextBtn.textContent = (state.qIdx < state.questions.length - 1) ? 'Next \u2192' : 'See results \u2192';
+    nextBtn.classList.add('visible');
+  }
+
+  function nextQuestion() {
+    state.qIdx++;
+    if (state.qIdx < state.questions.length) {
+      renderQuestion();
+      window.scrollTo(0, 0);
+    } else {
+      showResults();
+    }
+  }
+
+  function showResults() {
+    showScreen('scf-results');
+    var total = state.questions.length;
+    var score = state.score;
+    var pct   = Math.round((score / total) * 100);
+
+    var n = document.getElementById('scf-res-n');
+    n.textContent = score + '/' + total;
+    n.style.color = pct >= 80 ? '#16a34a' : pct >= 60 ? '#d97706' : '#dc2626';
+
+    var msgs = [
+      ['Parfait\u00a0!',       'Full marks — excellent grammar awareness.'],
+      ['Tr\u00e8s bien\u00a0!','Really strong. Review the ones you missed below.'],
+      ['Bien fait\u00a0!',     'Good effort. Focus on the review list.'],
+      ['Keep going!',         'More practice needed — read the notes carefully.']
+    ];
+    var tier = pct >= 90 ? 0 : pct >= 70 ? 1 : pct >= 50 ? 2 : 3;
+    document.getElementById('scf-res-msg').textContent = msgs[tier][0];
+    document.getElementById('scf-res-sub').textContent = score + ' correct out of ' + total + ' \u2014 ' + msgs[tier][1];
+
+    var body = document.getElementById('scf-res-body');
+    body.innerHTML = '';
+
+    var wrong   = state.results.filter(function(r){ return !r.correct; });
+    var correct = state.results.filter(function(r){ return  r.correct; });
+
+    if (wrong.length) {
+      var sec = document.createElement('div'); sec.style.marginBottom = '24px';
+      var t = document.createElement('div');
+      t.className = 'scf-section-title no';
+      t.textContent = '\u2717 Need more practice (' + wrong.length + ')';
+      sec.appendChild(t);
+      var list = document.createElement('div'); list.className = 'scf-review-list';
+      wrong.forEach(function(r) {
+        var c = document.createElement('div'); c.className = 'scf-review-card';
+        var sentence = r.q.sentence.replace('{BLANK}', '<strong style="color:#dc2626;">' + r.q.options[r.chosen] + '</strong>');
+        var corrected = r.q.sentence.replace('{BLANK}', '<strong style="color:#16a34a;">' + r.q.options[r.q.answer] + '</strong>');
+        c.innerHTML =
+          '<div class="scf-review-sentence">Your answer: ' + sentence + '</div>' +
+          '<div class="scf-review-answer">&#10003; Correct: ' + corrected + '</div>' +
+          '<div class="scf-review-note">&#128161; ' + r.q.note + '</div>';
+        list.appendChild(c);
+      });
+      sec.appendChild(list);
+      body.appendChild(sec);
+    }
+
+    if (correct.length) {
+      var sec2 = document.createElement('div');
+      var t2 = document.createElement('div');
+      t2.className = 'scf-section-title ok';
+      t2.textContent = '\u2713 Got it (' + correct.length + ')';
+      sec2.appendChild(t2);
+      var list2 = document.createElement('div'); list2.className = 'scf-correct-list';
+      correct.forEach(function(r) {
+        var c = document.createElement('div'); c.className = 'scf-correct-card';
+        c.textContent = r.q.sentence.replace('{BLANK}', r.q.options[r.q.answer]);
+        list2.appendChild(c);
+      });
+      sec2.appendChild(list2);
+      body.appendChild(sec2);
+    }
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.scf-screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  document.getElementById('scf-start-btn').addEventListener('click', startGame);
+  document.getElementById('scf-next-btn').addEventListener('click', nextQuestion);
+  document.getElementById('scf-retry-btn').addEventListener('click', startGame);
+
+})();
+</script>
+
+  <script src="js/nav.js"></script>
+</body>
+</html>

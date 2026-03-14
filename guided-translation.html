@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guided Translation | Year 8 French Revision</title>
+  <link rel="stylesheet" href="styles-v2.css">
+  <style>
+    .level-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #1e1b4b; color: #a5b4fc;
+      font-size: 12px; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 99px;
+      margin-bottom: 10px;
+    }
+    .level-dot { width: 7px; height: 7px; border-radius: 50%; background: #818cf8; }
+
+    /* ── TOPIC PICKER ── */
+    .gt-topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px; margin: 20px 0 28px;
+    }
+    .gt-topic-card {
+      display: flex; flex-direction: column;
+      padding: 22px 20px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      cursor: pointer; text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.15s, transform 0.12s, box-shadow 0.15s;
+      user-select: none;
+    }
+    .gt-topic-card:hover {
+      border-color: #818cf8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99,102,241,0.12);
+    }
+    .gt-topic-icon { font-size: 32px; line-height: 1; margin-bottom: 12px; }
+    .gt-topic-name { font-size: 17px; font-weight: 800; margin-bottom: 3px; }
+    .gt-topic-fr   { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+    .gt-topic-count {
+      font-size: 12px; font-weight: 700;
+      color: #4338ca; background: #e0e7ff;
+      border-radius: 99px; padding: 2px 10px;
+      display: inline-block; width: fit-content;
+    }
+
+    .gt-how-box {
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 14px; padding: 20px 24px; margin-bottom: 28px;
+    }
+    .gt-how-steps {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px; margin-top: 14px;
+    }
+    .gt-how-step { display: flex; align-items: flex-start; gap: 10px; }
+    .gt-step-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #4338ca; color: #fff;
+      font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .gt-step-text { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.4; }
+
+    /* ── PRACTICE SCREEN ── */
+    .gt-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .gt-back-btn {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 8px; padding: 6px 12px;
+      font-family: 'Dosis', sans-serif; font-size: 13px; font-weight: 700;
+      color: var(--text-muted); cursor: pointer; transition: all 0.12s;
+    }
+    .gt-back-btn:hover { border-color: #4338ca; color: #4338ca; }
+    .gt-header-title { font-size: 18px; font-weight: 800; color: var(--text); }
+    .gt-header-fr    { font-size: 14px; font-weight: 600; color: var(--text-muted); }
+
+    .gt-prog-wrap { margin-bottom: 24px; }
+    .gt-prog-meta {
+      display: flex; justify-content: space-between;
+      font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .gt-prog-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .gt-prog-fill { height: 100%; background: #4338ca; border-radius: 99px; transition: width 0.35s ease; }
+
+    .gt-score-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .gt-badge {
+      display: flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 99px; font-size: 13px; font-weight: 700;
+    }
+    .gt-badge.got  { background: #f0fdf4; color: #166534; border: 1.5px solid #86efac; }
+    .gt-badge.meh  { background: #fefce8; color: #92400e; border: 1.5px solid #fde68a; }
+    .gt-badge.no   { background: #fef2f2; color: #991b1b; border: 1.5px solid #fca5a5; }
+
+    /* Question card */
+    .gt-card {
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 16px; padding: 28px 32px; margin-bottom: 16px;
+    }
+    .gt-card-hint {
+      font-size: 11px; font-weight: 800; color: var(--text-muted);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .gt-card-en {
+      font-size: clamp(18px, 3.5vw, 26px); font-weight: 800;
+      line-height: 1.4; color: var(--text); margin-bottom: 18px;
+    }
+
+    /* Hint strip */
+    .gt-hint-label {
+      font-size: 11px; font-weight: 800; color: #4338ca;
+      letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .gt-hint-strip { display: flex; flex-wrap: wrap; gap: 7px; }
+    .gt-hint-chip {
+      background: #e0e7ff; color: #1e1b4b;
+      border-radius: 7px; padding: 5px 11px;
+      font-size: 13px; font-weight: 700;
+    }
+    .gt-hint-chip em {
+      font-style: normal; font-weight: 600;
+      color: #4338ca; font-size: 11px; margin-left: 3px;
+    }
+
+    /* Answer input */
+    .gt-attempt-wrap { margin: 18px 0 14px; }
+    .gt-attempt-label {
+      font-size: 11px; font-weight: 800; color: var(--text-muted);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px;
+    }
+    .gt-attempt-input {
+      width: 100%; box-sizing: border-box;
+      font-family: 'Dosis', sans-serif; font-size: 17px; font-weight: 700;
+      padding: 13px 16px; border: 2.5px solid var(--border);
+      border-radius: 10px; background: var(--white); color: var(--text);
+      outline: none; resize: vertical; min-height: 56px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .gt-attempt-input:focus { border-color: #4338ca; box-shadow: 0 0 0 3px rgba(67,56,202,0.12); }
+
+    /* Accent bar */
+    .gt-accent-bar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; align-items: center; }
+    .gt-accent-label { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-right: 4px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .gt-ab {
+      width: 34px; height: 34px;
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 7px; font-family: 'Dosis', sans-serif;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: all 0.1s; color: var(--text);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .gt-ab:hover { background: #e0e7ff; border-color: #4338ca; color: #1e1b4b; }
+
+    /* Reveal */
+    .gt-reveal-btn {
+      padding: 13px 28px; background: #4338ca; color: #fff;
+      border: none; border-radius: 10px; font-family: 'Dosis', sans-serif;
+      font-size: 16px; font-weight: 800; cursor: pointer; transition: background 0.15s;
+    }
+    .gt-reveal-btn:hover { background: #3730a3; }
+
+    /* Answer panel */
+    .gt-answer-panel {
+      background: #f8fafc; border: 2px solid #c7d2fe;
+      border-radius: 14px; padding: 20px 24px; margin: 16px 0 20px; display: none;
+    }
+    .gt-answer-panel.visible { display: block; }
+    .gt-answer-label {
+      font-size: 11px; font-weight: 800; color: #4338ca;
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .gt-answer-fr {
+      font-size: 20px; font-weight: 800; color: var(--text); line-height: 1.5; margin-bottom: 10px;
+    }
+    .gt-answer-note { font-size: 13px; font-weight: 600; color: var(--text-muted); line-height: 1.6; }
+
+    /* Self-mark */
+    .gt-mark-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+    .gt-mark-btn {
+      flex: 1; min-width: 100px; max-width: 180px;
+      padding: 13px 16px; border: 2px solid var(--border);
+      border-radius: 10px; background: var(--white);
+      font-family: 'Dosis', sans-serif; font-size: 14px; font-weight: 800;
+      cursor: pointer; transition: all 0.15s; text-align: center; color: var(--text);
+    }
+    .gt-mark-btn:hover { border-color: #818cf8; background: #eef2ff; }
+    .gt-mark-btn.mark-got   { border-color: #16a34a; background: #f0fdf4; color: #166534; }
+    .gt-mark-btn.mark-close { border-color: #d97706; background: #fefce8; color: #92400e; }
+    .gt-mark-btn.mark-no    { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
+    .gt-mark-label { font-size: 11px; display: block; font-weight: 600; margin-top: 2px; opacity: 0.75; }
+
+    /* ── RESULTS ── */
+    .gt-res-score-box {
+      display: flex; align-items: center; gap: 24px;
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 16px; padding: 28px 32px; margin-bottom: 28px;
+    }
+    .gt-res-n { font-size: 56px; font-weight: 800; line-height: 1; flex-shrink: 0; }
+    .gt-res-msg { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .gt-res-sub { font-size: 14px; color: var(--text-muted); }
+
+    .gt-res-section { margin-bottom: 24px; }
+    .gt-res-section-title {
+      font-size: 14px; font-weight: 800; letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 12px; padding-bottom: 6px;
+      border-bottom: 2px solid var(--border);
+    }
+    .gt-res-section-title.ok  { color: #16a34a; border-color: #86efac; }
+    .gt-res-section-title.meh { color: #d97706; border-color: #fde68a; }
+    .gt-res-section-title.no  { color: #dc2626; border-color: #fca5a5; }
+    .gt-res-cards { display: flex; flex-direction: column; gap: 8px; }
+    .gt-res-card {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 12px 16px;
+    }
+    .gt-res-card .rc-en { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 3px; }
+    .gt-res-card .rc-fr { font-size: 15px; font-weight: 800; color: var(--text); }
+    .gt-res-card .rc-note { font-size: 12px; color: #4338ca; margin-top: 4px; }
+
+    .gt-screen { display: none; }
+    .gt-screen.active { display: block; }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#003B72">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/y8-french-revision/sw.js');
+      });
+    }
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GRSHMVBVGD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-GRSHMVBVGD");
+  </script>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
+        </div>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="header-nav" id="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="index.html" class="hn-link">Topics</a>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Grammar <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="grammar.html" class="hn-link">Grammar</a>
+            <a href="grammar-trainer.html" class="hn-link">Grammar Trainer</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Practice <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="vocab-challenge.html" class="hn-link">Vocab Challenge</a>
+            <a href="spelling-test.html" class="hn-link">Spelling Test</a>
+            <a href="speed-recall.html" class="hn-link">Speed Recall</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Exam Prep <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="speaking-prep.html" class="hn-link">Speaking Prep</a>
+            <a href="select-correct-form.html" class="hn-link">Select the Form <span style="font-size:10px;background:#dcfce7;color:#166534;border-radius:4px;padding:1px 5px;margin-left:4px;font-weight:800;">L1</span></a>
+            <a href="guided-translation.html" class="hn-link">Guided Translation <span style="font-size:10px;background:#e0e7ff;color:#1e1b4b;border-radius:4px;padding:1px 5px;margin-left:4px;font-weight:800;">L2</span></a>
+            <a href="past-papers.html" class="hn-link">Past Papers</a>
+            <a href="checklist.html" class="hn-link">Checklist</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <div class="page-banner-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Guided Translation</span>
+      </div>
+      <div class="level-badge"><div class="level-dot"></div>Level 2</div>
+      <h1 class="hero-title" style="margin-top:8px;">&#9997;&#65039; Guided Translation</h1>
+      <p class="hero-desc">Translate English sentences into French using the vocabulary hints provided &mdash; just like in the Level 2 exam</p>
+    </div>
+  </div>
+
+  <main class="content-wrap">
+
+    <!-- SCREEN 1 — TOPIC PICKER -->
+    <div id="gt-pick" class="gt-screen active">
+
+      <div class="gt-how-box">
+        <strong style="font-size:15px;">How it works</strong>
+        <div class="gt-how-steps">
+          <div class="gt-how-step">
+            <div class="gt-step-num">1</div>
+            <div class="gt-step-text">Read the English sentence carefully</div>
+          </div>
+          <div class="gt-how-step">
+            <div class="gt-step-num">2</div>
+            <div class="gt-step-text">Use the hints: nouns have gender, verbs are infinitives, adjectives are masculine singular</div>
+          </div>
+          <div class="gt-how-step">
+            <div class="gt-step-num">3</div>
+            <div class="gt-step-text">Type your French translation — add articles, agreements and correct word order</div>
+          </div>
+          <div class="gt-how-step">
+            <div class="gt-step-num">4</div>
+            <div class="gt-step-text">Reveal the answer and mark yourself honestly</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 style="font-size:20px;font-weight:800;margin:0 0 6px;">Choose a Topic</h2>
+      <p style="font-size:14px;color:var(--text-muted);margin:0 0 4px;">5 sentences per topic &mdash; same format as the Level 2 exam.</p>
+      <div class="gt-topic-grid" id="gt-topic-grid"></div>
+
+    </div>
+
+    <!-- SCREEN 2 — PRACTICE -->
+    <div id="gt-practice" class="gt-screen">
+
+      <div class="gt-header">
+        <button class="gt-back-btn" id="gt-back-btn">&#8592; Topics</button>
+        <div>
+          <div class="gt-header-title" id="gt-header-title"></div>
+          <div class="gt-header-fr" id="gt-header-fr"></div>
+        </div>
+      </div>
+
+      <div class="gt-prog-wrap">
+        <div class="gt-prog-meta">
+          <span id="gt-prog-label">1 of 5</span>
+          <span id="gt-prog-pct">0%</span>
+        </div>
+        <div class="gt-prog-bar"><div class="gt-prog-fill" id="gt-prog-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="gt-score-row">
+        <div class="gt-badge got"><span>&#10003;</span> <span id="gt-count-got">0</span> Got it</div>
+        <div class="gt-badge meh"><span>~</span> <span id="gt-count-meh">0</span> Almost</div>
+        <div class="gt-badge no"><span>&#10007;</span> <span id="gt-count-no">0</span> Need review</div>
+      </div>
+
+      <div class="gt-card">
+        <div class="gt-card-hint">Translate into French</div>
+        <div class="gt-card-en" id="gt-card-en"></div>
+        <div class="gt-hint-label">Vocabulary provided</div>
+        <div class="gt-hint-strip" id="gt-hint-strip"></div>
+      </div>
+
+      <div class="gt-attempt-wrap">
+        <div class="gt-attempt-label">Your translation</div>
+        <textarea class="gt-attempt-input" id="gt-attempt" rows="2" placeholder="Type your French here&#8230;"></textarea>
+      </div>
+
+      <div class="gt-accent-bar" id="gt-accent-bar">
+        <span class="gt-accent-label">Accents</span>
+      </div>
+
+      <button class="gt-reveal-btn" id="gt-reveal-btn">Reveal Answer &#128065;&#65039;</button>
+
+      <div class="gt-answer-panel" id="gt-answer-panel">
+        <div class="gt-answer-label">&#127468;&#127479; Model Answer</div>
+        <div class="gt-answer-fr" id="gt-answer-fr"></div>
+        <div class="gt-answer-note" id="gt-answer-note"></div>
+      </div>
+
+      <div class="gt-mark-row" id="gt-mark-row" style="display:none;">
+        <button class="gt-mark-btn mark-got" data-mark="got">
+          &#10003; Got it
+          <span class="gt-mark-label">Correct translation</span>
+        </button>
+        <button class="gt-mark-btn mark-close" data-mark="close">
+          ~ Almost
+          <span class="gt-mark-label">Minor errors</span>
+        </button>
+        <button class="gt-mark-btn mark-no" data-mark="no">
+          &#10007; Need review
+          <span class="gt-mark-label">Missed it</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- SCREEN 3 — RESULTS -->
+    <div id="gt-results" class="gt-screen">
+      <div class="gt-res-score-box">
+        <div class="gt-res-n" id="gt-res-n"></div>
+        <div>
+          <div class="gt-res-msg" id="gt-res-msg"></div>
+          <div class="gt-res-sub" id="gt-res-sub"></div>
+        </div>
+      </div>
+      <div id="gt-res-body"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+        <button class="btn btn-outline" id="gt-retry-btn" style="cursor:pointer;">&#8635; Same topic again</button>
+        <button class="btn btn-ghost" id="gt-topics-btn" style="cursor:pointer;">&#8592; Choose topic</button>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var TOPICS = [
+    {
+      id: 'home',
+      name: 'My Home',
+      fr: 'Chez moi',
+      icon: '&#127968;',
+      questions: [
+        {
+          en: "At home, my brother and my sister share a big bedroom.",
+          hints: ["frère (m)", "sœur (f)", "partager", "grand", "chambre (f)"],
+          fr: "À la maison, mon frère et ma sœur partagent une grande chambre.",
+          note: "grande — chambre is feminine, so grand → grande | partagent — ils/elles form of partager (-ent)"
+        },
+        {
+          en: "My parents' bedroom is on the first floor, between my bedroom and the stairs.",
+          hints: ["parent (m)", "chambre (f)", "premier", "étage (m)", "escalier (m)"],
+          fr: "La chambre de mes parents est au premier étage, entre ma chambre et l'escalier.",
+          note: "au premier étage = on the first floor (à + le = au) | entre = between | l'escalier (elision)"
+        },
+        {
+          en: "In the morning I have a shower and my father makes the beds.",
+          hints: ["matin (m)", "prendre", "douche (f)", "père (m)", "faire", "lit (m)"],
+          fr: "Le matin je prends une douche et mon père fait les lits.",
+          note: "prendre une douche = to have a shower (je prends) | faire les lits = to make the beds (il fait)"
+        },
+        {
+          en: "Next year I am going to have a new wardrobe for my bedroom.",
+          hints: ["prochain", "année (f)", "nouveau", "armoire (f)", "chambre (f)"],
+          fr: "L'année prochaine je vais avoir une nouvelle armoire pour ma chambre.",
+          note: "nouvelle — armoire is feminine, so nouveau → nouvelle | prochaine agrees with année (f.)"
+        },
+        {
+          en: "After breakfast, we brush our teeth in the bathroom.",
+          hints: ["petit-déjeuner (m)", "se brosser", "dent (f)", "salle de bains (f)"],
+          fr: "Après le petit-déjeuner, nous nous brossons les dents dans la salle de bains.",
+          note: "se brosser les dents = to brush one's teeth (reflexive: nous nous brossons) | après le = after the"
+        }
+      ]
+    },
+    {
+      id: 'family',
+      name: 'My Family',
+      fr: 'Ma famille',
+      icon: '&#129489;',
+      questions: [
+        {
+          en: "My younger sister is very funny and she has long blond hair.",
+          hints: ["petit", "sœur (f)", "drôle", "long", "blond", "cheveu (m pl)"],
+          fr: "Ma petite sœur est très drôle et elle a les cheveux longs et blonds.",
+          note: "longs et blonds — cheveux is masculine plural, both adjectives agree | petite sœur = younger sister"
+        },
+        {
+          en: "I get on well with my parents because they are kind and patient.",
+          hints: ["s'entendre", "parent (m pl)", "gentil", "patient"],
+          fr: "Je m'entends bien avec mes parents parce qu'ils sont gentils et patients.",
+          note: "gentils et patients — masculine plural adjectives agree | m'entends = reflexive (je + me → m')"
+        },
+        {
+          en: "My grandmother lives in a small flat near the town centre.",
+          hints: ["grand-mère (f)", "habiter", "petit", "appartement (m)", "centre-ville (m)"],
+          fr: "Ma grand-mère habite dans un petit appartement près du centre-ville.",
+          note: "petit comes before appartement (m.) | près du = près de + le | du centre-ville"
+        },
+        {
+          en: "My older brother is very sporty — he plays rugby every Saturday.",
+          hints: ["aîné", "frère (m)", "sportif", "jouer", "rugby (m)", "samedi (m)"],
+          fr: "Mon frère aîné est très sportif — il joue au rugby chaque samedi.",
+          note: "aîné comes after the noun | sportif agrees with frère (m.) | jouer au + sport"
+        },
+        {
+          en: "My parents are separated — I live with my father during the week.",
+          hints: ["parent (m pl)", "séparé", "habiter", "père (m)", "semaine (f)"],
+          fr: "Mes parents sont séparés — j'habite avec mon père pendant la semaine.",
+          note: "séparés — masculine plural agrees with parents | pendant la semaine = during the week"
+        }
+      ]
+    },
+    {
+      id: 'school',
+      name: 'My School',
+      fr: 'Mon école',
+      icon: '&#127979;',
+      questions: [
+        {
+          en: "My French teacher is very enthusiastic and always encouraging.",
+          hints: ["professeur (m)", "français", "enthousiaste", "encourageant"],
+          fr: "Mon professeur de français est très enthousiaste et toujours encourageant.",
+          note: "professeur de + subject | enthousiaste = same m/f form | encourageant agrees with professeur (m.)"
+        },
+        {
+          en: "Last term I studied a lot and I got very good marks.",
+          hints: ["trimestre (m)", "dernier", "étudier", "bon", "note (f)"],
+          fr: "Le trimestre dernier j'ai beaucoup étudié et j'ai eu de très bonnes notes.",
+          note: "bonnes notes — feminine plural | étudier → étudié (avoir + past participle) | avoir → eu"
+        },
+        {
+          en: "Next year we are going to sit our Common Entrance exams.",
+          hints: ["prochain", "année (f)", "passer", "examen (m)"],
+          fr: "L'année prochaine nous allons passer nos examens.",
+          note: "passer un examen = to sit an exam (not réussir!) | prochaine agrees with année (f.) | aller + infinitive"
+        },
+        {
+          en: "I prefer science to history because it is more interesting.",
+          hints: ["préférer", "science (f)", "histoire (f)", "intéressant"],
+          fr: "Je préfère les sciences à l'histoire parce que c'est plus intéressant.",
+          note: "préférer X à Y = to prefer X to Y | plus intéressant — impersonal c'est, so masculine singular"
+        },
+        {
+          en: "I would like to become a journalist, so French is very useful.",
+          hints: ["vouloir", "devenir", "journaliste", "français (m)", "utile"],
+          fr: "Je voudrais devenir journaliste, donc le français est très utile.",
+          note: "devenir + job = no article! | journaliste = same m/f | donc = therefore/so | utile = same m/f"
+        }
+      ]
+    },
+    {
+      id: 'freetime',
+      name: 'Free Time',
+      fr: 'Mon temps libre',
+      icon: '&#9917;',
+      questions: [
+        {
+          en: "Last Saturday I went to the cinema and watched a really exciting film.",
+          hints: ["samedi (m)", "dernier", "aller", "cinéma (m)", "regarder", "passionnant", "film (m)"],
+          fr: "Samedi dernier je suis allé(e) au cinéma et j'ai regardé un film vraiment passionnant.",
+          note: "aller → je suis allé(e) — être verb in passé composé | regarder → j'ai regardé | passionnant after the noun"
+        },
+        {
+          en: "In my free time I play the piano and I go cycling at weekends.",
+          hints: ["temps libre (m)", "jouer", "piano (m)", "faire", "vélo (m)", "week-end (m)"],
+          fr: "Dans mon temps libre je joue du piano et je fais du vélo le week-end.",
+          note: "jouer du + instrument (m.) | faire du vélo = to go cycling | le week-end = at weekends"
+        },
+        {
+          en: "I would like to try horse riding because it looks very relaxing.",
+          hints: ["vouloir", "essayer", "équitation (f)", "avoir l'air", "relaxant"],
+          fr: "Je voudrais essayer l'équitation parce que ça a l'air très relaxant.",
+          note: "avoir l'air = to look/seem | l'équitation (f., elision) | relaxant — impersonal so masculine singular"
+        },
+        {
+          en: "I really love reading — I read for an hour every evening.",
+          hints: ["adorer", "lire", "heure (f)", "soir (m)"],
+          fr: "J'adore vraiment lire — je lis pendant une heure chaque soir.",
+          note: "lire → je lis (irregular) | pendant une heure = for an hour | chaque soir = every evening"
+        },
+        {
+          en: "Last summer I went on holiday to France and I visited lots of museums.",
+          hints: ["été (m)", "dernier", "aller", "vacances (f pl)", "France (f)", "visiter", "musée (m)"],
+          fr: "L'été dernier je suis allé(e) en vacances en France et j'ai visité beaucoup de musées.",
+          note: "aller → je suis allé(e) (être verb) | en France (feminine country) | visiter → j'ai visité | beaucoup de"
+        }
+      ]
+    },
+    {
+      id: 'daily',
+      name: 'Daily Routine',
+      fr: 'Ma routine quotidienne',
+      icon: '&#9728;&#65039;',
+      questions: [
+        {
+          en: "Every morning I get up at seven o'clock and I have a shower.",
+          hints: ["matin (m)", "se lever", "heure (f)", "prendre", "douche (f)"],
+          fr: "Chaque matin je me lève à sept heures et je prends une douche.",
+          note: "se lever = to get up (reflexive: je me lève) | à sept heures | prendre une douche = to have a shower"
+        },
+        {
+          en: "After dinner, I do my homework for an hour before going to bed.",
+          hints: ["dîner (m)", "faire", "devoir (m pl)", "heure (f)", "se coucher"],
+          fr: "Après le dîner, je fais mes devoirs pendant une heure avant de me coucher.",
+          note: "avant de + infinitive = before doing | se coucher = to go to bed | pendant une heure = for an hour"
+        },
+        {
+          en: "On Sundays we always eat together as a family.",
+          hints: ["dimanche (m)", "manger", "ensemble", "famille (f)"],
+          fr: "Le dimanche nous mangeons toujours ensemble en famille.",
+          note: "le dimanche = on Sundays (definite article for habitual action) | en famille = as a family"
+        },
+        {
+          en: "I get dressed quickly and then I eat breakfast with my family.",
+          hints: ["s'habiller", "vite", "ensuite", "manger", "petit-déjeuner (m)", "famille (f)"],
+          fr: "Je m'habille vite et ensuite je mange le petit-déjeuner avec ma famille.",
+          note: "s'habiller = to get dressed (reflexive: je m'habille) | vite = quickly | ensuite = then/afterwards"
+        },
+        {
+          en: "In the evening I watch television for half an hour before going to bed.",
+          hints: ["soir (m)", "regarder", "télévision (f)", "demi", "heure (f)", "se coucher"],
+          fr: "Le soir je regarde la télévision pendant une demi-heure avant de me coucher.",
+          note: "une demi-heure = half an hour | avant de + infinitive | le soir = in the evening (habitual)"
+        }
+      ]
+    }
+  ];
+
+  var state = {
+    topicIdx:  0,
+    qIdx:      0,
+    questions: [],
+    results:   [],
+    revealed:  false
+  };
+
+  var ACCENTS = ['é','è','ê','ë','à','â','ä','ç','ù','û','ü','ô','ö','î','ï','œ'];
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function buildAccentBar() {
+    var bar = document.getElementById('gt-accent-bar');
+    bar.innerHTML = '<span class="gt-accent-label">Accents</span>';
+    ACCENTS.forEach(function(ch) {
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'gt-ab'; btn.textContent = ch;
+      btn.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        var inp = document.getElementById('gt-attempt');
+        var s = inp.selectionStart, end = inp.selectionEnd;
+        inp.value = inp.value.substring(0, s) + ch + inp.value.substring(end);
+        inp.selectionStart = inp.selectionEnd = s + 1;
+        inp.focus();
+      });
+      bar.appendChild(btn);
+    });
+  }
+
+  function buildTopicGrid() {
+    var grid = document.getElementById('gt-topic-grid');
+    grid.innerHTML = '';
+    TOPICS.forEach(function(topic, idx) {
+      var card = document.createElement('div');
+      card.className = 'gt-topic-card';
+      card.innerHTML =
+        '<div class="gt-topic-icon">' + topic.icon + '</div>' +
+        '<div class="gt-topic-name">' + topic.name + '</div>' +
+        '<div class="gt-topic-fr">'   + topic.fr   + '</div>' +
+        '<div class="gt-topic-count">' + topic.questions.length + ' sentences</div>';
+      card.addEventListener('click', function() { startTopic(idx); });
+      grid.appendChild(card);
+    });
+  }
+
+  function startTopic(idx) {
+    state.topicIdx  = idx;
+    state.qIdx      = 0;
+    state.questions = shuffle(TOPICS[idx].questions);
+    state.results   = [];
+    var topic = TOPICS[idx];
+    document.getElementById('gt-header-title').textContent = topic.name;
+    document.getElementById('gt-header-fr').textContent    = topic.fr;
+    buildAccentBar();
+    showScreen('gt-practice');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    var q = state.questions[state.qIdx];
+    state.revealed = false;
+
+    var total = state.questions.length;
+    var pct   = Math.round((state.qIdx / total) * 100);
+    document.getElementById('gt-prog-label').textContent = (state.qIdx + 1) + ' of ' + total;
+    document.getElementById('gt-prog-pct').textContent   = pct + '%';
+    document.getElementById('gt-prog-fill').style.width  = pct + '%';
+
+    updateBadges();
+
+    document.getElementById('gt-card-en').textContent = q.en;
+
+    var strip = document.getElementById('gt-hint-strip');
+    strip.innerHTML = '';
+    q.hints.forEach(function(h) {
+      var chip = document.createElement('span');
+      chip.className = 'gt-hint-chip';
+      // bold word, italic gender/type in smaller text
+      var parts = h.match(/^(.*?)(\s*\(.*\))?$/);
+      chip.innerHTML = parts[1] + (parts[2] ? '<em>' + parts[2] + '</em>' : '');
+      strip.appendChild(chip);
+    });
+
+    document.getElementById('gt-attempt').value = '';
+    document.getElementById('gt-answer-fr').textContent   = q.fr;
+    document.getElementById('gt-answer-note').textContent = q.note || '';
+
+    document.getElementById('gt-answer-panel').classList.remove('visible');
+    document.getElementById('gt-mark-row').style.display  = 'none';
+    document.getElementById('gt-reveal-btn').style.display = 'inline-block';
+    document.getElementById('gt-attempt').disabled = false;
+
+    setTimeout(function() { document.getElementById('gt-attempt').focus(); }, 50);
+  }
+
+  function revealAnswer() {
+    if (state.revealed) return;
+    state.revealed = true;
+    document.getElementById('gt-answer-panel').classList.add('visible');
+    document.getElementById('gt-mark-row').style.display  = 'flex';
+    document.getElementById('gt-reveal-btn').style.display = 'none';
+    document.getElementById('gt-attempt').disabled = true;
+  }
+
+  function markQuestion(mark) {
+    var q = state.questions[state.qIdx];
+    state.results.push({ q: q, mark: mark });
+    updateBadges();
+    state.qIdx++;
+    if (state.qIdx < state.questions.length) {
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  function updateBadges() {
+    document.getElementById('gt-count-got').textContent = state.results.filter(function(r){ return r.mark === 'got';   }).length;
+    document.getElementById('gt-count-meh').textContent = state.results.filter(function(r){ return r.mark === 'close'; }).length;
+    document.getElementById('gt-count-no').textContent  = state.results.filter(function(r){ return r.mark === 'no';    }).length;
+  }
+
+  function showResults() {
+    showScreen('gt-results');
+    var total = state.results.length;
+    var got   = state.results.filter(function(r){ return r.mark === 'got';   }).length;
+    var close = state.results.filter(function(r){ return r.mark === 'close'; }).length;
+    var no    = state.results.filter(function(r){ return r.mark === 'no';    }).length;
+
+    var pct = Math.round((got / total) * 100);
+    var n = document.getElementById('gt-res-n');
+    n.textContent = pct + '%';
+    n.style.color = pct >= 80 ? '#16a34a' : pct >= 60 ? '#d97706' : '#dc2626';
+
+    var msgs = [
+      ['Parfait\u00a0!',   'Outstanding — you could sit this exam right now.'],
+      ['Tr\u00e8s bien\u00a0!', 'Really solid. Tighten up the ones you missed.'],
+      ['Bien fait\u00a0!',  'Good effort — focus on your review list.'],
+      ['Keep going!', 'More practice needed — use the grammar reference to help.']
+    ];
+    var tier = pct >= 90 ? 0 : pct >= 70 ? 1 : pct >= 50 ? 2 : 3;
+    document.getElementById('gt-res-msg').textContent = msgs[tier][0];
+    document.getElementById('gt-res-sub').textContent = got + ' correct, ' + close + ' almost, ' + no + ' to review \u2014 ' + msgs[tier][1];
+
+    var body = document.getElementById('gt-res-body');
+    body.innerHTML = '';
+
+    function makeSection(title, cls, items) {
+      if (!items.length) return;
+      var sec = document.createElement('div'); sec.className = 'gt-res-section';
+      var t = document.createElement('div');
+      t.className = 'gt-res-section-title ' + cls;
+      t.textContent = title + ' (' + items.length + ')';
+      sec.appendChild(t);
+      var cards = document.createElement('div'); cards.className = 'gt-res-cards';
+      items.forEach(function(r) {
+        var c = document.createElement('div'); c.className = 'gt-res-card';
+        c.innerHTML = '<div class="rc-en">' + r.q.en + '</div>' +
+                      '<div class="rc-fr">' + r.q.fr + '</div>' +
+                      (r.q.note ? '<div class="rc-note">&#128161; ' + r.q.note + '</div>' : '');
+        cards.appendChild(c);
+      });
+      sec.appendChild(cards);
+      body.appendChild(sec);
+    }
+
+    makeSection('\u2713 Got it', 'ok',  state.results.filter(function(r){ return r.mark === 'got';   }));
+    makeSection('~ Almost',      'meh', state.results.filter(function(r){ return r.mark === 'close'; }));
+    makeSection('\u2717 Need more practice', 'no', state.results.filter(function(r){ return r.mark === 'no'; }));
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.gt-screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Wire up
+  document.getElementById('gt-back-btn').addEventListener('click', function() { showScreen('gt-pick'); });
+  document.getElementById('gt-reveal-btn').addEventListener('click', revealAnswer);
+  document.querySelectorAll('[data-mark]').forEach(function(btn) {
+    btn.addEventListener('click', function() { markQuestion(btn.dataset.mark); });
+  });
+  document.getElementById('gt-retry-btn').addEventListener('click', function() { startTopic(state.topicIdx); });
+  document.getElementById('gt-topics-btn').addEventListener('click', function() { showScreen('gt-pick'); });
+  document.getElementById('gt-attempt').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (!state.revealed) revealAnswer(); }
+  });
+
+  buildTopicGrid();
+  buildAccentBar();
+
+})();
+</script>
+
+  <script src="js/nav.js"></script>
+</body>
+</html>
