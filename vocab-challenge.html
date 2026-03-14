@@ -1017,6 +1017,11 @@
     function senseCheck(given, catId, callback) {
       var keys = SENSE_KEYS[catId];
       if (!keys) { callback(false); return; }
+      // Reject if the input itself looks like English (matches English keywords directly)
+      var givenLower = given.trim().toLowerCase();
+      if (keys.some(function (k) { return givenLower.indexOf(k) !== -1; })) {
+        callback(false); return;
+      }
       var done = false;
       var timer = setTimeout(function () {
         if (!done) { done = true; callback(false); }
