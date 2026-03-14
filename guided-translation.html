@@ -16,6 +16,29 @@
     }
     .level-dot { width: 7px; height: 7px; border-radius: 50%; background: #818cf8; }
 
+    /* ── EXAM MODE CARD ── */
+    .gt-topic-card.exam-mode {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+      color: #e0e7ff; border-color: #4338ca;
+      grid-column: 1 / -1;
+    }
+    .gt-topic-card.exam-mode .gt-topic-name { color: #e0e7ff; }
+    .gt-topic-card.exam-mode .gt-topic-fr   { color: #a5b4fc; }
+    .gt-topic-card.exam-mode:hover { border-color: #818cf8; box-shadow: 0 6px 20px rgba(99,102,241,0.3); }
+    .gt-exam-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(129,140,248,0.25); color: #a5b4fc;
+      font-size: 11px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 99px; margin-top: 6px; width: fit-content;
+    }
+    /* ── TOPIC BADGE (shown in exam mode on each question) ── */
+    .gt-topic-badge {
+      display: none; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 700; color: #4338ca; background: #e0e7ff;
+      border-radius: 99px; padding: 4px 12px; margin-bottom: 14px; width: fit-content;
+    }
+    .gt-topic-badge.visible { display: inline-flex; }
+
     /* ── TOPIC PICKER ── */
     .gt-topic-grid {
       display: grid;
@@ -353,7 +376,7 @@
       </div>
 
       <h2 style="font-size:20px;font-weight:800;margin:0 0 6px;">Choose a Topic</h2>
-      <p style="font-size:14px;color:var(--text-muted);margin:0 0 4px;">5 sentences per topic &mdash; same format as the Level 2 exam.</p>
+      <p style="font-size:14px;color:var(--text-muted);margin:0 0 4px;">5 sentences per session from a larger pool &mdash; or try Exam Mode for one sentence from each topic.</p>
       <div class="gt-topic-grid" id="gt-topic-grid"></div>
 
     </div>
@@ -384,6 +407,7 @@
       </div>
 
       <div class="gt-card">
+        <div class="gt-topic-badge" id="gt-topic-badge"></div>
         <div class="gt-card-hint">Translate into French</div>
         <div class="gt-card-en" id="gt-card-en"></div>
         <div class="gt-hint-label">Vocabulary provided</div>
@@ -446,7 +470,8 @@
       </div>
       <div id="gt-res-body"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
-        <button class="btn btn-outline" id="gt-retry-btn" style="cursor:pointer;">&#8635; Same topic again</button>
+        <button class="gt-reveal-btn" id="gt-more-btn" style="font-size:15px;padding:11px 24px;">&#8594; 5 more</button>
+        <button class="btn btn-outline" id="gt-retry-btn" style="cursor:pointer;">&#8635; Retry same set</button>
         <button class="btn btn-ghost" id="gt-topics-btn" style="cursor:pointer;">&#8592; Choose topic</button>
       </div>
     </div>
@@ -464,203 +489,92 @@
 
   var TOPICS = [
     {
-      id: 'home',
-      name: 'My Home',
-      fr: 'Chez moi',
-      icon: '&#127968;',
+      id: 'home', name: 'My Home', fr: 'Chez moi', icon: '&#127968;',
       questions: [
-        {
-          en: "At home, my brother and my sister share a big bedroom.",
-          hints: ["frère (m)", "sœur (f)", "partager", "grand", "chambre (f)"],
-          fr: "À la maison, mon frère et ma sœur partagent une grande chambre.",
-          note: "grande — chambre is feminine, so grand → grande | partagent — ils/elles form of partager (-ent)"
-        },
-        {
-          en: "My parents' bedroom is on the first floor, between my bedroom and the stairs.",
-          hints: ["parent (m)", "chambre (f)", "premier", "étage (m)", "escalier (m)"],
-          fr: "La chambre de mes parents est au premier étage, entre ma chambre et l'escalier.",
-          note: "au premier étage = on the first floor (à + le = au) | entre = between | l'escalier (elision)"
-        },
-        {
-          en: "In the morning I have a shower and my father makes the beds.",
-          hints: ["matin (m)", "prendre", "douche (f)", "père (m)", "faire", "lit (m)"],
-          fr: "Le matin je prends une douche et mon père fait les lits.",
-          note: "prendre une douche = to have a shower (je prends) | faire les lits = to make the beds (il fait)"
-        },
-        {
-          en: "Next year I am going to have a new wardrobe for my bedroom.",
-          hints: ["prochain", "année (f)", "nouveau", "armoire (f)", "chambre (f)"],
-          fr: "L'année prochaine je vais avoir une nouvelle armoire pour ma chambre.",
-          note: "nouvelle — armoire is feminine, so nouveau → nouvelle | prochaine agrees with année (f.)"
-        },
-        {
-          en: "After breakfast, we brush our teeth in the bathroom.",
-          hints: ["petit-déjeuner (m)", "se brosser", "dent (f)", "salle de bains (f)"],
-          fr: "Après le petit-déjeuner, nous nous brossons les dents dans la salle de bains.",
-          note: "se brosser les dents = to brush one's teeth (reflexive: nous nous brossons) | après le = after the"
-        }
+        { en: "At home, my brother and my sister share a big bedroom.", hints: ["frère (m)", "sœur (f)", "partager", "grand", "chambre (f)"], fr: "À la maison, mon frère et ma sœur partagent une grande chambre.", note: "grande — chambre is feminine, so grand → grande | partagent — ils/elles form of partager (-ent)" },
+        { en: "My parents' bedroom is on the first floor, between my bedroom and the stairs.", hints: ["parent (m)", "chambre (f)", "premier", "étage (m)", "escalier (m)"], fr: "La chambre de mes parents est au premier étage, entre ma chambre et l'escalier.", note: "au premier étage = on the first floor (à + le = au) | entre = between | l'escalier (elision)" },
+        { en: "In the morning I have a shower and my father makes the beds.", hints: ["matin (m)", "prendre", "douche (f)", "père (m)", "faire", "lit (m)"], fr: "Le matin je prends une douche et mon père fait les lits.", note: "prendre une douche = to have a shower (je prends) | faire les lits = to make the beds (il fait)" },
+        { en: "Next year I am going to have a new wardrobe for my bedroom.", hints: ["prochain", "année (f)", "nouveau", "armoire (f)", "chambre (f)"], fr: "L'année prochaine je vais avoir une nouvelle armoire pour ma chambre.", note: "nouvelle — armoire is feminine, so nouveau → nouvelle | prochaine agrees with année (f.)" },
+        { en: "After breakfast, we brush our teeth in the bathroom.", hints: ["petit-déjeuner (m)", "se brosser", "dent (f)", "salle de bains (f)"], fr: "Après le petit-déjeuner, nous nous brossons les dents dans la salle de bains.", note: "se brosser les dents = to brush one's teeth (reflexive: nous nous brossons) | après le = after the" },
+        { en: "My house has a large garden with a swimming pool — it is very beautiful in summer.", hints: ["maison (f)", "grand", "jardin (m)", "piscine (f)", "beau", "été (m)"], fr: "Ma maison a un grand jardin avec une piscine — c'est très beau en été.", note: "grand before jardin (m.) | beau — impersonal c'est so masculine singular | en été = in summer" },
+        { en: "The kitchen is on the ground floor, next to the living room.", hints: ["cuisine (f)", "rez-de-chaussée (m)", "salon (m)"], fr: "La cuisine est au rez-de-chaussée, à côté du salon.", note: "au rez-de-chaussée = on the ground floor (à + le = au) | à côté du = next to (de + le = du)" },
+        { en: "Last year my parents bought a new sofa for the sitting room.", hints: ["an (m)", "dernier", "parent (m pl)", "acheter", "nouveau", "canapé (m)", "salon (m)"], fr: "L'année dernière mes parents ont acheté un nouveau canapé pour le salon.", note: "dernière agrees with année (f.) | nouveau before canapé (m.) | acheter → ont acheté (avoir + p.p.)" },
+        { en: "I share my bedroom with my younger sister and it is sometimes annoying.", hints: ["partager", "chambre (f)", "petit", "sœur (f)", "parfois", "agaçant"], fr: "Je partage ma chambre avec ma petite sœur et c'est parfois agaçant.", note: "petite sœur = younger sister | agaçant — impersonal c'est so masculine singular | parfois = sometimes" },
+        { en: "My favourite room is the living room because the whole family gets together there.", hints: ["pièce (f)", "préféré", "salon (m)", "famille (f)", "entier", "se retrouver"], fr: "Ma pièce préférée est le salon parce que toute la famille se retrouve là.", note: "préférée agrees with pièce (f.) | toute la famille = the whole family | se retrouver = to get together" }
       ]
     },
     {
-      id: 'family',
-      name: 'My Family',
-      fr: 'Ma famille',
-      icon: '&#129489;',
+      id: 'family', name: 'My Family', fr: 'Ma famille', icon: '&#129489;',
       questions: [
-        {
-          en: "My younger sister is very funny and she has long blond hair.",
-          hints: ["petit", "sœur (f)", "drôle", "long", "blond", "cheveu (m pl)"],
-          fr: "Ma petite sœur est très drôle et elle a les cheveux longs et blonds.",
-          note: "longs et blonds — cheveux is masculine plural, both adjectives agree | petite sœur = younger sister"
-        },
-        {
-          en: "I get on well with my parents because they are kind and patient.",
-          hints: ["s'entendre", "parent (m pl)", "gentil", "patient"],
-          fr: "Je m'entends bien avec mes parents parce qu'ils sont gentils et patients.",
-          note: "gentils et patients — masculine plural adjectives agree | m'entends = reflexive (je + me → m')"
-        },
-        {
-          en: "My grandmother lives in a small flat near the town centre.",
-          hints: ["grand-mère (f)", "habiter", "petit", "appartement (m)", "centre-ville (m)"],
-          fr: "Ma grand-mère habite dans un petit appartement près du centre-ville.",
-          note: "petit comes before appartement (m.) | près du = près de + le | du centre-ville"
-        },
-        {
-          en: "My older brother is very sporty — he plays rugby every Saturday.",
-          hints: ["aîné", "frère (m)", "sportif", "jouer", "rugby (m)", "samedi (m)"],
-          fr: "Mon frère aîné est très sportif — il joue au rugby chaque samedi.",
-          note: "aîné comes after the noun | sportif agrees with frère (m.) | jouer au + sport"
-        },
-        {
-          en: "My parents are separated — I live with my father during the week.",
-          hints: ["parent (m pl)", "séparé", "habiter", "père (m)", "semaine (f)"],
-          fr: "Mes parents sont séparés — j'habite avec mon père pendant la semaine.",
-          note: "séparés — masculine plural agrees with parents | pendant la semaine = during the week"
-        }
+        { en: "My younger sister is very funny and she has long blond hair.", hints: ["petit", "sœur (f)", "drôle", "long", "blond", "cheveu (m pl)"], fr: "Ma petite sœur est très drôle et elle a les cheveux longs et blonds.", note: "longs et blonds — cheveux is masculine plural, both adjectives agree | petite sœur = younger sister" },
+        { en: "I get on well with my parents because they are kind and patient.", hints: ["s'entendre", "parent (m pl)", "gentil", "patient"], fr: "Je m'entends bien avec mes parents parce qu'ils sont gentils et patients.", note: "gentils et patients — masculine plural adjectives agree | m'entends = reflexive (je + me → m')" },
+        { en: "My grandmother lives in a small flat near the town centre.", hints: ["grand-mère (f)", "habiter", "petit", "appartement (m)", "centre-ville (m)"], fr: "Ma grand-mère habite dans un petit appartement près du centre-ville.", note: "petit comes before appartement (m.) | près du = près de + le | du centre-ville" },
+        { en: "My older brother is very sporty — he plays rugby every Saturday.", hints: ["aîné", "frère (m)", "sportif", "jouer", "rugby (m)", "samedi (m)"], fr: "Mon frère aîné est très sportif — il joue au rugby chaque samedi.", note: "aîné comes after the noun | sportif agrees with frère (m.) | jouer au + sport" },
+        { en: "My parents are separated — I live with my father during the week.", hints: ["parent (m pl)", "séparé", "habiter", "père (m)", "semaine (f)"], fr: "Mes parents sont séparés — j'habite avec mon père pendant la semaine.", note: "séparés — masculine plural agrees with parents | pendant la semaine = during the week" },
+        { en: "My father works in London and comes home every Friday evening.", hints: ["père (m)", "travailler", "Londres", "rentrer", "vendredi (m)", "soir (m)"], fr: "Mon père travaille à Londres et rentre à la maison chaque vendredi soir.", note: "à Londres = in London (city → à) | chaque vendredi soir = every Friday evening | rentrer = to go home" },
+        { en: "My cousin is thirteen years old — she is shy but very kind.", hints: ["cousine (f)", "an (m)", "timide", "gentil"], fr: "Ma cousine a treize ans — elle est timide mais très gentille.", note: "avoir X ans = to be X years old | timide = same m/f form | gentille agrees with cousine (f.)" },
+        { en: "During the holidays we always visit my grandparents in Scotland.", hints: ["vacances (f pl)", "rendre visite", "grand-parent (m pl)", "Écosse (f)"], fr: "Pendant les vacances nous rendons toujours visite à mes grands-parents en Écosse.", note: "rendre visite à = to visit a person | en Écosse (feminine country) | toujours after verb" },
+        { en: "I look like my mother — I have brown eyes and straight hair.", hints: ["ressembler", "mère (f)", "œil/yeux (m pl)", "marron", "raide", "cheveu (m pl)"], fr: "Je ressemble à ma mère — j'ai les yeux marron et les cheveux raides.", note: "ressembler à = to look like | marron = invariable (no agreement) | les yeux, les cheveux = definite article" },
+        { en: "My brother is three years older than me — he is my best friend.", hints: ["frère (m)", "an (m)", "aîné", "meilleur", "ami (m)"], fr: "Mon frère a trois ans de plus que moi — c'est mon meilleur ami.", note: "avoir X ans de plus = to be X years older | meilleur before ami (m.) | c'est mon = he is my" }
       ]
     },
     {
-      id: 'school',
-      name: 'My School',
-      fr: 'Mon école',
-      icon: '&#127979;',
+      id: 'school', name: 'My School', fr: 'Mon école', icon: '&#127979;',
       questions: [
-        {
-          en: "My French teacher is very enthusiastic and always encouraging.",
-          hints: ["professeur (m)", "français", "enthousiaste", "encourageant"],
-          fr: "Mon professeur de français est très enthousiaste et toujours encourageant.",
-          note: "professeur de + subject | enthousiaste = same m/f form | encourageant agrees with professeur (m.)"
-        },
-        {
-          en: "Last term I studied a lot and I got very good marks.",
-          hints: ["trimestre (m)", "dernier", "étudier", "bon", "note (f)"],
-          fr: "Le trimestre dernier j'ai beaucoup étudié et j'ai eu de très bonnes notes.",
-          note: "bonnes notes — feminine plural | étudier → étudié (avoir + past participle) | avoir → eu"
-        },
-        {
-          en: "Next year we are going to sit our Common Entrance exams.",
-          hints: ["prochain", "année (f)", "passer", "examen (m)"],
-          fr: "L'année prochaine nous allons passer nos examens.",
-          note: "passer un examen = to sit an exam (not réussir!) | prochaine agrees with année (f.) | aller + infinitive"
-        },
-        {
-          en: "I prefer science to history because it is more interesting.",
-          hints: ["préférer", "science (f)", "histoire (f)", "intéressant"],
-          fr: "Je préfère les sciences à l'histoire parce que c'est plus intéressant.",
-          note: "préférer X à Y = to prefer X to Y | plus intéressant — impersonal c'est, so masculine singular"
-        },
-        {
-          en: "I would like to become a journalist, so French is very useful.",
-          hints: ["vouloir", "devenir", "journaliste", "français (m)", "utile"],
-          fr: "Je voudrais devenir journaliste, donc le français est très utile.",
-          note: "devenir + job = no article! | journaliste = same m/f | donc = therefore/so | utile = same m/f"
-        }
+        { en: "My French teacher is very enthusiastic and always encouraging.", hints: ["professeur (m)", "français", "enthousiaste", "encourageant"], fr: "Mon professeur de français est très enthousiaste et toujours encourageant.", note: "professeur de + subject | enthousiaste = same m/f form | encourageant agrees with professeur (m.)" },
+        { en: "Last term I studied a lot and I got very good marks.", hints: ["trimestre (m)", "dernier", "étudier", "bon", "note (f)"], fr: "Le trimestre dernier j'ai beaucoup étudié et j'ai eu de très bonnes notes.", note: "bonnes notes — feminine plural | étudier → étudié (avoir + past participle) | avoir → eu" },
+        { en: "Next year we are going to sit our Common Entrance exams.", hints: ["prochain", "année (f)", "passer", "examen (m)"], fr: "L'année prochaine nous allons passer nos examens.", note: "passer un examen = to sit an exam (not réussir!) | prochaine agrees with année (f.) | aller + infinitive" },
+        { en: "I prefer science to history because it is more interesting.", hints: ["préférer", "science (f)", "histoire (f)", "intéressant"], fr: "Je préfère les sciences à l'histoire parce que c'est plus intéressant.", note: "préférer X à Y = to prefer X to Y | plus intéressant — impersonal c'est, so masculine singular" },
+        { en: "I would like to become a journalist, so French is very useful.", hints: ["vouloir", "devenir", "journaliste", "français (m)", "utile"], fr: "Je voudrais devenir journaliste, donc le français est très utile.", note: "devenir + job = no article! | journaliste = same m/f | donc = therefore/so | utile = same m/f" },
+        { en: "Break time lasts twenty minutes — we eat our snack in the playground.", hints: ["récréation (f)", "durer", "minute (f)", "goûter (m)", "cour (f)"], fr: "La récréation dure vingt minutes — nous mangeons notre goûter dans la cour.", note: "durer = to last | vingt minutes | notre goûter = our snack | dans la cour = in the playground" },
+        { en: "I find maths difficult but my teacher always helps me.", hints: ["trouver", "maths (f pl)", "difficile", "professeur (m)", "toujours", "aider"], fr: "Je trouve les maths difficiles mais mon professeur m'aide toujours.", note: "difficiles agrees with les maths (f.pl.) | m'aide = helps me (me + aide) | toujours after verb" },
+        { en: "We have sport twice a week — I love playing tennis with my friends.", hints: ["sport (m)", "fois (f)", "semaine (f)", "adorer", "jouer", "tennis (m)", "ami (m pl)"], fr: "Nous avons sport deux fois par semaine — j'adore jouer au tennis avec mes amis.", note: "deux fois par semaine = twice a week | jouer au tennis (m.) | adorer + infinitive" },
+        { en: "This year I am working hard because I want to get good marks in all my subjects.", hints: ["année (f)", "travailler", "dur", "vouloir", "bon", "note (f)", "matière (f)"], fr: "Cette année je travaille dur parce que je veux avoir de bonnes notes dans toutes mes matières.", note: "cette année = this year | travailler dur = to work hard | de bonnes notes | toutes mes matières" },
+        { en: "The school library is very big — I often go there to do my homework.", hints: ["bibliothèque (f)", "grand", "souvent", "aller", "faire", "devoir (m pl)"], fr: "La bibliothèque de l'école est très grande — j'y vais souvent pour faire mes devoirs.", note: "grande agrees with bibliothèque (f.) | j'y vais = I go there (y = there) | pour + infinitive = in order to" }
       ]
     },
     {
-      id: 'freetime',
-      name: 'Free Time',
-      fr: 'Mon temps libre',
-      icon: '&#9917;',
+      id: 'freetime', name: 'Free Time', fr: 'Mon temps libre', icon: '&#9917;',
       questions: [
-        {
-          en: "Last Saturday I went to the cinema and watched a really exciting film.",
-          hints: ["samedi (m)", "dernier", "aller", "cinéma (m)", "regarder", "passionnant", "film (m)"],
-          fr: "Samedi dernier je suis allé(e) au cinéma et j'ai regardé un film vraiment passionnant.",
-          note: "aller → je suis allé(e) — être verb in passé composé | regarder → j'ai regardé | passionnant after the noun"
-        },
-        {
-          en: "In my free time I play the piano and I go cycling at weekends.",
-          hints: ["temps libre (m)", "jouer", "piano (m)", "faire", "vélo (m)", "week-end (m)"],
-          fr: "Dans mon temps libre je joue du piano et je fais du vélo le week-end.",
-          note: "jouer du + instrument (m.) | faire du vélo = to go cycling | le week-end = at weekends"
-        },
-        {
-          en: "I would like to try horse riding because it looks very relaxing.",
-          hints: ["vouloir", "essayer", "équitation (f)", "avoir l'air", "relaxant"],
-          fr: "Je voudrais essayer l'équitation parce que ça a l'air très relaxant.",
-          note: "avoir l'air = to look/seem | l'équitation (f., elision) | relaxant — impersonal so masculine singular"
-        },
-        {
-          en: "I really love reading — I read for an hour every evening.",
-          hints: ["adorer", "lire", "heure (f)", "soir (m)"],
-          fr: "J'adore vraiment lire — je lis pendant une heure chaque soir.",
-          note: "lire → je lis (irregular) | pendant une heure = for an hour | chaque soir = every evening"
-        },
-        {
-          en: "Last summer I went on holiday to France and I visited lots of museums.",
-          hints: ["été (m)", "dernier", "aller", "vacances (f pl)", "France (f)", "visiter", "musée (m)"],
-          fr: "L'été dernier je suis allé(e) en vacances en France et j'ai visité beaucoup de musées.",
-          note: "aller → je suis allé(e) (être verb) | en France (feminine country) | visiter → j'ai visité | beaucoup de"
-        }
+        { en: "Last Saturday I went to the cinema and watched a really exciting film.", hints: ["samedi (m)", "dernier", "aller", "cinéma (m)", "regarder", "passionnant", "film (m)"], fr: "Samedi dernier je suis allé(e) au cinéma et j'ai regardé un film vraiment passionnant.", note: "aller → je suis allé(e) — être verb in passé composé | regarder → j'ai regardé | passionnant after the noun" },
+        { en: "In my free time I play the piano and I go cycling at weekends.", hints: ["temps libre (m)", "jouer", "piano (m)", "faire", "vélo (m)", "week-end (m)"], fr: "Dans mon temps libre je joue du piano et je fais du vélo le week-end.", note: "jouer du + instrument (m.) | faire du vélo = to go cycling | le week-end = at weekends" },
+        { en: "I would like to try horse riding because it looks very relaxing.", hints: ["vouloir", "essayer", "équitation (f)", "avoir l'air", "relaxant"], fr: "Je voudrais essayer l'équitation parce que ça a l'air très relaxant.", note: "avoir l'air = to look/seem | l'équitation (f., elision) | relaxant — impersonal so masculine singular" },
+        { en: "I really love reading — I read for an hour every evening.", hints: ["adorer", "lire", "heure (f)", "soir (m)"], fr: "J'adore vraiment lire — je lis pendant une heure chaque soir.", note: "lire → je lis (irregular) | pendant une heure = for an hour | chaque soir = every evening" },
+        { en: "Last summer I went on holiday to France and I visited lots of museums.", hints: ["été (m)", "dernier", "aller", "vacances (f pl)", "France (f)", "visiter", "musée (m)"], fr: "L'été dernier je suis allé(e) en vacances en France et j'ai visité beaucoup de musées.", note: "aller → je suis allé(e) (être verb) | en France (feminine country) | visiter → j'ai visité | beaucoup de" },
+        { en: "My best friend and I often play video games in the evening.", hints: ["meilleur", "ami (m)", "souvent", "jouer", "jeu vidéo (m)", "soir (m)"], fr: "Mon meilleur ami et moi jouons souvent aux jeux vidéo le soir.", note: "meilleur before ami | aux jeux vidéo = jouer à + les | mon ami et moi → nous → -ons ending" },
+        { en: "I am learning to play the guitar — I have a lesson every Wednesday.", hints: ["apprendre", "jouer", "guitare (f)", "cours (m)", "mercredi (m)"], fr: "J'apprends à jouer de la guitare — j'ai un cours chaque mercredi.", note: "apprendre à + infinitive | jouer de la guitare (instrument: de + article) | chaque mercredi = every Wednesday" },
+        { en: "Next weekend I am going to go to a concert with my family.", hints: ["prochain", "week-end (m)", "aller", "concert (m)", "famille (f)"], fr: "Le week-end prochain je vais aller à un concert avec ma famille.", note: "prochain after week-end (m.) | near future: aller + infinitive | aller à un concert" },
+        { en: "I watch too much television — I should do more sport instead.", hints: ["regarder", "trop", "télévision (f)", "devoir", "plus", "sport (m)", "à la place"], fr: "Je regarde trop la télévision — je devrais faire plus de sport à la place.", note: "trop = too much | devrais = should (conditional of devoir) | à la place = instead | plus de + noun" },
+        { en: "During the summer holidays I read a lot of books and went swimming every day.", hints: ["grandes vacances (f pl)", "lire", "livre (m)", "aller", "nager", "jour (m)"], fr: "Pendant les grandes vacances j'ai lu beaucoup de livres et je suis allé(e) nager chaque jour.", note: "lire → lu (irregular p.p. with avoir) | beaucoup de livres | aller → je suis allé(e) (être verb) | chaque jour = every day" }
       ]
     },
     {
-      id: 'daily',
-      name: 'Daily Routine',
-      fr: 'Ma routine quotidienne',
-      icon: '&#9728;&#65039;',
+      id: 'daily', name: 'Daily Routine', fr: 'Ma routine quotidienne', icon: '&#9728;&#65039;',
       questions: [
-        {
-          en: "Every morning I get up at seven o'clock and I have a shower.",
-          hints: ["matin (m)", "se lever", "heure (f)", "prendre", "douche (f)"],
-          fr: "Chaque matin je me lève à sept heures et je prends une douche.",
-          note: "se lever = to get up (reflexive: je me lève) | à sept heures | prendre une douche = to have a shower"
-        },
-        {
-          en: "After dinner, I do my homework for an hour before going to bed.",
-          hints: ["dîner (m)", "faire", "devoir (m pl)", "heure (f)", "se coucher"],
-          fr: "Après le dîner, je fais mes devoirs pendant une heure avant de me coucher.",
-          note: "avant de + infinitive = before doing | se coucher = to go to bed | pendant une heure = for an hour"
-        },
-        {
-          en: "On Sundays we always eat together as a family.",
-          hints: ["dimanche (m)", "manger", "ensemble", "famille (f)"],
-          fr: "Le dimanche nous mangeons toujours ensemble en famille.",
-          note: "le dimanche = on Sundays (definite article for habitual action) | en famille = as a family"
-        },
-        {
-          en: "I get dressed quickly and then I eat breakfast with my family.",
-          hints: ["s'habiller", "vite", "ensuite", "manger", "petit-déjeuner (m)", "famille (f)"],
-          fr: "Je m'habille vite et ensuite je mange le petit-déjeuner avec ma famille.",
-          note: "s'habiller = to get dressed (reflexive: je m'habille) | vite = quickly | ensuite = then/afterwards"
-        },
-        {
-          en: "In the evening I watch television for half an hour before going to bed.",
-          hints: ["soir (m)", "regarder", "télévision (f)", "demi", "heure (f)", "se coucher"],
-          fr: "Le soir je regarde la télévision pendant une demi-heure avant de me coucher.",
-          note: "une demi-heure = half an hour | avant de + infinitive | le soir = in the evening (habitual)"
-        }
+        { en: "Every morning I get up at seven o'clock and I have a shower.", hints: ["matin (m)", "se lever", "heure (f)", "prendre", "douche (f)"], fr: "Chaque matin je me lève à sept heures et je prends une douche.", note: "se lever = to get up (reflexive: je me lève) | à sept heures | prendre une douche = to have a shower" },
+        { en: "After dinner, I do my homework for an hour before going to bed.", hints: ["dîner (m)", "faire", "devoir (m pl)", "heure (f)", "se coucher"], fr: "Après le dîner, je fais mes devoirs pendant une heure avant de me coucher.", note: "avant de + infinitive = before doing | se coucher = to go to bed | pendant une heure = for an hour" },
+        { en: "On Sundays we always eat together as a family.", hints: ["dimanche (m)", "manger", "ensemble", "famille (f)"], fr: "Le dimanche nous mangeons toujours ensemble en famille.", note: "le dimanche = on Sundays (definite article for habitual action) | en famille = as a family" },
+        { en: "I get dressed quickly and then I eat breakfast with my family.", hints: ["s'habiller", "vite", "ensuite", "manger", "petit-déjeuner (m)", "famille (f)"], fr: "Je m'habille vite et ensuite je mange le petit-déjeuner avec ma famille.", note: "s'habiller = to get dressed (reflexive: je m'habille) | vite = quickly | ensuite = then/afterwards" },
+        { en: "In the evening I watch television for half an hour before going to bed.", hints: ["soir (m)", "regarder", "télévision (f)", "demi", "heure (f)", "se coucher"], fr: "Le soir je regarde la télévision pendant une demi-heure avant de me coucher.", note: "une demi-heure = half an hour | avant de + infinitive | le soir = in the evening (habitual)" },
+        { en: "I always have breakfast before school — usually cereal with milk.", hints: ["toujours", "prendre", "petit-déjeuner (m)", "école (f)", "céréale (f pl)", "lait (m)"], fr: "Je prends toujours le petit-déjeuner avant l'école — en général des céréales avec du lait.", note: "toujours after conjugated verb | avant l'école (elision) | en général = usually | du lait (m. partitive)" },
+        { en: "I go to school by bus — the journey takes about twenty minutes.", hints: ["aller", "école (f)", "bus (m)", "trajet (m)", "durer", "minute (f)"], fr: "Je vais à l'école en bus — le trajet dure environ vingt minutes.", note: "à l'école | en bus = by bus | le trajet = the journey | durer = to last | environ = about/approximately" },
+        { en: "At lunchtime I eat with my friends in the dining hall.", hints: ["déjeuner (m)", "manger", "ami (m pl)", "réfectoire (m)"], fr: "À l'heure du déjeuner je mange avec mes amis au réfectoire.", note: "à l'heure du déjeuner = at lunchtime | au réfectoire = à + le = au | avec mes amis" },
+        { en: "When I get home from school, I have a snack before starting my homework.", hints: ["rentrer", "école (f)", "goûter (m)", "commencer", "devoir (m pl)"], fr: "Quand je rentre de l'école, je prends un goûter avant de commencer mes devoirs.", note: "rentrer de l'école = to get home from school | prendre un goûter = to have a snack | avant de + infinitive" },
+        { en: "On Saturdays I tidy my bedroom and help my mother with the shopping.", hints: ["samedi (m)", "ranger", "chambre (f)", "aider", "mère (f)", "courses (f pl)"], fr: "Le samedi je range ma chambre et j'aide ma mère à faire les courses.", note: "le samedi = on Saturdays (habitual) | ranger = to tidy | aider quelqu'un à + infinitive | faire les courses = to do the shopping" }
       ]
     }
   ];
 
+  var SESSION_SIZE = 5;
+
   var state = {
-    topicIdx:  0,
-    qIdx:      0,
-    questions: [],
-    results:   [],
-    revealed:  false
+    topicIdx:   0,
+    qIdx:       0,
+    questions:  [],
+    results:    [],
+    revealed:   false,
+    isExamMode: false,
+    lastSession: [] // store last set so Retry replays the same questions
   };
 
   var ACCENTS = ['é','è','ê','ë','à','â','ä','ç','ù','û','ü','ô','ö','î','ï','œ'];
@@ -702,20 +616,54 @@
         '<div class="gt-topic-icon">' + topic.icon + '</div>' +
         '<div class="gt-topic-name">' + topic.name + '</div>' +
         '<div class="gt-topic-fr">'   + topic.fr   + '</div>' +
-        '<div class="gt-topic-count">' + topic.questions.length + ' sentences</div>';
+        '<div class="gt-topic-count">' + topic.questions.length + ' sentences &middot; 5 per session</div>';
       card.addEventListener('click', function() { startTopic(idx); });
       grid.appendChild(card);
     });
+    // Exam mode card
+    var exam = document.createElement('div');
+    exam.className = 'gt-topic-card exam-mode';
+    exam.innerHTML =
+      '<div class="gt-topic-icon">&#127981;</div>' +
+      '<div class="gt-topic-name">Exam Mode</div>' +
+      '<div class="gt-topic-fr">Practice like the real thing</div>' +
+      '<div class="gt-exam-pill">&#9733; 5 sentences &mdash; one from each topic</div>';
+    exam.addEventListener('click', startExamMode);
+    grid.appendChild(exam);
   }
 
   function startTopic(idx) {
-    state.topicIdx  = idx;
-    state.qIdx      = 0;
-    state.questions = shuffle(TOPICS[idx].questions);
-    state.results   = [];
+    state.topicIdx   = idx;
+    state.isExamMode = false;
+    state.qIdx       = 0;
+    state.questions  = shuffle(TOPICS[idx].questions).slice(0, SESSION_SIZE);
+    state.lastSession = state.questions.slice();
+    state.results    = [];
     var topic = TOPICS[idx];
     document.getElementById('gt-header-title').textContent = topic.name;
     document.getElementById('gt-header-fr').textContent    = topic.fr;
+    document.getElementById('gt-more-btn').textContent     = '\u2192 5 more from this topic';
+    document.getElementById('gt-retry-btn').textContent    = '\u21bb Retry same set';
+    buildAccentBar();
+    showScreen('gt-practice');
+    renderQuestion();
+  }
+
+  function startExamMode() {
+    state.isExamMode = true;
+    state.qIdx       = 0;
+    // Pick 1 random question from each topic, shuffle the order
+    var picked = shuffle(TOPICS.map(function(topic) {
+      var q = shuffle(topic.questions)[0];
+      return Object.assign({}, q, { _topicName: topic.name, _topicIcon: topic.icon });
+    }));
+    state.questions   = picked;
+    state.lastSession = picked.slice();
+    state.results     = [];
+    document.getElementById('gt-header-title').textContent = 'Exam Mode';
+    document.getElementById('gt-header-fr').textContent    = '5 sentences — one from each topic';
+    document.getElementById('gt-more-btn').textContent     = '\u2192 New exam';
+    document.getElementById('gt-retry-btn').textContent    = '\u21bb Retry same exam';
     buildAccentBar();
     showScreen('gt-practice');
     renderQuestion();
@@ -732,6 +680,15 @@
     document.getElementById('gt-prog-fill').style.width  = pct + '%';
 
     updateBadges();
+
+    // Topic badge — only shown in exam mode
+    var badge = document.getElementById('gt-topic-badge');
+    if (state.isExamMode && q._topicName) {
+      badge.textContent = (q._topicIcon || '') + ' ' + q._topicName;
+      badge.classList.add('visible');
+    } else {
+      badge.classList.remove('visible');
+    }
 
     document.getElementById('gt-card-en').textContent = q.en;
 
@@ -907,7 +864,18 @@
   document.querySelectorAll('[data-mark]').forEach(function(btn) {
     btn.addEventListener('click', function() { markQuestion(btn.dataset.mark); });
   });
-  document.getElementById('gt-retry-btn').addEventListener('click', function() { startTopic(state.topicIdx); });
+  // "5 more" — fresh set from same topic, or new exam
+  document.getElementById('gt-more-btn').addEventListener('click', function() {
+    if (state.isExamMode) { startExamMode(); } else { startTopic(state.topicIdx); }
+  });
+  // "Retry" — replay the exact same questions in the same order
+  document.getElementById('gt-retry-btn').addEventListener('click', function() {
+    state.qIdx     = 0;
+    state.results  = [];
+    state.questions = state.lastSession.slice();
+    showScreen('gt-practice');
+    renderQuestion();
+  });
   document.getElementById('gt-topics-btn').addEventListener('click', function() { showScreen('gt-pick'); });
   document.getElementById('gt-attempt').addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (!state.revealed) revealAnswer(); }
