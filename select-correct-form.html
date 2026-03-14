@@ -260,7 +260,7 @@
           </div>
         </div>
       </div>
-      <p style="font-size:15px;font-weight:600;color:var(--text-muted);margin:0 0 24px;">20 questions &mdash; shuffled every time. Each question tests one grammar rule: adjective agreement, verb forms, articles, or French homophones.</p>
+      <p style="font-size:15px;font-weight:600;color:var(--text-muted);margin:0 0 24px;">250+ questions &mdash; 5 at a time, just like in the real exam. New questions every session covering adjective agreement, verb forms, articles, homophones, possessives, and more.</p>
       <button class="scf-start-btn" id="scf-start-btn">Start &#8594;</button>
     </div>
 
@@ -301,6 +301,7 @@
       </div>
       <div id="scf-res-body"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+        <button class="scf-start-btn" id="scf-more-btn">&#8594; Do 5 more</button>
         <button class="btn btn-outline" id="scf-retry-btn" style="cursor:pointer;">&#8635; Try again</button>
       </div>
     </div>
@@ -316,128 +317,258 @@
 (function () {
   'use strict';
 
-  // Each question: sentence with {BLANK} placeholder, 3 options, correct answer index, grammar note
+  var SESSION_SIZE = 5;
+
   var ALL_QUESTIONS = [
-    {
-      sentence: "Mon anniversaire, c'est le premier {BLANK}.",
-      options: ["mai", "may", "mais"],
-      answer: 0,
-      note: "mai = the month May | mais = but | may is not a French word"
-    },
-    {
-      sentence: "Il est onze heures et {BLANK}.",
-      options: ["demy", "demi", "demie"],
-      answer: 2,
-      note: "demie agrees with heure (f.) in time expressions — il est… et demie"
-    },
-    {
-      sentence: "Ça coûte trente euros. C'est trop {BLANK}\u00a0!",
-      options: ["chère", "cher", "chers"],
-      answer: 1,
-      note: "c'est + adjective is impersonal → always masculine singular: cher"
-    },
-    {
-      sentence: "Les pommes sont {BLANK}.",
-      options: ["gros", "grosse", "grosses"],
-      answer: 2,
-      note: "pommes = feminine plural → grosses (gros → grosse → grosses)"
-    },
-    {
-      sentence: "Je préfère {BLANK} des nouvelles baskets.",
-      options: ["achète", "acheter", "achetez"],
-      answer: 1,
-      note: "préférer + infinitive | achète = I buy, achetez = you buy (pl.), acheter = to buy"
-    },
-    {
-      sentence: "Ma sœur est très {BLANK}.",
-      options: ["sportif", "sportive", "sportifs"],
-      answer: 1,
-      note: "sœur is feminine → sportive (sportif → sportive)"
-    },
-    {
-      sentence: "Nous {BLANK} au football le samedi.",
-      options: ["joue", "jouons", "jouent"],
-      answer: 1,
-      note: "nous → -ons ending: nous jouons | joue = il/elle, jouent = ils/elles"
-    },
-    {
-      sentence: "Il y a une {BLANK} église dans mon village.",
-      options: ["vieux", "vieille", "vieil"],
-      answer: 1,
-      note: "église is feminine → vieille (irregular: vieux → vieil before m. vowel → vieille f.)"
-    },
-    {
-      sentence: "Je mange {BLANK} pain au petit-déjeuner.",
-      options: ["du", "de la", "des"],
-      answer: 0,
-      note: "pain is masculine → du (de + le) | de la = feminine, des = plural"
-    },
-    {
-      sentence: "Mon frère {BLANK} très grand.",
-      options: ["est", "sont", "êtes"],
-      answer: 0,
-      note: "mon frère = il → est (3rd person singular) | sont = ils/elles, êtes = vous"
-    },
-    {
-      sentence: "Elle {BLANK} les dents après le dîner.",
-      options: ["se brosse", "me brosse", "te brosse"],
-      answer: 0,
-      note: "elle → se (3rd person reflexive) | se brosser les dents = to brush one's teeth"
-    },
-    {
-      sentence: "Les cours {BLANK} à neuf heures.",
-      options: ["commence", "commencent", "commencez"],
-      answer: 1,
-      note: "les cours = ils → -ent ending: commencent | commence = il/elle, commencez = vous"
-    },
-    {
-      sentence: "J'ai {BLANK} un bon film hier soir.",
-      options: ["regardé", "regarder", "regardait"],
-      answer: 0,
-      note: "passé composé with avoir → past participle: regardé | regarder = infinitive, regardait = imperfect"
-    },
-    {
-      sentence: "Mes parents sont très {BLANK}.",
-      options: ["gentil", "gentils", "gentille"],
-      answer: 1,
-      note: "parents = masculine plural → gentils | gentil (m.s.), gentille (f.s.), gentils (m.pl.)"
-    },
-    {
-      sentence: "Je {BLANK} à sept heures du matin.",
-      options: ["me lève", "te lève", "se lève"],
-      answer: 0,
-      note: "je → me (1st person reflexive) | se lever: je me lève, tu te lèves, il se lève"
-    },
-    {
-      sentence: "L'année {BLANK} je vais passer mes examens.",
-      options: ["prochain", "prochaine", "prochains"],
-      answer: 1,
-      note: "année is feminine → prochaine | prochain (m.s.), prochaine (f.s.)"
-    },
-    {
-      sentence: "Le trimestre {BLANK}, j'ai travaillé très dur.",
-      options: ["dernier", "dernière", "derniers"],
-      answer: 0,
-      note: "trimestre is masculine → dernier | dernier (m.s.), dernière (f.s.)"
-    },
-    {
-      sentence: "Mon professeur est très {BLANK}.",
-      options: ["strict", "stricte", "stricts"],
-      answer: 0,
-      note: "professeur is masculine singular → strict | stricte = feminine form"
-    },
-    {
-      sentence: "Après le petit-déjeuner, je {BLANK} une douche.",
-      options: ["prends", "prendre", "prenez"],
-      answer: 0,
-      note: "je → prends (irregular verb prendre) | prendre = infinitive, prenez = vous form"
-    },
-    {
-      sentence: "La chambre de mes parents est {BLANK} premier étage.",
-      options: ["au", "à la", "aux"],
-      answer: 0,
-      note: "étage is masculine → au (à + le) | au premier étage = on the first floor"
-    }
+    // ── ADJECTIVE AGREEMENT ──────────────────────────────────────────
+    { sentence: "Ma chambre est très {BLANK}.", options: ["grande", "grand", "grands"], answer: 0, note: "chambre is feminine → grande | grand (m.s.), grande (f.s.)" },
+    { sentence: "La robe est {BLANK}.", options: ["belle", "beau", "bel"], answer: 0, note: "robe is feminine → belle | beau (m.s. before consonant), bel (m.s. before vowel), belle (f.s.)" },
+    { sentence: "La soupe est {BLANK}.", options: ["chaude", "chaud", "chauds"], answer: 0, note: "soupe is feminine → chaude | chaud (m.s.), chaude (f.s.)" },
+    { sentence: "Ma mère est {BLANK}.", options: ["contente", "content", "contents"], answer: 0, note: "mère is feminine → contente | content (m.s.), contente (f.s.)" },
+    { sentence: "La maison est {BLANK}.", options: ["petite", "petit", "petits"], answer: 0, note: "maison is feminine → petite | petit (m.s.), petite (f.s.)" },
+    { sentence: "La ville est très {BLANK}.", options: ["animée", "animé", "animés"], answer: 0, note: "ville is feminine → animée | animé (m.s.), animée (f.s.)" },
+    { sentence: "La jupe est {BLANK}.", options: ["longue", "long", "longs"], answer: 0, note: "jupe is feminine → longue | long (m.s.), longue (f.s.)" },
+    { sentence: "Mon frère est {BLANK}.", options: ["grand", "grande", "grands"], answer: 0, note: "frère is masculine → grand | grande = feminine form" },
+    { sentence: "Le gâteau est {BLANK}.", options: ["délicieux", "délicieuse", "délicieuses"], answer: 0, note: "gâteau is masculine → délicieux | délicieuse = feminine form" },
+    { sentence: "Le film est {BLANK}.", options: ["ennuyeux", "ennuyeuse", "ennuyeuses"], answer: 0, note: "film is masculine → ennuyeux | ennuyeuse = feminine form" },
+    { sentence: "Mon père est {BLANK}.", options: ["fatigué", "fatiguée", "fatigués"], answer: 0, note: "père is masculine → fatigué | fatiguée = feminine form" },
+    { sentence: "Le livre est {BLANK}.", options: ["intéressant", "intéressante", "intéressants"], answer: 0, note: "livre is masculine → intéressant | intéressante = feminine form" },
+    { sentence: "Les chats sont {BLANK}.", options: ["noirs", "noir", "noire"], answer: 0, note: "chats = masculine plural → noirs | noir (m.s.), noire (f.s.)" },
+    { sentence: "Les filles sont {BLANK}.", options: ["intelligentes", "intelligents", "intelligent"], answer: 0, note: "filles = feminine plural → intelligentes | intelligents = masculine plural" },
+    { sentence: "Les garçons sont {BLANK}.", options: ["sportifs", "sportif", "sportive"], answer: 0, note: "garçons = masculine plural → sportifs | sportif (m.s.), sportive (f.s.)" },
+    { sentence: "Les maisons sont {BLANK}.", options: ["grandes", "grand", "grande"], answer: 0, note: "maisons = feminine plural → grandes | grand (m.s.), grande (f.s.)" },
+    { sentence: "Il y a une {BLANK} église dans mon village.", options: ["vieille", "vieux", "vieil"], answer: 0, note: "église is feminine → vieille | vieux (m.s. before consonant), vieil (m.s. before vowel)" },
+    { sentence: "C'est un {BLANK} appartement.", options: ["nouvel", "nouveau", "nouvelle"], answer: 0, note: "appartement starts with vowel → nouvel (m.s.) | nouveau before consonant, nouvelle (f.s.)" },
+    { sentence: "La {BLANK} voiture est rapide.", options: ["nouvelle", "nouvel", "nouveau"], answer: 0, note: "voiture is feminine → nouvelle | nouveau (m.s.), nouvel (m.s. before vowel)" },
+    { sentence: "C'est un {BLANK} ami.", options: ["bel", "beau", "belle"], answer: 0, note: "ami starts with vowel → bel (m.s.) | beau before consonant, belle (f.s.)" },
+    { sentence: "Ça coûte trente euros. C'est trop {BLANK}\u00a0!", options: ["cher", "chère", "chers"], answer: 0, note: "c'est + adjective is impersonal → always masculine singular: cher" },
+    { sentence: "C'est {BLANK} aujourd'hui\u00a0!", options: ["chaud", "chaude", "chauds"], answer: 0, note: "c'est (weather/impersonal) → masculine singular: chaud" },
+    { sentence: "C'est {BLANK}\u00a0!", options: ["délicieux", "délicieuse", "délicieuses"], answer: 0, note: "c'est + adjective (impersonal) → always masculine singular: délicieux" },
+    { sentence: "Mon professeur est très {BLANK}.", options: ["strict", "stricte", "stricts"], answer: 0, note: "professeur is masculine singular → strict | stricte = feminine form" },
+    { sentence: "Ma sœur est très {BLANK}.", options: ["sportive", "sportif", "sportifs"], answer: 0, note: "sœur is feminine → sportive | sportif = masculine form" },
+    { sentence: "Les pommes sont {BLANK}.", options: ["grosses", "gros", "grosse"], answer: 0, note: "pommes = feminine plural → grosses | gros (m.s./m.pl.), grosse (f.s.)" },
+    { sentence: "Mes parents sont très {BLANK}.", options: ["gentils", "gentil", "gentille"], answer: 0, note: "parents = masculine plural → gentils | gentil (m.s.), gentille (f.s.)" },
+    { sentence: "La mer est {BLANK}.", options: ["bleue", "bleu", "bleus"], answer: 0, note: "mer is feminine → bleue | bleu (m.s.), bleue (f.s.)" },
+    { sentence: "Le ciel est {BLANK}.", options: ["bleu", "bleue", "bleues"], answer: 0, note: "ciel is masculine → bleu | bleue = feminine form" },
+    { sentence: "La fenêtre est {BLANK}.", options: ["ouverte", "ouvert", "ouverts"], answer: 0, note: "fenêtre is feminine → ouverte | ouvert (m.s.), ouverts (m.pl.)" },
+
+    // ── PRESENT TENSE ─────────────────────────────────────────────────
+    { sentence: "Tu {BLANK} bien le français.", options: ["parles", "parle", "parlent"], answer: 0, note: "tu → -es ending: parles | parle = il/elle, parlent = ils/elles" },
+    { sentence: "Vous {BLANK} en France.", options: ["habitez", "habite", "habitent"], answer: 0, note: "vous → -ez ending: habitez | habite = il/elle, habitent = ils/elles" },
+    { sentence: "Elle {BLANK} de la musique.", options: ["écoute", "écoutes", "écoutent"], answer: 0, note: "elle → no extra ending: écoute | écoutes = tu form, écoutent = ils/elles" },
+    { sentence: "Nous {BLANK} la télé le soir.", options: ["regardons", "regarde", "regardent"], answer: 0, note: "nous → -ons ending: regardons | regarde = il/elle, regardent = ils/elles" },
+    { sentence: "Il {BLANK} son vélo.", options: ["répare", "répares", "réparons"], answer: 0, note: "il → no extra ending: répare | répares = tu, réparons = nous" },
+    { sentence: "Nous {BLANK} au football le samedi.", options: ["jouons", "joue", "jouent"], answer: 0, note: "nous → -ons: jouons | joue = il/elle, jouent = ils/elles" },
+    { sentence: "Je {BLANK} un bon livre.", options: ["lis", "lit", "lisez"], answer: 0, note: "je → lis (lire is irregular) | lit = il/elle, lisez = vous" },
+    { sentence: "Il {BLANK} à midi.", options: ["finit", "finis", "finissez"], answer: 0, note: "il → finit (-ir verb) | finis = je/tu, finissez = vous" },
+    { sentence: "Nous {BLANK} à Lyon.", options: ["vivons", "vit", "vivent"], answer: 0, note: "nous → vivons (vivre) | vit = il/elle, vivent = ils/elles" },
+    { sentence: "Tu {BLANK} du café\u00a0?", options: ["bois", "boit", "buvez"], answer: 0, note: "tu → bois (boire is irregular) | boit = il/elle, buvez = vous" },
+    { sentence: "Il {BLANK} du café.", options: ["boit", "bois", "buvons"], answer: 0, note: "il → boit | bois = je/tu, buvons = nous" },
+    { sentence: "Je {BLANK} à la boulangerie.", options: ["vais", "va", "allez"], answer: 0, note: "je → vais (aller is irregular) | va = il/elle, allez = vous" },
+    { sentence: "Tu {BLANK} au parc\u00a0?", options: ["vas", "va", "allons"], answer: 0, note: "tu → vas | va = il/elle, allons = nous" },
+    { sentence: "Il {BLANK} au collège en vélo.", options: ["va", "vais", "allez"], answer: 0, note: "il → va | vais = je, allez = vous" },
+    { sentence: "Nous {BLANK} au musée.", options: ["allons", "va", "vont"], answer: 0, note: "nous → allons | va = il/elle, vont = ils/elles" },
+    { sentence: "Je {BLANK} faim.", options: ["ai", "a", "avez"], answer: 0, note: "je → ai (avoir) | a = il/elle, avez = vous" },
+    { sentence: "Tu {BLANK} combien de frères\u00a0?", options: ["as", "a", "avons"], answer: 0, note: "tu → as | a = il/elle, avons = nous" },
+    { sentence: "Il {BLANK} les yeux bleus.", options: ["a", "ai", "avons"], answer: 0, note: "il → a | ai = je, avons = nous" },
+    { sentence: "Nous {BLANK} une maison en ville.", options: ["avons", "ai", "ont"], answer: 0, note: "nous → avons | ai = je, ont = ils/elles" },
+    { sentence: "Je {BLANK} français.", options: ["suis", "est", "sommes"], answer: 0, note: "je → suis (être) | est = il/elle, sommes = nous" },
+    { sentence: "Tu {BLANK} en quelle année\u00a0?", options: ["es", "est", "êtes"], answer: 0, note: "tu → es | est = il/elle, êtes = vous" },
+    { sentence: "Il {BLANK} professeur.", options: ["est", "es", "sommes"], answer: 0, note: "il → est | es = tu, sommes = nous" },
+    { sentence: "Vous {BLANK} de Paris\u00a0?", options: ["êtes", "est", "sont"], answer: 0, note: "vous → êtes | est = il/elle, sont = ils/elles" },
+    { sentence: "Je {BLANK} mes devoirs.", options: ["fais", "fait", "faites"], answer: 0, note: "je → fais (faire) | fait = il/elle, faites = vous" },
+    { sentence: "Il {BLANK} beau temps.", options: ["fait", "fais", "faites"], answer: 0, note: "il fait beau = the weather is nice (impersonal) | fais = je/tu" },
+    { sentence: "Nous {BLANK} une promenade.", options: ["faisons", "fait", "font"], answer: 0, note: "nous → faisons | fait = il/elle, font = ils/elles" },
+    { sentence: "Je {BLANK} parler espagnol.", options: ["peux", "peut", "pouvez"], answer: 0, note: "je → peux (pouvoir) | peut = il/elle, pouvez = vous" },
+    { sentence: "Il {BLANK} sortir ce soir.", options: ["veut", "veux", "voulez"], answer: 0, note: "il → veut (vouloir) | veux = je/tu, voulez = vous" },
+    { sentence: "Tu {BLANK} rester ici.", options: ["dois", "doit", "devez"], answer: 0, note: "tu → dois (devoir) | doit = il/elle, devez = vous" },
+    { sentence: "Je préfère {BLANK} des nouvelles baskets.", options: ["acheter", "achète", "achetez"], answer: 0, note: "préférer + infinitive | achète = je form, achetez = vous form, acheter = infinitive (correct)" },
+    { sentence: "J'aime {BLANK} au football.", options: ["jouer", "joue", "jouez"], answer: 0, note: "aimer + infinitive | jouer = infinitive (correct), joue = je/il, jouez = vous" },
+    { sentence: "Je veux {BLANK} médecin.", options: ["devenir", "devient", "devenez"], answer: 0, note: "vouloir + infinitive | devenir = infinitive (correct), devient = il, devenez = vous" },
+    { sentence: "Les cours {BLANK} à neuf heures.", options: ["commencent", "commence", "commencez"], answer: 0, note: "les cours = ils → -ent: commencent | commence = il/elle, commencez = vous" },
+    { sentence: "Après le petit-déjeuner, je {BLANK} une douche.", options: ["prends", "prendre", "prenez"], answer: 0, note: "je → prends (prendre is irregular) | prendre = infinitive, prenez = vous" },
+
+    // ── ARTICLES ──────────────────────────────────────────────────────
+    { sentence: "Je mange {BLANK} pain au petit-déjeuner.", options: ["du", "de la", "des"], answer: 0, note: "pain is masculine → du (de + le) | de la = feminine, des = plural" },
+    { sentence: "Je bois {BLANK} lait.", options: ["du", "de la", "de l'"], answer: 0, note: "lait is masculine → du | de la = feminine, de l' = before vowel/h" },
+    { sentence: "Je mange {BLANK} salade.", options: ["de la", "du", "des"], answer: 0, note: "salade is feminine → de la | du = masculine, des = plural" },
+    { sentence: "Je mange {BLANK} légumes.", options: ["des", "du", "de la"], answer: 0, note: "légumes = plural → des | du = masculine singular, de la = feminine singular" },
+    { sentence: "Je bois {BLANK} eau.", options: ["de l'", "du", "de la"], answer: 0, note: "eau starts with vowel → de l' | du = masculine, de la = feminine" },
+    { sentence: "Je mange {BLANK} viande.", options: ["de la", "du", "des"], answer: 0, note: "viande is feminine → de la | du = masculine, des = plural" },
+    { sentence: "Je bois {BLANK} jus d'orange.", options: ["du", "de la", "de l'"], answer: 0, note: "jus is masculine → du | de la = feminine, de l' = before vowel" },
+    { sentence: "Il y a {BLANK} pommes sur la table.", options: ["des", "du", "de la"], answer: 0, note: "pommes = plural → des | du = m.s., de la = f.s." },
+    { sentence: "Je ne mange pas {BLANK} sucre.", options: ["de", "du", "de la"], answer: 0, note: "after negation (ne...pas), partitive → de | du/de la become de" },
+    { sentence: "Je n'ai pas {BLANK} frères.", options: ["de", "des", "du"], answer: 0, note: "after negation, des → de | je n'ai pas de frères = I have no brothers" },
+    { sentence: "Il n'y a pas {BLANK} pain.", options: ["de", "du", "de la"], answer: 0, note: "after negation, du → de | il n'y a pas de pain = there is no bread" },
+    { sentence: "Je ne bois pas {BLANK} café.", options: ["de", "du", "de la"], answer: 0, note: "after negation, du → de | je ne bois pas de café" },
+    { sentence: "Je vais {BLANK} supermarché.", options: ["au", "à la", "aux"], answer: 0, note: "supermarché is masculine → au (à + le) | à la = feminine, aux = plural" },
+    { sentence: "Je joue {BLANK} tennis.", options: ["au", "à la", "aux"], answer: 0, note: "tennis is masculine → au | à la = feminine, aux = plural" },
+    { sentence: "Elle va {BLANK} piscine.", options: ["à la", "au", "aux"], answer: 0, note: "piscine is feminine → à la | au = masculine, aux = plural" },
+    { sentence: "Nous allons {BLANK} magasins.", options: ["aux", "au", "à la"], answer: 0, note: "magasins = plural → aux (à + les) | au = m.s., à la = f.s." },
+    { sentence: "Il joue {BLANK} football.", options: ["au", "à la", "aux"], answer: 0, note: "football is masculine → au | jouer au foot is a fixed expression" },
+    { sentence: "Je vais {BLANK} école.", options: ["à l'", "au", "à la"], answer: 0, note: "école starts with vowel → à l' | au = masculine, à la = feminine before consonant" },
+    { sentence: "Je joue {BLANK} guitare.", options: ["de la", "du", "des"], answer: 0, note: "jouer de + article for instruments | guitare is feminine → de la guitare" },
+    { sentence: "Il joue {BLANK} piano.", options: ["du", "de la", "des"], answer: 0, note: "jouer de + article | piano is masculine → du piano" },
+    { sentence: "La chambre est {BLANK} premier étage.", options: ["au", "à la", "aux"], answer: 0, note: "étage is masculine → au (à + le) | au premier étage = on the first floor" },
+
+    // ── HOMOPHONES ───────────────────────────────────────────────────
+    { sentence: "Tu préfères le thé {BLANK} le café\u00a0?", options: ["ou", "où", "au"], answer: 0, note: "ou (no accent) = or | où (with accent) = where" },
+    { sentence: "{BLANK} est-ce que tu habites\u00a0?", options: ["Où", "Ou", "Au"], answer: 0, note: "Où (with accent) = where | ou = or" },
+    { sentence: "Je ne sais pas {BLANK} il est allé.", options: ["où", "ou", "au"], answer: 0, note: "où = where (relative/indirect question) | ou = or" },
+    { sentence: "Chocolat {BLANK} vanille\u00a0?", options: ["ou", "où", "au"], answer: 0, note: "ou = or (choice) | où = where (location)" },
+    { sentence: "C'est {BLANK} chien.", options: ["son", "sont", "ses"], answer: 0, note: "son = his/her (before masculine noun) | sont = they are, ses = his/her plural" },
+    { sentence: "Ils {BLANK} arrivés à midi.", options: ["sont", "son", "ont"], answer: 0, note: "sont = they are (être, 3rd pl.) | son = his/her, ont = they have" },
+    { sentence: "Elles {BLANK} très intelligentes.", options: ["sont", "son", "ont"], answer: 0, note: "sont = they are | son = possessive adjective, ont = they have" },
+    { sentence: "Il promène {BLANK} chien.", options: ["son", "sont", "ses"], answer: 0, note: "son = his/her + m.s. noun | sont = they are (verb)" },
+    { sentence: "Les enfants {BLANK} fatigués.", options: ["sont", "son", "ont"], answer: 0, note: "sont = they are | son = possessive, ont = they have" },
+    { sentence: "Mon père {BLANK} médecin.", options: ["est", "et", "es"], answer: 0, note: "est = is (être, 3rd s.) | et = and, es = you are (tu form)" },
+    { sentence: "J'aime le football {BLANK} le tennis.", options: ["et", "est", "es"], answer: 0, note: "et = and (conjunction) | est = is, es = you are" },
+    { sentence: "Tu {BLANK} en quelle classe\u00a0?", options: ["es", "est", "et"], answer: 0, note: "es = you are (tu form) | est = he/she is, et = and" },
+    { sentence: "La maison {BLANK} grande.", options: ["est", "et", "es"], answer: 0, note: "est = is (3rd person singular) | et = and, es = tu form" },
+    { sentence: "Je mange une pomme {BLANK} une banane.", options: ["et", "est", "es"], answer: 0, note: "et = and | est = is, es = you are" },
+    { sentence: "Mon père {BLANK} une voiture rouge.", options: ["a", "à", "as"], answer: 0, note: "a = has (avoir, 3rd s.) | à = to/at (preposition), as = you have" },
+    { sentence: "Je vais {BLANK} Paris.", options: ["à", "a", "as"], answer: 0, note: "à = to/at (preposition) | a = has (3rd s.), as = you have" },
+    { sentence: "Il {BLANK} faim.", options: ["a", "à", "as"], answer: 0, note: "a = has (avoir, 3rd s.) | avoir faim = to be hungry" },
+    { sentence: "Elle habite {BLANK} Lyon.", options: ["à", "a", "as"], answer: 0, note: "à = in/at (preposition before city) | a = has, as = you have" },
+    { sentence: "Mon frère {BLANK} quinze ans.", options: ["a", "à", "as"], answer: 0, note: "a = has (avoir, 3rd s.) | avoir X ans = to be X years old" },
+    { sentence: "{BLANK} mange du pain en France.", options: ["On", "Ont", "Son"], answer: 0, note: "On = one/we/people (indefinite subject) | Ont = they have, Son = his/her" },
+    { sentence: "Ils {BLANK} trois enfants.", options: ["ont", "on", "son"], answer: 0, note: "ont = they have (avoir, 3rd pl.) | on = one/we, son = his/her" },
+    { sentence: "Mes parents {BLANK} voyagé en Espagne.", options: ["ont", "on", "sont"], answer: 0, note: "ont = they have (passé composé with avoir) | sont = they are (être verbs use être)" },
+    { sentence: "{BLANK} parle français au Québec.", options: ["On", "Ont", "Son"], answer: 0, note: "On = people/one (general statement) | Ont = they have, Son = his/her" },
+    { sentence: "Elles {BLANK} beaucoup de travail.", options: ["ont", "on", "sont"], answer: 0, note: "ont = they have | on = one/we, sont = they are" },
+    { sentence: "{BLANK} livres sont à moi.", options: ["Ces", "Ses", "Les"], answer: 0, note: "Ces = these/those (demonstrative pl.) | Ses = his/her plural, Les = the (definite article)" },
+    { sentence: "Marie range {BLANK} affaires.", options: ["ses", "ces", "les"], answer: 0, note: "ses = her (possessive, pl.) | ces = these (demonstrative), les = the" },
+    { sentence: "{BLANK} exercices sont difficiles.", options: ["Ces", "Ses", "Les"], answer: 0, note: "Ces = these (demonstrative, pointing out) | Ses = his/her pl., Les = the" },
+    { sentence: "Mon anniversaire, c'est en {BLANK}.", options: ["mai", "mais", "mes"], answer: 0, note: "mai = the month May | mais = but, mes = my (plural)" },
+    { sentence: "J'aime le chocolat {BLANK} pas les bonbons.", options: ["mais", "mai", "mes"], answer: 0, note: "mais = but (conjunction) | mai = May, mes = my" },
+    { sentence: "Il est onze heures et {BLANK}.", options: ["demie", "demi", "demy"], answer: 0, note: "demie agrees with heure (f.) in time expressions | demi = masculine form" },
+    { sentence: "Il est midi et {BLANK}.", options: ["demi", "demie", "demy"], answer: 0, note: "midi is masculine → demi (no agreement needed with masculine) | demie = feminine form" },
+
+    // ── POSSESSIVE ADJECTIVES ──────────────────────────────────────────
+    { sentence: "{BLANK} chien s'appelle Rex.", options: ["Mon", "Ma", "Mes"], answer: 0, note: "chien is masculine → Mon | Ma = before f. noun, Mes = plural" },
+    { sentence: "{BLANK} sœur a quinze ans.", options: ["Ma", "Mon", "Mes"], answer: 0, note: "sœur is feminine → Ma | Mon = masculine, Mes = plural" },
+    { sentence: "{BLANK} parents habitent à Paris.", options: ["Mes", "Mon", "Ma"], answer: 0, note: "parents is plural → Mes | Mon = m.s., Ma = f.s." },
+    { sentence: "{BLANK} amie s'appelle Marie.", options: ["Mon", "Ma", "Mes"], answer: 0, note: "amie starts with vowel → Mon (not Ma) to avoid awkward sound | Mon amie (f.s. but vowel)" },
+    { sentence: "{BLANK} frère joue au football.", options: ["Son", "Sa", "Ses"], answer: 0, note: "frère is masculine → Son | Sa = feminine, Ses = plural" },
+    { sentence: "{BLANK} mère est professeur.", options: ["Sa", "Son", "Ses"], answer: 0, note: "mère is feminine → Sa | Son = masculine, Ses = plural" },
+    { sentence: "{BLANK} devoirs sont difficiles.", options: ["Ses", "Son", "Sa"], answer: 0, note: "devoirs is plural → Ses | Son = m.s., Sa = f.s." },
+    { sentence: "Il aime {BLANK} chien.", options: ["son", "sa", "ses"], answer: 0, note: "chien is masculine singular → son | sa = feminine, ses = plural" },
+    { sentence: "Elle parle à {BLANK} amie.", options: ["son", "sa", "ses"], answer: 0, note: "amie starts with vowel → son (not sa) | euphony rule: sa + vowel → son" },
+    { sentence: "Comment s'appelle {BLANK} père\u00a0?", options: ["ton", "ta", "tes"], answer: 0, note: "père is masculine → ton | ta = feminine, tes = plural" },
+    { sentence: "Comment s'appelle {BLANK} mère\u00a0?", options: ["ta", "ton", "tes"], answer: 0, note: "mère is feminine → ta | ton = masculine, tes = plural" },
+    { sentence: "Tu fais {BLANK} devoirs\u00a0?", options: ["tes", "ton", "ta"], answer: 0, note: "devoirs is plural → tes | ton = m.s., ta = f.s." },
+    { sentence: "{BLANK} professeur est sympa.", options: ["Notre", "Nos", "Leur"], answer: 0, note: "professeur is singular → Notre (our, s.) | Nos = plural, Leur = their" },
+    { sentence: "{BLANK} enfants jouent dans le jardin.", options: ["Leurs", "Leur", "Les"], answer: 0, note: "enfants is plural → Leurs (their plural) | Leur = their singular, Les = the" },
+    { sentence: "C'est {BLANK} voiture.", options: ["leur", "leurs", "ses"], answer: 0, note: "voiture is singular → leur (their) | leurs = plural noun, ses = his/her" },
+    { sentence: "Ce sont {BLANK} livres.", options: ["leurs", "leur", "ses"], answer: 0, note: "livres is plural → leurs (their plural) | leur = their singular" },
+    { sentence: "Vous faites {BLANK} devoirs\u00a0?", options: ["vos", "votre", "leurs"], answer: 0, note: "devoirs is plural → vos (your plural) | votre = your singular" },
+    { sentence: "C'est {BLANK} maison.", options: ["votre", "vos", "leur"], answer: 0, note: "maison is singular → votre (your, formal/plural) | vos = plural nouns" },
+
+    // ── COUNTRY PREPOSITIONS ──────────────────────────────────────────
+    { sentence: "Je vais {BLANK} France.", options: ["en", "au", "aux"], answer: 0, note: "France is feminine → en | au = masculine country, aux = plural country" },
+    { sentence: "Il habite {BLANK} Japon.", options: ["au", "en", "aux"], answer: 0, note: "Japon is masculine → au (à + le) | en = feminine country" },
+    { sentence: "Nous allons {BLANK} États-Unis.", options: ["aux", "au", "en"], answer: 0, note: "États-Unis is plural → aux (à + les) | au = m.s. country, en = f.s. country" },
+    { sentence: "Elle est née {BLANK} Angleterre.", options: ["en", "au", "aux"], answer: 0, note: "Angleterre is feminine → en | au = masculine, aux = plural" },
+    { sentence: "Je pars {BLANK} Espagne cet été.", options: ["en", "au", "aux"], answer: 0, note: "Espagne is feminine → en | au = masculine, aux = plural" },
+    { sentence: "Il va {BLANK} Portugal.", options: ["au", "en", "aux"], answer: 0, note: "Portugal is masculine → au | en = feminine country" },
+    { sentence: "Ils habitent {BLANK} Canada.", options: ["au", "en", "aux"], answer: 0, note: "Canada is masculine → au | en = feminine country" },
+    { sentence: "Nous voyageons {BLANK} Italie.", options: ["en", "au", "aux"], answer: 0, note: "Italie is feminine → en | au = masculine, aux = plural" },
+    { sentence: "Elle travaille {BLANK} Chine.", options: ["en", "au", "aux"], answer: 0, note: "Chine is feminine → en | au = masculine country" },
+    { sentence: "Je vais {BLANK} Pays-Bas.", options: ["aux", "au", "en"], answer: 0, note: "Pays-Bas is plural → aux | au = m.s. country, en = f.s. country" },
+
+    // ── TIME EXPRESSIONS ──────────────────────────────────────────────
+    { sentence: "Mon anniversaire est le {BLANK} avril.", options: ["premier", "première", "premiers"], answer: 0, note: "dates use masculine: le premier (1st) | première = feminine form" },
+    { sentence: "C'est la {BLANK} fois que je le vois.", options: ["première", "premier", "premières"], answer: 0, note: "fois is feminine → première | premier = masculine form" },
+    { sentence: "Le {BLANK} janvier est un jour férié.", options: ["premier", "première", "premiers"], answer: 0, note: "dates use masculine ordinal: le premier janvier | première = feminine" },
+    { sentence: "C'est ma {BLANK} visite en France.", options: ["première", "premier", "premières"], answer: 0, note: "visite is feminine → première | premier = masculine form" },
+    { sentence: "Le trimestre {BLANK}, j'ai travaillé très dur.", options: ["dernier", "dernière", "derniers"], answer: 0, note: "trimestre is masculine → dernier | dernière = feminine form" },
+    { sentence: "La semaine {BLANK}, il a plu.", options: ["dernière", "dernier", "derniers"], answer: 0, note: "semaine is feminine → dernière | dernier = masculine form" },
+    { sentence: "C'est la {BLANK} fois.", options: ["dernière", "dernier", "derniers"], answer: 0, note: "fois is feminine → dernière | dernier = masculine form" },
+    { sentence: "Le {BLANK} bus part à minuit.", options: ["dernier", "dernière", "derniers"], answer: 0, note: "bus is masculine → dernier | dernière = feminine form" },
+    { sentence: "À l'année {BLANK}\u00a0!", options: ["prochaine", "prochain", "prochains"], answer: 0, note: "année is feminine → prochaine | prochain = masculine form" },
+    { sentence: "Le {BLANK} cours est mardi.", options: ["prochain", "prochaine", "prochains"], answer: 0, note: "cours is masculine → prochain | prochaine = feminine form" },
+    { sentence: "La semaine {BLANK}, je pars en vacances.", options: ["prochaine", "prochain", "prochains"], answer: 0, note: "semaine is feminine → prochaine | prochain = masculine form" },
+    { sentence: "L'année {BLANK} je vais passer mes examens.", options: ["prochaine", "prochain", "prochains"], answer: 0, note: "année is feminine → prochaine | prochain = masculine form" },
+
+    // ── PASSÉ COMPOSÉ ─────────────────────────────────────────────────
+    { sentence: "J'ai {BLANK} mes devoirs hier soir.", options: ["fait", "faire", "faisais"], answer: 0, note: "passé composé with avoir: past participle fait | faire = infinitive, faisais = imperfect" },
+    { sentence: "Elle a {BLANK} une belle robe.", options: ["acheté", "acheter", "achetait"], answer: 0, note: "p.c. with avoir → p.p.: acheté | acheter = infinitive, achetait = imperfect" },
+    { sentence: "Nous avons {BLANK} au restaurant.", options: ["mangé", "manger", "mangeons"], answer: 0, note: "p.c. with avoir → p.p.: mangé | manger = infinitive, mangeons = present" },
+    { sentence: "Il a {BLANK} ce livre.", options: ["lu", "lire", "lisait"], answer: 0, note: "p.c. with avoir → p.p.: lu (lire) | lire = infinitive, lisait = imperfect" },
+    { sentence: "J'ai {BLANK} la télé pendant deux heures.", options: ["regardé", "regarder", "regardais"], answer: 0, note: "p.c. with avoir → p.p.: regardé | regarder = infinitive, regardais = imperfect" },
+    { sentence: "Ils ont {BLANK} le bus.", options: ["pris", "prendre", "prenaient"], answer: 0, note: "p.c. with avoir → p.p.: pris (prendre) | prendre = infinitive, prenaient = imperfect" },
+    { sentence: "Elle a {BLANK} à sa mère.", options: ["parlé", "parler", "parlait"], answer: 0, note: "p.c. with avoir → p.p.: parlé | parler = infinitive, parlait = imperfect" },
+    { sentence: "J'ai {BLANK} une bonne note.", options: ["eu", "avoir", "avais"], answer: 0, note: "p.c. with avoir → p.p.: eu (avoir) | avoir = infinitive, avais = imperfect" },
+    { sentence: "Il a {BLANK} malade pendant une semaine.", options: ["été", "être", "était"], answer: 0, note: "p.c. with avoir → p.p.: été (être) | être = infinitive, était = imperfect" },
+    { sentence: "J'ai {BLANK} un bon film hier soir.", options: ["regardé", "regarder", "regardait"], answer: 0, note: "p.c. with avoir → p.p.: regardé | regarder = infinitive" },
+    { sentence: "Elle est {BLANK} hier soir.", options: ["arrivée", "arrivé", "arrivées"], answer: 0, note: "arriver uses être → p.p. agrees: arrivée (f.s.) | arrivé = m.s., arrivées = f.pl." },
+    { sentence: "Ils sont {BLANK} en France.", options: ["allés", "allé", "allées"], answer: 0, note: "aller uses être → p.p. agrees: allés (m.pl.) | allé = m.s., allées = f.pl." },
+    { sentence: "Elle est {BLANK} à Londres.", options: ["née", "né", "nées"], answer: 0, note: "naître uses être → p.p. agrees: née (f.s.) | né = m.s., nées = f.pl." },
+    { sentence: "Il est {BLANK} à Paris.", options: ["né", "née", "nés"], answer: 0, note: "naître uses être → p.p. agrees: né (m.s.) | née = f.s., nés = m.pl." },
+    { sentence: "Elles sont {BLANK} à l'hôtel.", options: ["restées", "restés", "resté"], answer: 0, note: "rester uses être → p.p. agrees: restées (f.pl.) | restés = m.pl., resté = m.s." },
+    { sentence: "Les garçons sont {BLANK} hier.", options: ["partis", "parti", "parties"], answer: 0, note: "partir uses être → p.p. agrees: partis (m.pl.) | parti = m.s., parties = f.pl." },
+    { sentence: "Elle {BLANK} partie à l'aube.", options: ["est", "a", "avait"], answer: 0, note: "partir uses être (not avoir) in p.c. → est partie | a = avoir auxiliary" },
+    { sentence: "Il {BLANK} mangé une pomme.", options: ["a", "est", "avait"], answer: 0, note: "manger uses avoir in p.c. → a mangé | est = être auxiliary (wrong verb)" },
+    { sentence: "Nous {BLANK} arrivés à temps.", options: ["sommes", "avons", "étions"], answer: 0, note: "arriver uses être → sommes arrivés | avons = avoir auxiliary, étions = imperfect" },
+    { sentence: "Elle {BLANK} tombée dans l'escalier.", options: ["est", "a", "était"], answer: 0, note: "tomber uses être → est tombée | a = avoir auxiliary, était = imperfect" },
+
+    // ── NEAR FUTURE ───────────────────────────────────────────────────
+    { sentence: "Je {BLANK} regarder un film ce soir.", options: ["vais", "va", "allez"], answer: 0, note: "near future: aller + infinitive | je → vais | va = il/elle, allez = vous" },
+    { sentence: "Il {BLANK} partir demain.", options: ["va", "vais", "allons"], answer: 0, note: "near future: il → va | vais = je, allons = nous" },
+    { sentence: "Nous {BLANK} manger au restaurant.", options: ["allons", "va", "vont"], answer: 0, note: "near future: nous → allons | va = il/elle, vont = ils/elles" },
+    { sentence: "Tu {BLANK} réussir tes examens.", options: ["vas", "va", "allons"], answer: 0, note: "near future: tu → vas | va = il/elle, allons = nous" },
+    { sentence: "Ils {BLANK} jouer au tennis.", options: ["vont", "va", "allons"], answer: 0, note: "near future: ils → vont | va = il/elle, allons = nous" },
+    { sentence: "Elle {BLANK} acheter une nouvelle robe.", options: ["va", "vais", "allons"], answer: 0, note: "near future: elle → va | vais = je, allons = nous" },
+    { sentence: "Je {BLANK} faire mes devoirs.", options: ["vais", "va", "allons"], answer: 0, note: "near future: je → vais | va = il/elle, allons = nous" },
+    { sentence: "Vous {BLANK} partir bientôt\u00a0?", options: ["allez", "allons", "vont"], answer: 0, note: "near future: vous → allez | allons = nous, vont = ils/elles" },
+
+    // ── REFLEXIVE VERBS ───────────────────────────────────────────────
+    { sentence: "Je {BLANK} à sept heures.", options: ["me réveille", "te réveilles", "se réveille"], answer: 0, note: "je → me (1st person reflexive) | tu → te, il/elle → se" },
+    { sentence: "Tu {BLANK} le matin\u00a0?", options: ["te lèves", "me lèves", "se lève"], answer: 0, note: "tu → te (2nd person reflexive) | je → me, il/elle → se" },
+    { sentence: "Nous {BLANK} dans la cuisine.", options: ["nous retrouvons", "me retrouve", "te retrouves"], answer: 0, note: "nous → nous (1st pl. reflexive) | me = je, te = tu" },
+    { sentence: "Je {BLANK} bien en vacances.", options: ["m'amuse", "t'amuses", "s'amuse"], answer: 0, note: "je → me → m' before vowel | tu → te, il/elle → se" },
+    { sentence: "Elle {BLANK} avant de sortir.", options: ["se coiffe", "me coiffe", "te coiffes"], answer: 0, note: "elle → se (3rd person reflexive) | me = je, te = tu" },
+    { sentence: "Vous {BLANK} bien\u00a0?", options: ["vous amusez", "nous amusons", "s'amusent"], answer: 0, note: "vous → vous (2nd pl. reflexive) | nous → nous, ils/elles → se" },
+    { sentence: "Ils {BLANK} à huit heures.", options: ["se couchent", "me couche", "te couches"], answer: 0, note: "ils → se (3rd pl. reflexive) | me = je, te = tu" },
+    { sentence: "Je {BLANK} les mains avant de manger.", options: ["me lave", "te laves", "se lave"], answer: 0, note: "je → me (1st person reflexive) | te = tu, se = il/elle" },
+    { sentence: "Tu {BLANK} bien ici\u00a0?", options: ["te sens", "me sens", "se sent"], answer: 0, note: "tu → te (2nd person reflexive) | me = je, se = il/elle" },
+    { sentence: "Elle {BLANK} les dents après le dîner.", options: ["se brosse", "me brosse", "te brosse"], answer: 0, note: "elle → se (3rd person reflexive) | se brosser les dents = to brush one's teeth" },
+    { sentence: "Je {BLANK} à sept heures du matin.", options: ["me lève", "te lève", "se lève"], answer: 0, note: "je → me (1st person reflexive) | te = tu, se = il/elle" },
+
+    // ── DEMONSTRATIVE ADJECTIVES ──────────────────────────────────────
+    { sentence: "Je voudrais {BLANK} robe.", options: ["cette", "ce", "cet"], answer: 0, note: "robe is feminine → cette | ce = masculine before consonant, cet = masculine before vowel" },
+    { sentence: "Regarde {BLANK} chien\u00a0!", options: ["ce", "cette", "ces"], answer: 0, note: "chien is masculine (consonant) → ce | cette = feminine, ces = plural" },
+    { sentence: "{BLANK} exercices sont faciles.", options: ["Ces", "Ce", "Cette"], answer: 0, note: "exercices is plural → Ces | Ce = m.s., Cette = f.s." },
+    { sentence: "J'aime {BLANK} chaussures.", options: ["ces", "ce", "cette"], answer: 0, note: "chaussures is plural → ces | ce = m.s., cette = f.s." },
+    { sentence: "{BLANK} homme est sympa.", options: ["Cet", "Ce", "Cette"], answer: 0, note: "homme starts with h (aspirate) → Cet (m.s. before vowel/h) | Ce = before consonant, Cette = f.s." },
+
+    // ── DEPUIS / PENDANT ──────────────────────────────────────────────
+    { sentence: "J'apprends le français {BLANK} trois ans.", options: ["depuis", "pendant", "pour"], answer: 0, note: "depuis + present = ongoing action still happening | pendant = completed period, pour = for (future)" },
+    { sentence: "Il habite à Paris {BLANK} cinq ans.", options: ["depuis", "pendant", "pour"], answer: 0, note: "depuis + present = still living there now | pendant = used with past/completed actions" },
+    { sentence: "Il a habité à Rome {BLANK} deux ans.", options: ["pendant", "depuis", "pour"], answer: 0, note: "pendant = for (completed, past action) | depuis = ongoing (present tense)" },
+    { sentence: "Je l'ai vu {BLANK} longtemps.", options: ["il y a", "depuis", "pendant"], answer: 0, note: "il y a + time = time ago | depuis = since/for (ongoing), pendant = during/for" },
+    { sentence: "Je le connais {BLANK} deux ans.", options: ["depuis", "il y a", "pendant"], answer: 0, note: "depuis + present = I have known him for 2 years (ongoing) | il y a = 2 years ago" },
+
+    // ── ADVERBS ───────────────────────────────────────────────────────
+    { sentence: "Il parle très {BLANK}.", options: ["vite", "vitesse", "rapide"], answer: 0, note: "vite = fast (adverb) | vitesse = speed (noun), rapide = fast (adjective)" },
+    { sentence: "Elle chante {BLANK}.", options: ["bien", "bon", "bonne"], answer: 0, note: "bien = well (adverb) | bon/bonne = good (adjective, modifies noun)" },
+    { sentence: "Il nage {BLANK} que son frère.", options: ["mieux", "plus", "meilleur"], answer: 0, note: "mieux = better (comparative adverb) | meilleur = better (adjective, agrees with noun)" },
+    { sentence: "Tu chantes {BLANK} que moi\u00a0!", options: ["mieux", "plus", "meilleur"], answer: 0, note: "mieux = better (adverb comparing verbs/actions) | meilleur = adjective (modifies nouns)" },
+
+    // ── MIXED GRAMMAR ─────────────────────────────────────────────────
+    { sentence: "Cette maison est {BLANK} grande que la mienne.", options: ["plus", "mieux", "aussi"], answer: 0, note: "plus + adjective = comparative (bigger) | mieux = better (adverb), aussi = as" },
+    { sentence: "Ce livre est {BLANK} intéressant que l'autre.", options: ["moins", "mieux", "meilleur"], answer: 0, note: "moins + adjective = less (comparative) | mieux = adverb, meilleur = adjective (better quality)" },
+    { sentence: "C'est le {BLANK} grand château de la région.", options: ["plus", "mieux", "moins"], answer: 0, note: "le plus + adjective = superlative (the biggest) | le mieux = the best (adverb)" },
+    { sentence: "Je voudrais {BLANK} eau, s'il vous plaît.", options: ["de l'", "du", "de la"], answer: 0, note: "eau starts with vowel → de l' | du = masculine, de la = feminine before consonant" },
+    { sentence: "Il {BLANK} toujours à l'heure.", options: ["arrive", "arrivent", "arrivez"], answer: 0, note: "il → no extra ending: arrive | arrivent = ils/elles, arrivez = vous" },
+    { sentence: "Je n'ai {BLANK} compris la leçon.", options: ["pas", "jamais", "rien"], answer: 0, note: "ne...pas = not (simple negation) | jamais = never, rien = nothing" },
+    { sentence: "Je ne mange {BLANK} de viande — je suis végétarien.", options: ["jamais", "pas", "plus"], answer: 0, note: "ne...jamais = never | pas = not, plus = no longer" },
+    { sentence: "Il n'y a {BLANK} de lait dans le frigo.", options: ["plus", "jamais", "rien"], answer: 0, note: "ne...plus = no longer/no more | jamais = never, rien = nothing" },
+    { sentence: "Je ne comprends {BLANK}.", options: ["rien", "jamais", "pas"], answer: 0, note: "ne...rien = nothing/not anything | jamais = never, pas = not" },
+    { sentence: "C'est {BLANK} intéressant\u00a0!", options: ["vraiment", "vrai", "vrais"], answer: 0, note: "vraiment = really/truly (adverb modifying adjective) | vrai = true (adjective)" },
+    { sentence: "Je suis {BLANK} fatigué.", options: ["très", "trop de", "beaucoup"], answer: 0, note: "très = very (before adjective) | trop de = too much (before noun), beaucoup = a lot" },
+    { sentence: "Il parle {BLANK} vite.", options: ["trop", "très de", "beaucoup de"], answer: 0, note: "trop = too (before adverb) | très = very, beaucoup = a lot (without de before adverb)" },
+    { sentence: "J'ai {BLANK} d'amis à Paris.", options: ["beaucoup", "très", "trop"], answer: 0, note: "beaucoup de + noun = many/a lot of | très = very (before adjective/adverb), trop de = too many" }
   ];
 
   var state = {
@@ -457,7 +588,7 @@
   }
 
   function startGame() {
-    state.questions = shuffle(ALL_QUESTIONS);
+    state.questions = shuffle(ALL_QUESTIONS).slice(0, SESSION_SIZE);
     state.qIdx = 0;
     state.score = 0;
     state.results = [];
@@ -467,7 +598,7 @@
 
   function renderQuestion() {
     var q = state.questions[state.qIdx];
-    var total = state.questions.length;
+    var total = SESSION_SIZE;
     var pct = Math.round((state.qIdx / total) * 100);
 
     document.getElementById('scf-prog-label').textContent = 'Question ' + (state.qIdx + 1) + ' of ' + total;
@@ -639,6 +770,7 @@
   document.getElementById('scf-start-btn').addEventListener('click', startGame);
   document.getElementById('scf-next-btn').addEventListener('click', nextQuestion);
   document.getElementById('scf-retry-btn').addEventListener('click', startGame);
+  document.getElementById('scf-more-btn').addEventListener('click', startGame);
 
 })();
 </script>

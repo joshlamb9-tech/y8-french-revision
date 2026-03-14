@@ -162,10 +162,36 @@
     }
     .gt-reveal-btn:hover { background: #3730a3; }
 
+    /* Compare panel */
+    .gt-compare-panel {
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 14px; padding: 18px 22px; margin: 14px 0 0; display: none;
+    }
+    .gt-compare-panel.visible { display: block; }
+    .gt-compare-label {
+      font-size: 11px; font-weight: 800; color: var(--text-muted);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .gt-compare-line {
+      font-size: 19px; font-weight: 700; line-height: 1.7;
+      flex-wrap: wrap; display: flex; gap: 0; align-items: baseline;
+    }
+    .gt-w { display: inline; }
+    .gt-w-ok     { color: #16a34a; }
+    .gt-w-accent { color: #b45309; background: #fef9c3; border-radius: 3px; padding: 0 2px; }
+    .gt-w-wrong  { color: #dc2626; text-decoration: line-through; }
+    .gt-w-extra  { color: #9333ea; font-style: italic; }
+    .gt-compare-key {
+      display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px;
+      font-size: 12px; font-weight: 700;
+    }
+    .gt-key-item { display: flex; align-items: center; gap: 5px; }
+    .gt-key-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
     /* Answer panel */
     .gt-answer-panel {
       background: #f8fafc; border: 2px solid #c7d2fe;
-      border-radius: 14px; padding: 20px 24px; margin: 16px 0 20px; display: none;
+      border-radius: 14px; padding: 20px 24px; margin: 14px 0 20px; display: none;
     }
     .gt-answer-panel.visible { display: block; }
     .gt-answer-label {
@@ -374,6 +400,17 @@
       </div>
 
       <button class="gt-reveal-btn" id="gt-reveal-btn">Reveal Answer &#128065;&#65039;</button>
+
+      <div class="gt-compare-panel" id="gt-compare-panel">
+        <div class="gt-compare-label">Your answer — word by word</div>
+        <div class="gt-compare-line" id="gt-compare-line"></div>
+        <div class="gt-compare-key">
+          <span class="gt-key-item"><span class="gt-key-dot" style="background:#16a34a;"></span><span style="color:#16a34a;">Correct</span></span>
+          <span class="gt-key-item"><span class="gt-key-dot" style="background:#b45309;"></span><span style="color:#b45309;">Missing accent</span></span>
+          <span class="gt-key-item"><span class="gt-key-dot" style="background:#dc2626;"></span><span style="color:#dc2626;">Incorrect / unconjugated</span></span>
+          <span class="gt-key-item"><span class="gt-key-dot" style="background:#9333ea;"></span><span style="color:#9333ea;">Extra word</span></span>
+        </div>
+      </div>
 
       <div class="gt-answer-panel" id="gt-answer-panel">
         <div class="gt-answer-label">&#127468;&#127479; Model Answer</div>
@@ -713,6 +750,7 @@
     document.getElementById('gt-answer-fr').textContent   = q.fr;
     document.getElementById('gt-answer-note').textContent = q.note || '';
 
+    document.getElementById('gt-compare-panel').classList.remove('visible');
     document.getElementById('gt-answer-panel').classList.remove('visible');
     document.getElementById('gt-mark-row').style.display  = 'none';
     document.getElementById('gt-reveal-btn').style.display = 'inline-block';
@@ -721,9 +759,69 @@
     setTimeout(function() { document.getElementById('gt-attempt').focus(); }, 50);
   }
 
+  function stripAccents(s) {
+    return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function tokenise(sentence) {
+    // Split on spaces but keep leading/trailing punctuation with each token
+    return sentence.trim().split(/\s+/).filter(function(t) { return t.length > 0; });
+  }
+
+  function coreWord(token) {
+    // Strip surrounding punctuation for comparison
+    return token.replace(/^[«»""''.,;:!?¡¿\-–—()\[\]]+|[«»""''.,;:!?¡¿\-–—()\[\]]+$/g, '').toLowerCase();
+  }
+
+  function compareToModel(studentText, correctText) {
+    if (!studentText.trim()) return null;
+    var sTokens = tokenise(studentText);
+    var cTokens = tokenise(correctText);
+    var result = [];
+
+    for (var i = 0; i < sTokens.length; i++) {
+      var sw = coreWord(sTokens[i]);
+      var cw = coreWord(cTokens[i] || '');
+      var status;
+
+      if (sw === cw) {
+        status = 'ok';
+      } else if (stripAccents(sw) === stripAccents(cw) && cw.length > 0) {
+        status = 'accent';
+      } else if (i >= cTokens.length) {
+        status = 'extra';
+      } else {
+        status = 'wrong';
+      }
+      result.push({ token: sTokens[i], status: status });
+    }
+    return result;
+  }
+
   function revealAnswer() {
     if (state.revealed) return;
     state.revealed = true;
+
+    var attempt = document.getElementById('gt-attempt').value;
+    var q = state.questions[state.qIdx];
+
+    // Show word-by-word comparison if the student typed something
+    if (attempt.trim()) {
+      var compared = compareToModel(attempt, q.fr);
+      if (compared) {
+        var line = document.getElementById('gt-compare-line');
+        line.innerHTML = '';
+        compared.forEach(function(item, idx) {
+          if (idx > 0) line.appendChild(document.createTextNode('\u00a0'));
+          var span = document.createElement('span');
+          span.className = 'gt-w gt-w-' + item.status;
+          span.textContent = item.token;
+          line.appendChild(span);
+        });
+        document.getElementById('gt-compare-panel').classList.add('visible');
+      }
+    }
+
     document.getElementById('gt-answer-panel').classList.add('visible');
     document.getElementById('gt-mark-row').style.display  = 'flex';
     document.getElementById('gt-reveal-btn').style.display = 'none';
