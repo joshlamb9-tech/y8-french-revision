@@ -275,10 +275,12 @@
         'se réveiller': 'réveillé', 'se laver': 'lavé', 'se brosser les dents': 'brossé les dents'
       };
       var partBase = partMatch[verb.fr_inf] || 'levé';
-      var partAgreed = agreeEtre(partBase, subj.gen, subj.num);
+      // se brosser les dents: the reflexive pronoun is INDIRECT (body part is the direct object),
+      // so NO agreement on the past participle — always brossé les dents regardless of subject.
+      var partAgreed = (verb.fr_inf === 'se brosser les dents') ? partBase : agreeEtre(partBase, subj.gen, subj.num);
       var fr = subj.refl + ' ' + partAgreed;
       var en = subj.en + ' ' + verb.en + '.';
-      return { type: 'Reflexive verb', q: en, a: fr, hint: 'Reflexive verbs use être; agree the participle' };
+      return { type: 'Reflexive verb', q: en, a: fr, hint: 'Reflexive verbs use être; agree the participle (not se brosser les dents — body part is the direct object)' };
     }
 
     function generatePool() {
