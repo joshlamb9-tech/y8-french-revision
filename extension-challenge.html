@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Can You Cut It? | Extension Zone | Year 8 French</title>
+  <link rel="stylesheet" href="styles-v2.css">
+  <style>
+    /* ─── EXTENSION SHARED ─── */
+    .ext-page-banner { background: linear-gradient(135deg, #1a2744 0%, #2a3f6f 100%); border-bottom: 3px solid #c9a84c; }
+    .ext-page-banner-inner { max-width: 1200px; margin: 0 auto; padding: 36px 28px 32px; }
+    .ext-banner-kicker {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(201,168,76,0.2); color: #c9a84c;
+      border: 1.5px solid #c9a84c; border-radius: 99px;
+      padding: 3px 12px; font-size: 11px; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .ext-banner-title { font-size: clamp(22px, 3.5vw, 36px); font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+    .ext-banner-sub { font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 6px; font-weight: 600; }
+    .ext-back {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: #c9a84c; font-size: 13px; font-weight: 700;
+      text-decoration: none; margin-bottom: 16px;
+    }
+    .ext-back:hover { color: #e6c96b; }
+
+    /* ─── QUIZ ENGINE ─── */
+    .eq-screen { display: none; }
+    .eq-screen.active { display: block; }
+
+    .eq-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      margin-bottom: 20px;
+    }
+
+    .eq-progress-bar {
+      background: #e4e4e7;
+      border-radius: 99px;
+      height: 8px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .eq-progress-fill {
+      background: linear-gradient(90deg, #1a2744, #c9a84c);
+      height: 100%;
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+    .eq-q-counter {
+      font-size: 12px; font-weight: 800; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px;
+    }
+    .eq-q-type {
+      font-size: 11px; font-weight: 800; color: #1a2744;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      background: rgba(26,39,68,0.08); border-radius: 99px;
+      padding: 2px 10px; display: inline-block; margin-bottom: 10px;
+    }
+    .eq-q-text {
+      font-size: 18px; font-weight: 700; color: var(--text);
+      line-height: 1.4; margin-bottom: 20px;
+    }
+
+    /* MCQ options */
+    .eq-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 480px) { .eq-options { grid-template-columns: 1fr; } }
+
+    .eq-opt {
+      padding: 13px 16px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.12s, background 0.12s;
+      min-height: 48px;
+    }
+    .eq-opt:hover:not(:disabled) { border-color: #1a2744; background: rgba(26,39,68,0.05); }
+    .eq-opt.correct { background: #dcfce7; border-color: #16a34a; color: #14532d; }
+    .eq-opt.wrong   { background: #fee2e2; border-color: #dc2626; color: #7f1d1d; }
+    .eq-opt:disabled { cursor: default; }
+
+    /* Type-in */
+    .eq-type-wrap { margin-bottom: 16px; }
+    .eq-input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.12s;
+      -webkit-appearance: none;
+    }
+    .eq-input:focus { border-color: #1a2744; }
+    .eq-input.correct { border-color: #16a34a; background: #dcfce7; }
+    .eq-input.wrong   { border-color: #dc2626; background: #fee2e2; }
+
+    .eq-feedback {
+      font-size: 13px; font-weight: 700;
+      padding: 10px 14px; border-radius: 10px;
+      margin-bottom: 14px; display: none;
+    }
+    .eq-feedback.show { display: block; }
+    .eq-feedback.correct { background: #dcfce7; color: #14532d; }
+    .eq-feedback.wrong   { background: #fee2e2; color: #7f1d1d; }
+
+    .eq-submit-btn, .eq-next-btn {
+      padding: 12px 24px;
+      background: #1a2744;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.12s;
+      min-height: 48px;
+    }
+    .eq-submit-btn:hover, .eq-next-btn:hover { background: #2a3f6f; }
+    .eq-submit-btn:disabled { background: var(--border); color: var(--text-muted); cursor: default; }
+
+    /* ─── RESULTS ─── */
+    .eq-results-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 28px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .eq-big-score { font-size: 80px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+    .eq-score-label { font-size: 16px; font-weight: 700; color: var(--text-muted); margin-bottom: 20px; }
+
+    .eq-verdict {
+      font-size: 18px; font-weight: 800; padding: 16px 24px;
+      border-radius: 12px; margin-bottom: 20px; line-height: 1.4;
+    }
+    .eq-verdict.pass { background: #dcfce7; color: #14532d; border: 2px solid #86efac; }
+    .eq-verdict.fail { background: #fef3c7; color: #78350f; border: 2px solid #fde68a; }
+
+    .eq-breakdown {
+      text-align: left;
+      background: #f9f9f8;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 24px;
+    }
+    .eq-breakdown h3 { font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+    .eq-bk-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; }
+    .eq-bk-row:last-child { border-bottom: none; }
+    .eq-bk-cat { color: var(--text-mid); }
+    .eq-bk-score { font-weight: 800; }
+    .eq-bk-score.full { color: #16a34a; }
+    .eq-bk-score.partial { color: #d97706; }
+    .eq-bk-score.none { color: #dc2626; }
+
+    /* Leaderboard submit */
+    .eq-lb-submit {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      margin-bottom: 20px;
+    }
+    .eq-lb-submit h3 { font-size: 14px; font-weight: 800; margin-bottom: 12px; }
+    .eq-lb-row-form { display: flex; gap: 10px; flex-wrap: wrap; }
+    .eq-name-input {
+      flex: 1; min-width: 160px;
+      padding: 11px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 15px; font-weight: 700;
+      color: var(--text);
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .eq-name-input:focus { border-color: #1a2744; }
+    .eq-lb-submit-btn {
+      padding: 11px 22px;
+      background: #c9a84c;
+      color: #1a2744;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 14px; font-weight: 800;
+      cursor: pointer;
+      transition: background 0.12s;
+      min-height: 48px;
+    }
+    .eq-lb-submit-btn:hover { background: #b8942f; }
+    .eq-lb-submit-btn:disabled { background: var(--border); color: var(--text-muted); cursor: default; }
+    .eq-submit-msg { font-size: 13px; font-weight: 700; margin-top: 8px; }
+    .eq-submit-msg.success { color: #16a34a; }
+    .eq-submit-msg.error { color: #dc2626; }
+
+    .eq-retry-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px;
+      background: #1a2744;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 15px; font-weight: 800;
+      cursor: pointer;
+      transition: background 0.12s;
+      text-decoration: none;
+      min-height: 48px;
+    }
+    .eq-retry-btn:hover { background: #2a3f6f; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
+        </div>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="header-nav" id="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="index.html" class="hn-link">Topics</a>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Grammar <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="grammar.html" class="hn-link">Grammar</a>
+            <a href="grammar-trainer.html" class="hn-link">Grammar Trainer</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Practice <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="vocab-challenge.html" class="hn-link">Vocab Challenge</a>
+            <a href="spelling-test.html" class="hn-link">Spelling Test</a>
+            <a href="speed-recall.html" class="hn-link">Speed Recall</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Exam Prep <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="speaking-prep.html" class="hn-link">Speaking Prep</a>
+            <a href="select-correct-form.html" class="hn-link">Select the Form</a>
+            <a href="guided-translation.html" class="hn-link">Guided Translation</a>
+            <a href="past-papers.html" class="hn-link">Past Papers</a>
+            <a href="checklist.html" class="hn-link">Checklist</a>
+          </div>
+        </div>
+        <a href="extension.html" class="hn-link" style="background:#1a2744;color:#c9a84c;">&#9733; Extension</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="ext-page-banner">
+    <div class="ext-page-banner-inner">
+      <a href="extension.html" class="ext-back">&#8592; Extension Zone</a>
+      <div class="ext-banner-kicker">&#127919; Diagnostic</div>
+      <div class="ext-banner-title">Can you cut it?</div>
+      <div class="ext-banner-sub">15 questions &mdash; all Level 2 grammar &mdash; score 12+ to unlock the challenge activities</div>
+    </div>
+  </div>
+
+  <main class="page-wrap">
+
+    <!-- QUIZ SCREEN -->
+    <div id="eq-quiz" class="eq-screen active">
+      <div class="eq-card">
+        <div class="eq-progress-bar"><div class="eq-progress-fill" id="eq-prog"></div></div>
+        <div class="eq-q-counter" id="eq-counter">Question 1 of 15</div>
+        <div class="eq-q-type" id="eq-type"></div>
+        <div class="eq-q-text" id="eq-qtext"></div>
+        <div id="eq-mcq-wrap">
+          <div class="eq-options" id="eq-options"></div>
+        </div>
+        <div id="eq-type-wrap" class="eq-type-wrap" style="display:none;">
+          <input type="text" class="eq-input" id="eq-input" placeholder="Type French here…" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+        </div>
+        <div class="eq-feedback" id="eq-feedback"></div>
+        <button class="eq-submit-btn" id="eq-submit">Check</button>
+        <button class="eq-next-btn" id="eq-next" style="display:none;margin-left:10px;">Next &#8594;</button>
+      </div>
+    </div>
+
+    <!-- RESULTS SCREEN -->
+    <div id="eq-results" class="eq-screen">
+      <div class="eq-results-card">
+        <div class="eq-big-score" id="eq-big-score" style="color:#1a2744;">0</div>
+        <div class="eq-score-label">out of 15</div>
+        <div class="eq-verdict" id="eq-verdict"></div>
+      </div>
+      <div class="eq-breakdown" id="eq-breakdown"></div>
+      <div class="eq-lb-submit" id="eq-lb-submit">
+        <h3>&#127942; Submit to leaderboard</h3>
+        <div class="eq-lb-row-form">
+          <input type="text" class="eq-name-input" id="eq-name" placeholder="Your name" maxlength="30" autocomplete="off">
+          <button class="eq-lb-submit-btn" id="eq-lb-btn">Submit score</button>
+        </div>
+        <div class="eq-submit-msg" id="eq-submit-msg"></div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="eq-retry-btn" id="eq-retry">&#8635; Try again — new questions</button>
+        <a href="extension.html" class="eq-retry-btn" style="background:transparent;border:2px solid #1a2744;color:#1a2744;">&#8592; Extension Zone</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem or want to request a feature? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/nav.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var SUPABASE_URL  = 'https://dlcseuejvducbsjhqvze.supabase.co';
+    var SUPABASE_ANON = 'sb_publishable_k_59EUPnHNnJ534tF0vMvQ_Ams9wV9L';
+    var db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    /* ═══════════════════════════════════════════════════════
+       QUESTION POOLS (15 per category pool, pick 3 each)
+    ═══════════════════════════════════════════════════════ */
+
+    var POOLS = {
+
+      perfectTense: [
+        { q: 'She went to school.', a: 'elle est allée à l\'école', opts: ['elle est allée à l\'école', 'elle a allé à l\'école', 'elle est aller à l\'école', 'elle était allée à l\'école'] },
+        { q: 'He stayed at home.', a: 'il est resté à la maison', opts: ['il est resté à la maison', 'il a resté à la maison', 'il est restait à la maison', 'il est reste à la maison'] },
+        { q: 'They (f) arrived late.', a: 'elles sont arrivées en retard', opts: ['elles sont arrivées en retard', 'elles ont arrivé en retard', 'elles sont arrivé en retard', 'elles sont arriver en retard'] },
+        { q: 'We (mixed) went out yesterday.', a: 'nous sommes sortis hier', opts: ['nous sommes sortis hier', 'nous avons sorti hier', 'nous sommes sorti hier', 'nous sommes sortie hier'] },
+        { q: 'She came back tired.', a: 'elle est revenue fatiguée', opts: ['elle est revenue fatiguée', 'elle a revenu fatiguée', 'elle est revenu fatiguée', 'elle est revenait fatiguée'] },
+        { q: 'I (f) got up early.', a: 'je me suis levée tôt', opts: ['je me suis levée tôt', 'je suis levée tôt', 'j\'ai levée tôt', 'je me suis lever tôt'] },
+        { q: 'He fell in the garden.', a: 'il est tombé dans le jardin', opts: ['il est tombé dans le jardin', 'il a tombé dans le jardin', 'il est tomber dans le jardin', 'il est tombait dans le jardin'] },
+        { q: 'She got dressed quickly.', a: 'elle s\'est habillée vite', opts: ['elle s\'est habillée vite', 'elle a habillée vite', 'elle est habillée vite', 'elle s\'est habiller vite'] },
+        { q: 'They (m) left at eight.', a: 'ils sont partis à huit heures', opts: ['ils sont partis à huit heures', 'ils ont parti à huit heures', 'ils sont partir à huit heures', 'ils sont partie à huit heures'] },
+        { q: 'I (m) arrived at the station.', a: 'je suis arrivé à la gare', opts: ['je suis arrivé à la gare', 'j\'ai arrivé à la gare', 'je suis arriver à la gare', 'je suis arrivée à la gare'] },
+        { q: 'She was born in Paris.', a: 'elle est née à Paris', opts: ['elle est née à Paris', 'elle a née à Paris', 'elle est naître à Paris', 'elle est nait à Paris'] },
+        { q: 'We (f) came back together.', a: 'nous sommes revenues ensemble', opts: ['nous sommes revenues ensemble', 'nous avons revenu ensemble', 'nous sommes revenu ensemble', 'nous sommes revenus ensemble'] },
+        { q: 'He went up to his room.', a: 'il est monté dans sa chambre', opts: ['il est monté dans sa chambre', 'il a monté dans sa chambre', 'il est monter dans sa chambre', 'il était monté dans sa chambre'] },
+        { q: 'She went down the stairs.', a: 'elle est descendue par l\'escalier', opts: ['elle est descendue par l\'escalier', 'elle a descendu par l\'escalier', 'elle est descend par l\'escalier', 'elle est descendu par l\'escalier'] },
+        { q: 'I (m) got up at seven.', a: 'je me suis levé à sept heures', opts: ['je me suis levé à sept heures', 'je suis levé à sept heures', 'j\'ai me levé à sept heures', 'je me suis lever à sept heures'] }
+      ],
+
+      adjectives: [
+        { q: 'a beautiful old house (f)', a: 'une belle vieille maison', opts: ['une belle vieille maison', 'une beau vieux maison', 'une belle vieux maison', 'une bel vieille maison'] },
+        { q: 'a good small book (m)', a: 'un bon petit livre', opts: ['un bon petit livre', 'une bonne petite livre', 'un petit bon livre', 'un bonne petit livre'] },
+        { q: 'a new red bag (m)', a: 'un nouveau sac rouge', opts: ['un nouveau sac rouge', 'un nouvel sac rouge', 'un nouveau rouge sac', 'une nouveau sac rouge'] },
+        { q: 'a tall German boy (m)', a: 'un grand garçon allemand', opts: ['un grand garçon allemand', 'un garçon grand allemand', 'un grande garçon allemand', 'un grand garçon allemande'] },
+        { q: 'a beautiful old church (m, before vowel)', a: 'un bel ancien temple', opts: ['un bel ancien temple', 'un beau ancien temple', 'un belle ancien temple', 'un bel ancienne temple'] },
+        { q: 'two big fat cats (m)', a: 'deux gros chats gris', opts: ['deux gros chats gris', 'deux grosses chats gris', 'deux gros chat gris', 'deux grand chats gris'] },
+        { q: 'a pretty young girl (f)', a: 'une jolie jeune fille', opts: ['une jolie jeune fille', 'une joli jeune fille', 'une jeune jolie fille', 'une jolie jeune filles'] },
+        { q: 'some bad old habits (m pl)', a: 'de mauvaises vieilles habitudes', opts: ['de mauvaises vieilles habitudes', 'des mauvais vieux habitudes', 'de mauvaise vieille habitudes', 'des mauvaises vielles habitudes'] },
+        { q: 'a new white school (f)', a: 'une nouvelle école blanche', opts: ['une nouvelle école blanche', 'un nouveau école blanc', 'une nouvel école blanche', 'une nouvelle école blanc'] },
+        { q: 'a long French film (m)', a: 'un long film français', opts: ['un long film français', 'un film long français', 'un long film française', 'un long française film'] },
+        { q: 'a small green apple (f)', a: 'une petite pomme verte', opts: ['une petite pomme verte', 'un petit pomme vert', 'une petite verte pomme', 'une petite pomme verts'] },
+        { q: 'the old French teacher (f)', a: 'la vieille professeure française', opts: ['la vieille professeure française', 'le vieux professeure français', 'la vieille professeure français', 'la vielle professeure française'] },
+        { q: 'a beautiful new car (f)', a: 'une belle nouvelle voiture', opts: ['une belle nouvelle voiture', 'un beau nouveau voiture', 'une bel nouvelle voiture', 'une belle nouvelle voitures'] },
+        { q: 'some young Spanish boys (m pl)', a: 'de jeunes garçons espagnols', opts: ['de jeunes garçons espagnols', 'des jeunes garçons espagnol', 'de jeune garçons espagnols', 'des jeunes garçon espagnols'] },
+        { q: 'a fat grey cat (m)', a: 'un gros chat gris', opts: ['un gros chat gris', 'une grosse chat grise', 'un gross chat gris', 'un gros chats gris'] }
+      ],
+
+      negatives: [
+        { q: 'I never eat meat.', a: 'je ne mange jamais de viande', opts: ['je ne mange jamais de viande', 'je mange jamais de viande', 'je ne mange pas jamais de viande', 'je ne jamais mange de viande'] },
+        { q: 'She no longer lives here.', a: 'elle n\'habite plus ici', opts: ['elle n\'habite plus ici', 'elle habite plus ici', 'elle n\'habite jamais ici', 'elle ne plus habite ici'] },
+        { q: 'He didn\'t eat anything.', a: 'il n\'a rien mangé', opts: ['il n\'a rien mangé', 'il a rien mangé', 'il n\'a pas mangé rien', 'il ne rien a mangé'] },
+        { q: 'I only have one brother.', a: 'je n\'ai qu\'un frère', opts: ['je n\'ai qu\'un frère', 'je n\'ai que un frère', 'j\'ai qu\'un frère', 'je ne que ai un frère'] },
+        { q: 'Nobody came to the party.', a: 'personne n\'est venu à la fête', opts: ['personne n\'est venu à la fête', 'il n\'y a personne venu à la fête', 'personne est venu à la fête', 'personne n\'a venu à la fête'] },
+        { q: 'She never went to the market.', a: 'elle n\'est jamais allée au marché', opts: ['elle n\'est jamais allée au marché', 'elle est jamais allée au marché', 'elle n\'a jamais allée au marché', 'elle n\'est jamais aller au marché'] },
+        { q: 'I didn\'t see anyone.', a: 'je n\'ai vu personne', opts: ['je n\'ai vu personne', 'je n\'ai pas vu personne', 'je n\'ai personne vu', 'je ai vu personne'] },
+        { q: 'He no longer goes to school.', a: 'il ne va plus à l\'école', opts: ['il ne va plus à l\'école', 'il ne pas va à l\'école', 'il va plus à l\'école', 'il ne va jamais à l\'école'] },
+        { q: 'We didn\'t do anything wrong.', a: 'nous n\'avons rien fait de mal', opts: ['nous n\'avons rien fait de mal', 'nous n\'avons pas fait rien de mal', 'nous avons rien fait de mal', 'nous n\'avons rien fait mal'] },
+        { q: 'She only speaks French.', a: 'elle ne parle que le français', opts: ['elle ne parle que le français', 'elle parle que le français', 'elle ne que parle le français', 'elle ne parle pas que le français'] },
+        { q: 'I never wanted to go.', a: 'je n\'ai jamais voulu y aller', opts: ['je n\'ai jamais voulu y aller', 'j\'ai jamais voulu y aller', 'je n\'ai pas jamais voulu y aller', 'je n\'ai jamais vouloir y aller'] },
+        { q: 'They no longer play football.', a: 'ils ne jouent plus au football', opts: ['ils ne jouent plus au football', 'ils jouent plus au football', 'ils ne pas jouent au football', 'ils ne jouent pas plus au football'] },
+        { q: 'Nothing happened yesterday.', a: 'il ne s\'est rien passé hier', opts: ['il ne s\'est rien passé hier', 'rien s\'est passé hier', 'il s\'est rien passé hier', 'il ne s\'a rien passé hier'] },
+        { q: 'I didn\'t see anyone at school.', a: 'je n\'ai vu personne à l\'école', opts: ['je n\'ai vu personne à l\'école', 'je n\'ai pas vu personne à l\'école', 'je ai vu personne à l\'école', 'personne j\'ai vu à l\'école'] },
+        { q: 'He only ate vegetables.', a: 'il n\'a mangé que des légumes', opts: ['il n\'a mangé que des légumes', 'il a mangé que des légumes', 'il n\'a que mangé des légumes', 'il n\'a pas mangé que des légumes'] }
+      ],
+
+      pronouns: [
+        { q: 'I eat it. (le pain → ?)', a: 'je le mange', opts: ['je le mange', 'je la mange', 'je les mange', 'je lui mange'] },
+        { q: 'She sees them. (les enfants → ?)', a: 'elle les voit', opts: ['elle les voit', 'elle le voit', 'elle lui voit', 'elle leur voit'] },
+        { q: 'He speaks to her. (à Marie → ?)', a: 'il lui parle', opts: ['il lui parle', 'il la parle', 'il leur parle', 'il le parle'] },
+        { q: 'I give them the book. (aux élèves → ?)', a: 'je leur donne le livre', opts: ['je leur donne le livre', 'je lui donne le livre', 'je les donne le livre', 'je le donne le livre'] },
+        { q: 'She reads it. (le livre → ?)', a: 'elle le lit', opts: ['elle le lit', 'elle la lit', 'elle les lit', 'elle lui lit'] },
+        { q: 'I ate it. (la pizza → ?) [perfect tense]', a: 'je l\'ai mangée', opts: ['je l\'ai mangée', 'je la mangée', 'je l\'ai mangé', 'je l\'ai manger'] },
+        { q: 'He saw them. (les filles → ?) [perfect tense]', a: 'il les a vues', opts: ['il les a vues', 'il les a vu', 'il les a vus', 'il leur a vues'] },
+        { q: 'I spoke to him. (à Pierre → ?) [perfect tense]', a: 'je lui ai parlé', opts: ['je lui ai parlé', 'je la ai parlé', 'je leur ai parlé', 'je le ai parlé'] },
+        { q: 'She doesn\'t eat it. (le gâteau → ?) [negative]', a: 'elle ne le mange pas', opts: ['elle ne le mange pas', 'elle le ne mange pas', 'elle ne mange pas le', 'elle ne la mange pas'] },
+        { q: 'I don\'t see them. (les amis → ?) [negative]', a: 'je ne les vois pas', opts: ['je ne les vois pas', 'je les ne vois pas', 'je ne vois pas les', 'je ne leur vois pas'] },
+        { q: 'He gives it to her. (le livre → à Marie)', a: 'il le lui donne', opts: ['il le lui donne', 'il lui le donne', 'il la lui donne', 'il les lui donne'] },
+        { q: 'We buy it. (la voiture → ?)', a: 'nous l\'achetons', opts: ['nous l\'achetons', 'nous le achetons', 'nous la achetons', 'nous lui achetons'] },
+        { q: 'They write to them. (aux parents → ?)', a: 'ils leur écrivent', opts: ['ils leur écrivent', 'ils les écrivent', 'ils lui écrivent', 'ils le écrivent'] },
+        { q: 'I didn\'t give it to them. (le cadeau → aux amis) [negative, perfect]', a: 'je ne le leur ai pas donné', opts: ['je ne le leur ai pas donné', 'je leur le ne ai pas donné', 'je ne leur le ai pas donné', 'je ne le les ai pas donné'] },
+        { q: 'She finishes it. (les devoirs → ?)', a: 'elle les finit', opts: ['elle les finit', 'elle le finit', 'elle leur finit', 'elle la finit'] }
+      ],
+
+      translation: [
+        { q: 'Translate: "She never went to Paris."', a: 'elle n\'est jamais allée à Paris', type: 'type' },
+        { q: 'Translate: "I didn\'t see them yesterday."', a: 'je ne les ai pas vus hier', type: 'type' },
+        { q: 'Translate: "He only ate the vegetables."', a: 'il n\'a mangé que les légumes', type: 'type' },
+        { q: 'Translate: "We (f) went to the old market."', a: 'nous sommes allées au vieux marché', type: 'type' },
+        { q: 'Translate: "She gave him her new book."', a: 'elle lui a donné son nouveau livre', type: 'type' },
+        { q: 'Translate: "They (m) never came back."', a: 'ils ne sont jamais revenus', type: 'type' },
+        { q: 'Translate: "I don\'t eat it anymore."', a: 'je ne le mange plus', type: 'type' },
+        { q: 'Translate: "She got up early and left."', a: 'elle s\'est levée tôt et est partie', type: 'type' },
+        { q: 'Translate: "He spoke to them."', a: 'il leur a parlé', type: 'type' },
+        { q: 'Translate: "Nobody saw the beautiful garden."', a: 'personne n\'a vu le beau jardin', type: 'type' }
+      ]
+    };
+
+    /* ═══════════════════════════════════════════════════════
+       SHUFFLE + PICK
+    ═══════════════════════════════════════════════════════ */
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+      }
+      return a;
+    }
+
+    function pick(arr, n) { return shuffle(arr).slice(0, n); }
+
+    function buildQuiz() {
+      var qs = [];
+      pick(POOLS.perfectTense, 3).forEach(function (q) { qs.push({ cat: 'Perfect Tense', type: 'mcq', q: q.q, a: q.a, opts: q.opts }); });
+      pick(POOLS.adjectives, 3).forEach(function (q)   { qs.push({ cat: 'Adjectives',    type: 'mcq', q: q.q, a: q.a, opts: q.opts }); });
+      pick(POOLS.negatives, 3).forEach(function (q)    { qs.push({ cat: 'Negatives',      type: 'mcq', q: q.q, a: q.a, opts: q.opts }); });
+      pick(POOLS.pronouns, 3).forEach(function (q)     { qs.push({ cat: 'Object Pronouns',type: 'mcq', q: q.q, a: q.a, opts: q.opts }); });
+      pick(POOLS.translation, 3).forEach(function (q)  { qs.push({ cat: 'Translation',    type: 'type', q: q.q, a: q.a, opts: [] }); });
+      return shuffle(qs);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       STATE
+    ═══════════════════════════════════════════════════════ */
+    var quiz = [];
+    var qIdx = 0;
+    var score = 0;
+    var catScores = {};
+    var answered = false;
+    var lastScore = 0;
+
+    function init() {
+      quiz = buildQuiz();
+      qIdx = 0;
+      score = 0;
+      catScores = { 'Perfect Tense': 0, 'Adjectives': 0, 'Negatives': 0, 'Object Pronouns': 0, 'Translation': 0 };
+      answered = false;
+      showScreen('eq-quiz');
+      renderQ();
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.eq-screen').forEach(function (s) { s.classList.remove('active'); });
+      document.getElementById(id).classList.add('active');
+    }
+
+    function renderQ() {
+      var q = quiz[qIdx];
+      var pct = ((qIdx) / quiz.length) * 100;
+      document.getElementById('eq-prog').style.width = pct + '%';
+      document.getElementById('eq-counter').textContent = 'Question ' + (qIdx + 1) + ' of ' + quiz.length;
+      document.getElementById('eq-type').textContent = q.cat;
+      document.getElementById('eq-qtext').textContent = q.q;
+
+      var fb = document.getElementById('eq-feedback');
+      fb.className = 'eq-feedback';
+      fb.textContent = '';
+
+      document.getElementById('eq-submit').style.display = '';
+      document.getElementById('eq-submit').disabled = false;
+      document.getElementById('eq-next').style.display = 'none';
+      answered = false;
+
+      if (q.type === 'mcq') {
+        document.getElementById('eq-mcq-wrap').style.display = '';
+        document.getElementById('eq-type-wrap').style.display = 'none';
+        var optDiv = document.getElementById('eq-options');
+        optDiv.innerHTML = '';
+        shuffle(q.opts).forEach(function (opt) {
+          var btn = document.createElement('button');
+          btn.className = 'eq-opt';
+          btn.textContent = opt;
+          btn.addEventListener('click', function () {
+            if (answered) return;
+            selectOpt(opt, q.a, btn);
+          });
+          optDiv.appendChild(btn);
+        });
+      } else {
+        document.getElementById('eq-mcq-wrap').style.display = 'none';
+        document.getElementById('eq-type-wrap').style.display = '';
+        var inp = document.getElementById('eq-input');
+        inp.value = '';
+        inp.className = 'eq-input';
+        setTimeout(function () { inp.focus(); }, 50);
+      }
+    }
+
+    function normalize(s) {
+      return s.toLowerCase().trim()
+        .replace(/[àâä]/g, 'a').replace(/[éèêë]/g, 'e')
+        .replace(/[îï]/g, 'i').replace(/[ôö]/g, 'o')
+        .replace(/[ùûü]/g, 'u').replace(/ç/g, 'c')
+        .replace(/œ/g, 'oe').replace(/['']/g, "'");
+    }
+
+    function selectOpt(chosen, correct, btn) {
+      answered = true;
+      var opts = document.querySelectorAll('.eq-opt');
+      opts.forEach(function (b) {
+        b.disabled = true;
+        if (b.textContent === correct) b.classList.add('correct');
+      });
+      var fb = document.getElementById('eq-feedback');
+      if (chosen === correct) {
+        btn.classList.add('correct');
+        score++;
+        catScores[quiz[qIdx].cat]++;
+        fb.className = 'eq-feedback correct show';
+        fb.textContent = 'Correct!';
+      } else {
+        btn.classList.add('wrong');
+        fb.className = 'eq-feedback wrong show';
+        fb.textContent = 'Incorrect. The answer is: ' + correct;
+      }
+      document.getElementById('eq-submit').style.display = 'none';
+      document.getElementById('eq-next').style.display = '';
+    }
+
+    function checkType() {
+      if (answered) return;
+      var inp = document.getElementById('eq-input');
+      var given = inp.value;
+      var correct = quiz[qIdx].a;
+      var fb = document.getElementById('eq-feedback');
+      answered = true;
+      inp.disabled = true;
+      document.getElementById('eq-submit').style.display = 'none';
+      document.getElementById('eq-next').style.display = '';
+      if (normalize(given) === normalize(correct)) {
+        inp.className = 'eq-input correct';
+        score++;
+        catScores[quiz[qIdx].cat]++;
+        fb.className = 'eq-feedback correct show';
+        fb.textContent = 'Correct!';
+      } else {
+        inp.className = 'eq-input wrong';
+        fb.className = 'eq-feedback wrong show';
+        fb.textContent = 'Model answer: ' + correct;
+      }
+    }
+
+    document.getElementById('eq-submit').addEventListener('click', function () {
+      var q = quiz[qIdx];
+      if (q.type === 'type') checkType();
+    });
+
+    document.getElementById('eq-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        if (!answered) checkType();
+        else if (qIdx < quiz.length - 1) advance();
+        else finish();
+      }
+    });
+
+    document.getElementById('eq-next').addEventListener('click', function () {
+      if (qIdx < quiz.length - 1) { qIdx++; renderQ(); }
+      else finish();
+    });
+
+    document.getElementById('eq-retry').addEventListener('click', function () { init(); });
+
+    function finish() {
+      lastScore = score;
+      document.getElementById('eq-prog').style.width = '100%';
+      var bigScore = document.getElementById('eq-big-score');
+      bigScore.textContent = score + '/15';
+      var pct = Math.round((score / 15) * 100);
+      bigScore.style.color = score >= 12 ? '#16a34a' : score >= 9 ? '#d97706' : '#dc2626';
+
+      var verdict = document.getElementById('eq-verdict');
+      if (score >= 12) {
+        verdict.className = 'eq-verdict pass';
+        verdict.innerHTML = '&#9989; Excellent — you\'re ready for the challenge activities. Head back to the Extension Zone and try them all.';
+      } else {
+        verdict.className = 'eq-verdict fail';
+        verdict.innerHTML = '&#9888;&#65039; Score: ' + score + '/15 (' + pct + '%). Keep practising — use the main site first, then come back.';
+      }
+
+      // Breakdown
+      var bk = document.getElementById('eq-breakdown');
+      var cats = ['Perfect Tense', 'Adjectives', 'Negatives', 'Object Pronouns', 'Translation'];
+      var html = '<h3>Breakdown by category</h3>';
+      cats.forEach(function (cat) {
+        var s = catScores[cat] || 0;
+        var cls = s === 3 ? 'full' : s >= 1 ? 'partial' : 'none';
+        html += '<div class="eq-bk-row"><span class="eq-bk-cat">' + cat + '</span><span class="eq-bk-score ' + cls + '">' + s + '/3</span></div>';
+      });
+      bk.innerHTML = html;
+
+      // Reset leaderboard form
+      document.getElementById('eq-submit-msg').textContent = '';
+      document.getElementById('eq-lb-btn').disabled = false;
+
+      showScreen('eq-results');
+    }
+
+    // Leaderboard submit
+    document.getElementById('eq-lb-btn').addEventListener('click', function () {
+      var name = document.getElementById('eq-name').value.trim();
+      var msgEl = document.getElementById('eq-submit-msg');
+      if (!name) {
+        msgEl.className = 'eq-submit-msg error';
+        msgEl.textContent = 'Enter your name first.';
+        return;
+      }
+      this.disabled = true;
+      var pct = Math.round((lastScore / 15) * 100);
+      db.from('extension_scores').insert({
+        student_name: name,
+        activity: 'diagnostic',
+        score: lastScore,
+        max_score: 15,
+        percentage: pct
+      }).then(function (res) {
+        if (res.error) {
+          msgEl.className = 'eq-submit-msg error';
+          msgEl.textContent = 'Could not submit — try again.';
+          document.getElementById('eq-lb-btn').disabled = false;
+        } else {
+          msgEl.className = 'eq-submit-msg success';
+          msgEl.textContent = 'Score submitted! \u2713';
+        }
+      });
+    });
+
+    init();
+  }());
+  </script>
+</body>
+</html>

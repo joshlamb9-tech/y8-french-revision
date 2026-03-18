@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adjective Minefield | Extension Zone | Year 8 French</title>
+  <link rel="stylesheet" href="styles-v2.css">
+  <style>
+    .ext-page-banner { background: linear-gradient(135deg, #1a2744 0%, #2a3f6f 100%); border-bottom: 3px solid #c9a84c; }
+    .ext-page-banner-inner { max-width: 1200px; margin: 0 auto; padding: 36px 28px 32px; }
+    .ext-banner-kicker {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(201,168,76,0.2); color: #c9a84c;
+      border: 1.5px solid #c9a84c; border-radius: 99px;
+      padding: 3px 12px; font-size: 11px; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .ext-banner-title { font-size: clamp(22px, 3.5vw, 36px); font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+    .ext-banner-sub { font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 6px; font-weight: 600; }
+    .ext-back { display: inline-flex; align-items: center; gap: 6px; color: #c9a84c; font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 16px; }
+    .ext-back:hover { color: #e6c96b; }
+
+    /* quiz layout */
+    .eq-screen { display: none; }
+    .eq-screen.active { display: block; }
+    .eq-card { background: var(--white); border: 2px solid var(--border); border-radius: 16px; padding: 28px 24px; margin-bottom: 20px; }
+    .eq-progress-bar { background: #e4e4e7; border-radius: 99px; height: 8px; margin-bottom: 24px; overflow: hidden; }
+    .eq-progress-fill { background: linear-gradient(90deg, #1a2744, #c9a84c); height: 100%; border-radius: 99px; transition: width 0.3s ease; }
+    .eq-q-counter { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+    .eq-q-type { font-size: 11px; font-weight: 800; color: #1a2744; text-transform: uppercase; letter-spacing: 0.07em; background: rgba(26,39,68,0.08); border-radius: 99px; padding: 2px 10px; display: inline-block; margin-bottom: 10px; }
+    .eq-q-text { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 6px; }
+    .eq-q-hint { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 18px; font-style: italic; }
+
+    /* MCQ */
+    .eq-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    @media (max-width: 480px) { .eq-options { grid-template-columns: 1fr; } }
+    .eq-opt {
+      padding: 13px 16px; background: var(--white); border: 2px solid var(--border); border-radius: 12px;
+      font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 700; color: var(--text);
+      cursor: pointer; text-align: left; transition: border-color 0.12s, background 0.12s; min-height: 48px;
+    }
+    .eq-opt:hover:not(:disabled) { border-color: #1a2744; background: rgba(26,39,68,0.05); }
+    .eq-opt.correct { background: #dcfce7; border-color: #16a34a; color: #14532d; }
+    .eq-opt.wrong   { background: #fee2e2; border-color: #dc2626; color: #7f1d1d; }
+    .eq-opt:disabled { cursor: default; }
+
+    /* Type-in */
+    .eq-input { width: 100%; padding: 13px 16px; border: 2px solid var(--border); border-radius: 12px; font-family: 'Dosis', sans-serif; font-size: 16px; font-weight: 700; color: var(--text); background: var(--white); outline: none; transition: border-color 0.12s; -webkit-appearance: none; }
+    .eq-input:focus { border-color: #1a2744; }
+    .eq-input.correct { border-color: #16a34a; background: #dcfce7; }
+    .eq-input.wrong   { border-color: #dc2626; background: #fee2e2; }
+
+    .eq-feedback { font-size: 13px; font-weight: 700; padding: 10px 14px; border-radius: 10px; margin: 14px 0; display: none; }
+    .eq-feedback.show { display: block; }
+    .eq-feedback.correct { background: #dcfce7; color: #14532d; }
+    .eq-feedback.wrong   { background: #fee2e2; color: #7f1d1d; }
+
+    .eq-btn { padding: 12px 24px; background: #1a2744; color: #fff; border: none; border-radius: 10px; font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; transition: background 0.12s; min-height: 48px; }
+    .eq-btn:hover { background: #2a3f6f; }
+    .eq-btn:disabled { background: var(--border); color: var(--text-muted); cursor: default; }
+    .eq-btn-outline { background: transparent; border: 2px solid #1a2744; color: #1a2744; border-radius: 10px; padding: 10px 22px; font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.12s; min-height: 48px; }
+    .eq-btn-outline:hover { background: #1a2744; color: #fff; }
+
+    /* results */
+    .eq-results-card { background: var(--white); border: 2px solid var(--border); border-radius: 16px; padding: 36px 28px; text-align: center; margin-bottom: 24px; }
+    .eq-big-score { font-size: 80px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+    .eq-score-label { font-size: 16px; font-weight: 700; color: var(--text-muted); margin-bottom: 20px; }
+    .eq-pass-badge { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #1a2744, #2a3f6f); color: #c9a84c; border: 2px solid #c9a84c; border-radius: 14px; padding: 18px 28px; font-size: 22px; font-weight: 800; margin-bottom: 20px; }
+    .eq-try-msg { font-size: 15px; font-weight: 700; color: var(--text-mid); background: #fef3c7; border: 2px solid #fde68a; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; }
+    .eq-missed-section { background: var(--white); border: 2px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 20px; text-align: left; }
+    .eq-missed-section h3 { font-size: 14px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+    .eq-missed-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; }
+    .eq-missed-item:last-child { border-bottom: none; }
+    .eq-missed-en { color: var(--text-mid); flex: 1; }
+    .eq-missed-fr { color: #16a34a; font-weight: 800; flex: 1; text-align: right; }
+    .eq-lb-submit { background: var(--white); border: 2px solid var(--border); border-radius: 14px; padding: 20px 22px; margin-bottom: 20px; }
+    .eq-lb-submit h3 { font-size: 14px; font-weight: 800; margin-bottom: 12px; }
+    .eq-lb-row-form { display: flex; gap: 10px; flex-wrap: wrap; }
+    .eq-name-input { flex: 1; min-width: 160px; padding: 11px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); outline: none; -webkit-appearance: none; }
+    .eq-name-input:focus { border-color: #1a2744; }
+    .eq-lb-submit-btn { padding: 11px 22px; background: #c9a84c; color: #1a2744; border: none; border-radius: 10px; font-family: 'Dosis', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; transition: background 0.12s; min-height: 48px; }
+    .eq-lb-submit-btn:hover { background: #b8942f; }
+    .eq-lb-submit-btn:disabled { background: var(--border); color: var(--text-muted); cursor: default; }
+    .eq-submit-msg { font-size: 13px; font-weight: 700; margin-top: 8px; }
+    .eq-submit-msg.success { color: #16a34a; }
+    .eq-submit-msg.error { color: #dc2626; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
+        </div>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="header-nav" id="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="index.html" class="hn-link">Topics</a>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Grammar <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="grammar.html" class="hn-link">Grammar</a>
+            <a href="grammar-trainer.html" class="hn-link">Grammar Trainer</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Practice <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="vocab-challenge.html" class="hn-link">Vocab Challenge</a>
+            <a href="spelling-test.html" class="hn-link">Spelling Test</a>
+            <a href="speed-recall.html" class="hn-link">Speed Recall</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Exam Prep <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="speaking-prep.html" class="hn-link">Speaking Prep</a>
+            <a href="select-correct-form.html" class="hn-link">Select the Form</a>
+            <a href="guided-translation.html" class="hn-link">Guided Translation</a>
+            <a href="past-papers.html" class="hn-link">Past Papers</a>
+            <a href="checklist.html" class="hn-link">Checklist</a>
+          </div>
+        </div>
+        <a href="extension.html" class="hn-link" style="background:#1a2744;color:#c9a84c;">&#9733; Extension</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="ext-page-banner">
+    <div class="ext-page-banner-inner">
+      <a href="extension.html" class="ext-back">&#8592; Extension Zone</a>
+      <div class="ext-banner-kicker">&#128208; Adjectives</div>
+      <div class="ext-banner-title">Adjective Minefield</div>
+      <div class="ext-banner-sub">10 questions from a pool of 30+ &mdash; new questions every attempt &mdash; 10/10 to pass</div>
+    </div>
+  </div>
+
+  <main class="page-wrap">
+
+    <div id="eq-quiz" class="eq-screen active">
+      <div class="eq-card">
+        <div class="eq-progress-bar"><div class="eq-progress-fill" id="eq-prog"></div></div>
+        <div class="eq-q-counter" id="eq-counter">Question 1 of 10</div>
+        <div class="eq-q-type" id="eq-type"></div>
+        <div class="eq-q-text" id="eq-qtext"></div>
+        <div class="eq-q-hint" id="eq-hint"></div>
+        <div id="eq-mcq-wrap">
+          <div class="eq-options" id="eq-options"></div>
+        </div>
+        <div id="eq-type-wrap" style="display:none;">
+          <input type="text" class="eq-input" id="eq-input" placeholder="Type French here…" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+        </div>
+        <div class="eq-feedback" id="eq-feedback"></div>
+        <div style="display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;">
+          <button class="eq-btn" id="eq-submit">Check</button>
+          <button class="eq-btn" id="eq-next" style="display:none;">Next &#8594;</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="eq-results" class="eq-screen">
+      <div class="eq-results-card">
+        <div class="eq-big-score" id="eq-big-score">0/10</div>
+        <div class="eq-score-label">Adjective Minefield</div>
+        <div id="eq-pass-area"></div>
+      </div>
+      <div class="eq-missed-section" id="eq-missed" style="display:none;">
+        <h3>Questions you missed</h3>
+        <div id="eq-missed-list"></div>
+      </div>
+      <div class="eq-lb-submit">
+        <h3>&#127942; Submit to leaderboard</h3>
+        <div class="eq-lb-row-form">
+          <input type="text" class="eq-name-input" id="eq-name" placeholder="Your name" maxlength="30" autocomplete="off">
+          <button class="eq-lb-submit-btn" id="eq-lb-btn">Submit score</button>
+        </div>
+        <div class="eq-submit-msg" id="eq-submit-msg"></div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="eq-btn" id="eq-retry">&#8635; Try again — new questions</button>
+        <a href="extension.html" class="eq-btn-outline">&#8592; Extension Zone</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/nav.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var SUPABASE_URL  = 'https://dlcseuejvducbsjhqvze.supabase.co';
+    var SUPABASE_ANON = 'sb_publishable_k_59EUPnHNnJ534tF0vMvQ_Ams9wV9L';
+    var db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    /* ═══════════════════════════════════════════════════════
+       QUESTION POOL — 30+ adjective questions
+       Mix of MCQ and type-in
+    ═══════════════════════════════════════════════════════ */
+
+    var POOL = [
+      // BAGS — before noun, masculine
+      { type: 'mcq', cat: 'BAGS adjective', q: 'a beautiful old church (m, before vowel)', a: 'un bel ancien temple', hint: 'beau → bel before a vowel sound',
+        opts: ['un bel ancien temple', 'un beau ancien temple', 'un belle ancien temple', 'un bel ancienne temple'] },
+      { type: 'mcq', cat: 'BAGS adjective', q: 'a good small book (m)', a: 'un bon petit livre', hint: 'bon and petit both go BEFORE the noun',
+        opts: ['un bon petit livre', 'une bonne petite livre', 'un petit bon livre', 'un bonne petit livre'] },
+      { type: 'mcq', cat: 'BAGS adjective', q: 'a big fat cat (m)', a: 'un gros chat gris', hint: 'gros goes before; gris (colour) goes after',
+        opts: ['un gros chat gris', 'une grosse chat grise', 'un gross chat gris', 'un grand chat gris'] },
+      { type: 'mcq', cat: 'BAGS adjective', q: 'a pretty young girl (f)', a: 'une jolie jeune fille', hint: 'joli and jeune both come before the noun',
+        opts: ['une jolie jeune fille', 'une joli jeune fille', 'une jeune jolie fille', 'une jolie jeune filles'] },
+      { type: 'mcq', cat: 'BAGS adjective', q: 'a long French film (m)', a: 'un long film français', hint: 'long goes before; français (nationality) goes after',
+        opts: ['un long film français', 'un film long français', 'un long film française', 'un long française film'] },
+      { type: 'mcq', cat: 'BAGS adjective', q: 'a small green apple (f)', a: 'une petite pomme verte', hint: 'petit goes before; colour goes after',
+        opts: ['une petite pomme verte', 'un petit pomme vert', 'une petite verte pomme', 'une petite pomme verts'] },
+
+      // Irregular BAGS forms
+      { type: 'mcq', cat: 'Irregular BAGS form', q: 'a beautiful house (f)', a: 'une belle maison', hint: 'beau → belle (feminine)',
+        opts: ['une belle maison', 'une beau maison', 'une bel maison', 'une beaux maison'] },
+      { type: 'mcq', cat: 'Irregular BAGS form', q: 'a new red car (f)', a: 'une nouvelle voiture rouge', hint: 'nouveau → nouvelle (feminine)',
+        opts: ['une nouvelle voiture rouge', 'une nouveau voiture rouge', 'une nouvel voiture rouge', 'un nouvelle voiture rouge'] },
+      { type: 'mcq', cat: 'Irregular BAGS form', q: 'an old man (m)', a: 'un vieil homme', hint: 'vieux → vieil before a vowel sound',
+        opts: ['un vieil homme', 'un vieux homme', 'un vieille homme', 'un viel homme'] },
+      { type: 'mcq', cat: 'Irregular BAGS form', q: 'an old woman (f)', a: 'une vieille femme', hint: 'vieux → vieille (feminine)',
+        opts: ['une vieille femme', 'une vieux femme', 'une vieil femme', 'un vieille femme'] },
+      { type: 'mcq', cat: 'Irregular BAGS form', q: 'a new school (m, before vowel)', a: 'un nouvel établissement', hint: 'nouveau → nouvel before a vowel sound',
+        opts: ['un nouvel établissement', 'un nouveau établissement', 'un nouvelle établissement', 'une nouvel établissement'] },
+      { type: 'mcq', cat: 'Irregular BAGS form', q: 'beautiful eyes (m pl)', a: 'de beaux yeux', hint: 'beau → beaux (masculine plural)',
+        opts: ['de beaux yeux', 'des belles yeux', 'des beaux yeux', 'de beau yeux'] },
+
+      // Post-noun adjectives (colours, nationalities)
+      { type: 'mcq', cat: 'Post-noun adjective', q: 'a tall German boy (m)', a: 'un grand garçon allemand', hint: 'grand (BAGS) before; nationality after the noun',
+        opts: ['un grand garçon allemand', 'un garçon grand allemand', 'un grande garçon allemand', 'un grand garçon allemande'] },
+      { type: 'mcq', cat: 'Post-noun adjective', q: 'the old French teacher (f)', a: 'la vieille professeure française', hint: 'vieille (BAGS) before; française (nationality) after',
+        opts: ['la vieille professeure française', 'le vieux professeure français', 'la vieille professeure français', 'la vielle professeure française'] },
+      { type: 'mcq', cat: 'Post-noun adjective', q: 'some young Spanish boys (m pl)', a: 'de jeunes garçons espagnols', hint: 'jeune (BAGS) before; espagnol after; de not des before BAGS plural',
+        opts: ['de jeunes garçons espagnols', 'des jeunes garçons espagnol', 'de jeune garçons espagnols', 'des jeunes garçon espagnols'] },
+      { type: 'mcq', cat: 'Post-noun adjective', q: 'a beautiful new car (f)', a: 'une belle nouvelle voiture', hint: 'both belle and nouvelle are BAGS — they go before the noun',
+        opts: ['une belle nouvelle voiture', 'un beau nouveau voiture', 'une bel nouvelle voiture', 'une belle nouvelle voitures'] },
+
+      // Full agreement — plural
+      { type: 'mcq', cat: 'Plural agreement', q: 'some bad old habits (f pl)', a: 'de mauvaises vieilles habitudes', hint: 'de before BAGS plural adjectives; agreement on both adjectives',
+        opts: ['de mauvaises vieilles habitudes', 'des mauvais vieux habitudes', 'de mauvaise vieille habitudes', 'des mauvaises vielles habitudes'] },
+      { type: 'mcq', cat: 'Plural agreement', q: 'beautiful new houses (f pl)', a: 'de belles nouvelles maisons', hint: 'de before BAGS plural; both adjectives agree feminine plural',
+        opts: ['de belles nouvelles maisons', 'des beaux nouveaux maisons', 'des belles nouvelles maisons', 'de belle nouvelle maisons'] },
+
+      // Type-in questions
+      { type: 'type', cat: 'BAGS adjective', q: 'Write in French: a beautiful old house (f)', a: 'une belle vieille maison', hint: 'beau → belle; vieux → vieille; both before noun' },
+      { type: 'type', cat: 'BAGS adjective', q: 'Write in French: a good small dog (m)', a: 'un bon petit chien', hint: 'bon and petit both go before the noun' },
+      { type: 'type', cat: 'BAGS adjective', q: 'Write in French: a new white school (f)', a: 'une nouvelle école blanche', hint: 'nouvelle (BAGS) before; blanche (colour) after' },
+      { type: 'type', cat: 'Irregular BAGS form', q: 'Write in French: a beautiful old building (m, before vowel)', a: 'un bel ancien bâtiment', hint: 'beau → bel before vowel; ancien also before noun' },
+      { type: 'type', cat: 'Post-noun adjective', q: 'Write in French: a short Spanish film (m)', a: 'un court film espagnol', hint: 'court (BAGS) before; nationality after' },
+      { type: 'type', cat: 'Full agreement', q: 'Write in French: some pretty blue eyes (m pl)', a: 'de beaux yeux bleus', hint: 'de before BAGS plural; beaux for m.pl; bleus after' },
+      { type: 'type', cat: 'Full agreement', q: 'Write in French: an old green car (f)', a: 'une vieille voiture verte', hint: 'vieille (BAGS) before; verte (colour) after' },
+      { type: 'type', cat: 'Irregular BAGS form', q: 'Write in French: a new friend (m, before vowel)', a: 'un nouvel ami', hint: 'nouveau → nouvel before a vowel sound' },
+      { type: 'type', cat: 'BAGS adjective', q: 'Write in French: a big black dog (m)', a: 'un grand chien noir', hint: 'grand (BAGS) before; noir (colour) after' },
+      { type: 'type', cat: 'Full agreement', q: 'Write in French: some beautiful French girls (f pl)', a: 'de belles filles françaises', hint: 'de before BAGS plural; française (nationality) after' },
+      { type: 'type', cat: 'Post-noun adjective', q: 'Write in French: a good English teacher (m)', a: 'un bon professeur anglais', hint: 'bon (BAGS) before; anglais (nationality) after' },
+      { type: 'mcq', cat: 'BAGS adjective', q: 'a big young man (m)', a: 'un grand jeune homme', hint: 'both grand and jeune are BAGS — go before the noun',
+        opts: ['un grand jeune homme', 'un jeune grand homme', 'un grande jeune homme', 'un grand jeune hommes'] },
+      { type: 'mcq', cat: 'Full agreement', q: 'a fat grey cat (m)', a: 'un gros chat gris', hint: 'gros (BAGS, irregular) before; gris (colour) after — both masculine singular',
+        opts: ['un gros chat gris', 'une grosse chat grise', 'un gross chat gris', 'un gros chats gris'] },
+      { type: 'mcq', cat: 'Post-noun adjective', q: 'a tall Italian woman (f)', a: 'une grande femme italienne', hint: 'grand (BAGS) → grande before; nationality after, agree feminine',
+        opts: ['une grande femme italienne', 'une grand femme italienne', 'une grande femme italian', 'un grande femme italienne'] }
+    ];
+
+    /* ═══════════════════════════════════════════════════════
+       ENGINE
+    ═══════════════════════════════════════════════════════ */
+
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+      }
+      return a;
+    }
+
+    var TOTAL = 10;
+    var quiz = [], qIdx = 0, score = 0, mistakes = [], answered = false, lastScore = 0;
+
+    function init() {
+      quiz = shuffle(POOL).slice(0, TOTAL);
+      qIdx = 0; score = 0; mistakes = []; answered = false;
+      showScreen('eq-quiz');
+      renderQ();
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.eq-screen').forEach(function (s) { s.classList.remove('active'); });
+      document.getElementById(id).classList.add('active');
+    }
+
+    function normalize(s) {
+      return s.toLowerCase().trim()
+        .replace(/[àâä]/g,'a').replace(/[éèêë]/g,'e')
+        .replace(/[îï]/g,'i').replace(/[ôö]/g,'o')
+        .replace(/[ùûü]/g,'u').replace(/ç/g,'c')
+        .replace(/œ/g,'oe').replace(/['']/g,"'")
+        .replace(/\s+/g,' ');
+    }
+
+    function renderQ() {
+      var q = quiz[qIdx];
+      document.getElementById('eq-prog').style.width = (qIdx / TOTAL * 100) + '%';
+      document.getElementById('eq-counter').textContent = 'Question ' + (qIdx+1) + ' of ' + TOTAL;
+      document.getElementById('eq-type').textContent = q.cat;
+      document.getElementById('eq-qtext').textContent = q.q;
+      document.getElementById('eq-hint').textContent = '(' + q.hint + ')';
+
+      var fb = document.getElementById('eq-feedback');
+      fb.className = 'eq-feedback'; fb.textContent = '';
+      document.getElementById('eq-submit').style.display = '';
+      document.getElementById('eq-submit').disabled = false;
+      document.getElementById('eq-next').style.display = 'none';
+      answered = false;
+
+      if (q.type === 'mcq') {
+        document.getElementById('eq-mcq-wrap').style.display = '';
+        document.getElementById('eq-type-wrap').style.display = 'none';
+        var optDiv = document.getElementById('eq-options');
+        optDiv.innerHTML = '';
+        shuffle(q.opts).forEach(function (opt) {
+          var btn = document.createElement('button');
+          btn.className = 'eq-opt';
+          btn.textContent = opt;
+          btn.addEventListener('click', function () { if (!answered) selectOpt(opt, q.a, btn); });
+          optDiv.appendChild(btn);
+        });
+      } else {
+        document.getElementById('eq-mcq-wrap').style.display = 'none';
+        document.getElementById('eq-type-wrap').style.display = '';
+        var inp = document.getElementById('eq-input');
+        inp.value = ''; inp.className = 'eq-input'; inp.disabled = false;
+        setTimeout(function () { inp.focus(); }, 50);
+      }
+    }
+
+    function selectOpt(chosen, correct, btn) {
+      answered = true;
+      document.querySelectorAll('.eq-opt').forEach(function (b) {
+        b.disabled = true;
+        if (b.textContent === correct) b.classList.add('correct');
+      });
+      var fb = document.getElementById('eq-feedback');
+      if (chosen === correct) {
+        btn.classList.add('correct');
+        score++;
+        fb.className = 'eq-feedback correct show';
+        fb.textContent = 'Correct!';
+      } else {
+        btn.classList.add('wrong');
+        fb.className = 'eq-feedback wrong show';
+        fb.textContent = 'Incorrect. The answer is: ' + correct;
+        mistakes.push({ q: quiz[qIdx].q, a: correct });
+      }
+      document.getElementById('eq-submit').style.display = 'none';
+      document.getElementById('eq-next').style.display = '';
+    }
+
+    function checkType() {
+      if (answered) return;
+      var q = quiz[qIdx];
+      var inp = document.getElementById('eq-input');
+      var fb = document.getElementById('eq-feedback');
+      answered = true;
+      inp.disabled = true;
+      document.getElementById('eq-submit').style.display = 'none';
+      document.getElementById('eq-next').style.display = '';
+      if (normalize(inp.value) === normalize(q.a)) {
+        inp.className = 'eq-input correct';
+        score++;
+        fb.className = 'eq-feedback correct show';
+        fb.textContent = 'Correct!';
+      } else {
+        inp.className = 'eq-input wrong';
+        fb.className = 'eq-feedback wrong show';
+        fb.textContent = 'Model answer: ' + q.a;
+        mistakes.push({ q: q.q, a: q.a });
+      }
+    }
+
+    document.getElementById('eq-submit').addEventListener('click', function () {
+      if (quiz[qIdx].type === 'type') checkType();
+    });
+    document.getElementById('eq-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        if (!answered) checkType();
+        else if (qIdx < TOTAL - 1) { qIdx++; renderQ(); }
+        else finish();
+      }
+    });
+    document.getElementById('eq-next').addEventListener('click', function () {
+      if (qIdx < TOTAL - 1) { qIdx++; renderQ(); }
+      else finish();
+    });
+    document.getElementById('eq-retry').addEventListener('click', init);
+
+    function finish() {
+      lastScore = score;
+      document.getElementById('eq-prog').style.width = '100%';
+      var big = document.getElementById('eq-big-score');
+      big.textContent = score + '/10';
+      big.style.color = score === 10 ? '#c9a84c' : score >= 7 ? '#d97706' : '#dc2626';
+
+      var passArea = document.getElementById('eq-pass-area');
+      if (score === 10) {
+        passArea.innerHTML = '<div class="eq-pass-badge">&#9733; PASS &#10003; &mdash; Perfect score! Outstanding adjective work.</div>';
+      } else {
+        passArea.innerHTML = '<div class="eq-try-msg">Score: ' + score + '/10. You need 10/10 to pass. Try again &mdash; questions are different each time!</div>';
+      }
+
+      if (mistakes.length) {
+        document.getElementById('eq-missed').style.display = '';
+        var html = '';
+        mistakes.forEach(function (m) {
+          html += '<div class="eq-missed-item"><span class="eq-missed-en">' + m.q + '</span><span class="eq-missed-fr">' + m.a + '</span></div>';
+        });
+        document.getElementById('eq-missed-list').innerHTML = html;
+      } else {
+        document.getElementById('eq-missed').style.display = 'none';
+      }
+
+      document.getElementById('eq-submit-msg').textContent = '';
+      document.getElementById('eq-lb-btn').disabled = false;
+      showScreen('eq-results');
+    }
+
+    document.getElementById('eq-lb-btn').addEventListener('click', function () {
+      var name = document.getElementById('eq-name').value.trim();
+      var msgEl = document.getElementById('eq-submit-msg');
+      if (!name) { msgEl.className = 'eq-submit-msg error'; msgEl.textContent = 'Enter your name first.'; return; }
+      this.disabled = true;
+      var pct = Math.round((lastScore / 10) * 100);
+      db.from('extension_scores').insert({ student_name: name, activity: 'adjectives', score: lastScore, max_score: 10, percentage: pct }).then(function (res) {
+        if (res.error) { msgEl.className = 'eq-submit-msg error'; msgEl.textContent = 'Could not submit — try again.'; document.getElementById('eq-lb-btn').disabled = false; }
+        else { msgEl.className = 'eq-submit-msg success'; msgEl.textContent = 'Score submitted! \u2713'; }
+      });
+    });
+
+    init();
+  }());
+  </script>
+</body>
+</html>

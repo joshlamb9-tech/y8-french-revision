@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extension Zone | Year 8 French Revision</title>
+  <link rel="stylesheet" href="styles-v2.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a2744">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CE French">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/y8-french-revision/sw.js');
+      });
+    }
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GRSHMVBVGD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-GRSHMVBVGD");
+  </script>
+  <style>
+    /* ─── EXTENSION ZONE STYLES ─── */
+
+    .ext-hero {
+      background: linear-gradient(135deg, #1a2744 0%, #2a3f6f 100%);
+      border-bottom: 3px solid #c9a84c;
+    }
+    .ext-hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 52px 28px 48px;
+    }
+    .ext-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(201, 168, 76, 0.2);
+      color: #c9a84c;
+      border: 1.5px solid #c9a84c;
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .ext-kicker-dot { width: 6px; height: 6px; background: #c9a84c; border-radius: 50%; }
+
+    .ext-hero-title {
+      font-size: clamp(26px, 4vw, 46px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      margin-bottom: 16px;
+    }
+    .ext-hero-title span { color: #c9a84c; }
+
+    .ext-hero-desc {
+      font-size: 16px;
+      color: rgba(255,255,255,0.75);
+      max-width: 600px;
+      line-height: 1.65;
+      margin-bottom: 0;
+    }
+
+    /* ─── CARDS GRID ─── */
+    .ext-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 52px;
+    }
+
+    .ext-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.15s, transform 0.12s, box-shadow 0.15s;
+    }
+    .ext-card:hover {
+      border-color: #1a2744;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(26,39,68,0.12);
+    }
+
+    /* Diagnostic card — full width, gold accent */
+    .ext-card.diagnostic {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #1a2744 0%, #2a3f6f 100%);
+      border-color: #c9a84c;
+      color: #ffffff;
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
+    }
+    .ext-card.diagnostic:hover {
+      border-color: #e6c96b;
+      box-shadow: 0 12px 36px rgba(201,168,76,0.25);
+    }
+    .ext-card.diagnostic .ext-card-icon { font-size: 52px; flex-shrink: 0; }
+    .ext-card.diagnostic .ext-card-body { flex: 1; }
+    .ext-card.diagnostic .ext-card-title { color: #ffffff; font-size: 20px; }
+    .ext-card.diagnostic .ext-card-desc { color: rgba(255,255,255,0.75); }
+    .ext-card.diagnostic .ext-card-tag {
+      background: rgba(201,168,76,0.2);
+      color: #c9a84c;
+      border: 1px solid #c9a84c;
+    }
+    .ext-card.diagnostic .ext-card-btn {
+      background: #c9a84c;
+      color: #1a2744;
+    }
+
+    .ext-card-icon { font-size: 36px; line-height: 1; }
+    .ext-card-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: #f4f2ef;
+      color: #71717a;
+      border-radius: 99px;
+      padding: 3px 10px;
+      width: fit-content;
+    }
+    .ext-card-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .ext-card-desc {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      line-height: 1.5;
+      flex: 1;
+    }
+    .ext-card-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1a2744;
+      color: #ffffff;
+      border-radius: 8px;
+      padding: 9px 16px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      width: fit-content;
+      transition: background 0.15s;
+    }
+    .ext-card-btn:hover { background: #2a3f6f; }
+
+    /* ─── PASS THRESHOLD BADGE ─── */
+    .ext-rule-box {
+      background: #fef3c7;
+      border: 2px solid #fde68a;
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .ext-rule-icon { font-size: 28px; flex-shrink: 0; }
+    .ext-rule-text { font-size: 14px; font-weight: 600; color: #78350f; line-height: 1.6; }
+    .ext-rule-text strong { font-weight: 800; color: #92400e; }
+
+    /* ─── LEADERBOARD ─── */
+    .ext-lb-wrap {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      margin-bottom: 52px;
+    }
+    .ext-lb-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .ext-lb-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1a2744;
+    }
+    .ext-lb-filter {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .ext-lb-btn {
+      padding: 5px 12px;
+      border-radius: 99px;
+      font-family: 'Dosis', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .ext-lb-btn.active, .ext-lb-btn:hover {
+      background: #1a2744;
+      color: #fff;
+      border-color: #1a2744;
+    }
+
+    .ext-lb-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .ext-lb-row:nth-child(even) { background: #f9f9f8; }
+    .ext-lb-row.is-me { background: #fef3c7; }
+
+    .ext-lb-rank { font-size: 16px; width: 28px; text-align: center; font-weight: 800; flex-shrink: 0; }
+    .ext-lb-rank.top { font-size: 18px; }
+    .ext-lb-name { flex: 1; font-weight: 700; color: var(--text); }
+    .ext-lb-activity {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #1a2744;
+      background: rgba(26,39,68,0.08);
+      border-radius: 99px;
+      padding: 2px 8px;
+    }
+    .ext-lb-pct { font-size: 15px; font-weight: 800; color: #c9a84c; min-width: 48px; text-align: right; }
+    .ext-lb-empty { text-align: center; color: var(--text-muted); font-size: 14px; font-weight: 600; padding: 20px; }
+    .ext-lb-loading { text-align: center; color: var(--text-muted); font-size: 14px; font-weight: 600; padding: 20px; }
+
+    @media (max-width: 680px) {
+      .ext-card.diagnostic { flex-direction: column; }
+      .ext-lb-filter { gap: 4px; }
+      .ext-lb-btn { font-size: 11px; padding: 4px 9px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
+        </div>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="header-nav" id="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="index.html" class="hn-link">Topics</a>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Grammar <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="grammar.html" class="hn-link">Grammar</a>
+            <a href="grammar-trainer.html" class="hn-link">Grammar Trainer</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Practice <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="vocab-challenge.html" class="hn-link">Vocab Challenge</a>
+            <a href="spelling-test.html" class="hn-link">Spelling Test</a>
+            <a href="speed-recall.html" class="hn-link">Speed Recall</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Exam Prep <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="speaking-prep.html" class="hn-link">Speaking Prep</a>
+            <a href="select-correct-form.html" class="hn-link">Select the Form</a>
+            <a href="guided-translation.html" class="hn-link">Guided Translation</a>
+            <a href="past-papers.html" class="hn-link">Past Papers</a>
+            <a href="checklist.html" class="hn-link">Checklist</a>
+          </div>
+        </div>
+        <a href="extension.html" class="hn-link active" style="background:#1a2744;color:#c9a84c;">&#9733; Extension</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="ext-hero">
+    <div class="ext-hero-inner">
+      <div class="ext-kicker">
+        <div class="ext-kicker-dot"></div>
+        AGT / Scholarship Level
+      </div>
+      <h1 class="ext-hero-title">Extension &amp; <span>Challenge Zone</span></h1>
+      <p class="ext-hero-desc">This section is for students aiming high. Activities regenerate every attempt — new questions each time. <strong style="color:#c9a84c;">100% is the only pass mark.</strong> If you're not ready, use the main site first.</p>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="page-wrap">
+
+    <!-- RULE BOX -->
+    <div class="ext-rule-box">
+      <div class="ext-rule-icon">&#9888;&#65039;</div>
+      <div class="ext-rule-text">
+        <strong>How this section works:</strong> Every activity pulls a fresh set of questions from a large pool — you'll never see the same set twice. For grammar activities, <strong>you need 10/10 to earn a Pass badge.</strong> Translation is scored but not gated. Start with the diagnostic to see if you're ready.
+      </div>
+    </div>
+
+    <!-- DIAGNOSTIC CARD (full width, prominent) -->
+    <div class="ext-grid" style="margin-bottom:20px;">
+      <a href="extension-challenge.html" class="ext-card diagnostic">
+        <div class="ext-card-icon">&#127919;</div>
+        <div class="ext-card-body">
+          <div class="ext-card-tag">Start here</div>
+          <div class="ext-card-title" style="font-size:22px;margin:6px 0 8px;">Can you cut it?</div>
+          <div class="ext-card-desc" style="color:rgba(255,255,255,0.75);margin-bottom:14px;">15-question diagnostic covering all Level 2 grammar areas. Score 12+ to unlock the challenge zone. Questions regenerate every attempt.</div>
+          <span class="ext-card-btn">Take the diagnostic &#8594;</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- SECTION HEADER -->
+    <div class="sh" style="margin-bottom:16px;">
+      <div class="sh-left">
+        <div class="sh-title">Challenge Activities</div>
+        <div class="sh-count">5 activities</div>
+      </div>
+    </div>
+
+    <!-- ACTIVITY CARDS -->
+    <div class="ext-grid">
+
+      <a href="extension-perfect-tense.html" class="ext-card">
+        <div class="ext-card-icon">&#9194;&#65039;</div>
+        <div class="ext-card-tag">Perfect Tense</div>
+        <div class="ext-card-title">Perfect Tense Gauntlet</div>
+        <div class="ext-card-desc">&#234;tre verbs, past participle agreement, irregular participles, reflexive verbs. 10 questions from a pool of 30+. Need 10/10 to pass.</div>
+        <span class="ext-card-btn">Start &#8594;</span>
+      </a>
+
+      <a href="extension-adjectives.html" class="ext-card">
+        <div class="ext-card-icon">&#128208;</div>
+        <div class="ext-card-tag">Adjectives</div>
+        <div class="ext-card-title">Adjective Minefield</div>
+        <div class="ext-card-desc">BAGS adjectives, post-noun adjectives, full agreement including irregular forms: beau/belle, vieux/vieille, nouveau/nouvelle. 10/10 to pass.</div>
+        <span class="ext-card-btn">Start &#8594;</span>
+      </a>
+
+      <a href="extension-negatives.html" class="ext-card">
+        <div class="ext-card-icon">&#10060;</div>
+        <div class="ext-card-tag">Negatives</div>
+        <div class="ext-card-title">Negatives in Context</div>
+        <div class="ext-card-desc">ne...pas, jamais, rien, plus, personne, que — in present and perfect tense. Full sentences. 10 questions from 30+ pool. 10/10 to pass.</div>
+        <span class="ext-card-btn">Start &#8594;</span>
+      </a>
+
+      <a href="extension-pronouns.html" class="ext-card">
+        <div class="ext-card-icon">&#128260;</div>
+        <div class="ext-card-tag">Object Pronouns</div>
+        <div class="ext-card-title">Object Pronouns</div>
+        <div class="ext-card-desc">Direct (le/la/les) and indirect (lui/leur) object pronouns, position before the verb, with perfect tense and negatives. 10/10 to pass.</div>
+        <span class="ext-card-btn">Start &#8594;</span>
+      </a>
+
+      <a href="extension-translation.html" class="ext-card">
+        <div class="ext-card-icon">&#128221;</div>
+        <div class="ext-card-tag">Translation</div>
+        <div class="ext-card-title">Hard Translation</div>
+        <div class="ext-card-desc">8 sentences per attempt, each requiring 2+ Level 2 structures. Genuinely difficult. Model answers + grammar notes shown on submission. Score goes to leaderboard.</div>
+        <span class="ext-card-btn">Start &#8594;</span>
+      </a>
+
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div class="ext-lb-wrap">
+      <div class="ext-lb-header">
+        <div class="ext-lb-title">&#127942; Extension Leaderboard — Top 10</div>
+        <div class="ext-lb-filter">
+          <button class="ext-lb-btn active" data-activity="all">All</button>
+          <button class="ext-lb-btn" data-activity="diagnostic">Diagnostic</button>
+          <button class="ext-lb-btn" data-activity="perfect-tense">Perfect Tense</button>
+          <button class="ext-lb-btn" data-activity="adjectives">Adjectives</button>
+          <button class="ext-lb-btn" data-activity="negatives">Negatives</button>
+          <button class="ext-lb-btn" data-activity="pronouns">Pronouns</button>
+          <button class="ext-lb-btn" data-activity="translation">Translation</button>
+        </div>
+      </div>
+      <div id="ext-lb-rows">
+        <div class="ext-lb-loading">Loading&#8230;</div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem or want to request a feature? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/nav.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    /*
+    ══════════════════════════════════════════════════════════
+    SUPABASE TABLE — run this SQL in the Supabase SQL editor:
+
+    create table extension_scores (
+      id uuid primary key default gen_random_uuid(),
+      student_name text not null,
+      activity text not null,
+      score int not null,
+      max_score int not null,
+      percentage int not null,
+      created_at timestamptz default now()
+    );
+
+    -- Enable Row Level Security
+    alter table extension_scores enable row level security;
+
+    -- Allow anyone to insert
+    create policy "Allow insert" on extension_scores
+      for insert with check (true);
+
+    -- Allow anyone to read
+    create policy "Allow read" on extension_scores
+      for select using (true);
+    ══════════════════════════════════════════════════════════
+    */
+
+    var SUPABASE_URL  = 'https://dlcseuejvducbsjhqvze.supabase.co';
+    var SUPABASE_ANON = 'sb_publishable_k_59EUPnHNnJ534tF0vMvQ_Ams9wV9L';
+    var db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    var currentActivity = 'all';
+
+    function loadLeaderboard(activity) {
+      var el = document.getElementById('ext-lb-rows');
+      el.innerHTML = '<div class="ext-lb-loading">Loading&#8230;</div>';
+
+      var query = db.from('extension_scores')
+        .select('student_name, activity, score, max_score, percentage, created_at')
+        .order('percentage', { ascending: false })
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (activity !== 'all') {
+        query = query.eq('activity', activity);
+      }
+
+      query.then(function (res) {
+        if (res.error) {
+          el.innerHTML = '<div class="ext-lb-empty">Could not load leaderboard.</div>';
+          return;
+        }
+        renderLeaderboard(res.data || [], activity);
+      });
+    }
+
+    function activityLabel(a) {
+      var map = {
+        'diagnostic': 'Diagnostic',
+        'perfect-tense': 'Perfect Tense',
+        'adjectives': 'Adjectives',
+        'negatives': 'Negatives',
+        'pronouns': 'Pronouns',
+        'translation': 'Translation'
+      };
+      return map[a] || a;
+    }
+
+    function renderLeaderboard(rows, activity) {
+      var el = document.getElementById('ext-lb-rows');
+      if (!rows.length) {
+        el.innerHTML = '<div class="ext-lb-empty">No scores yet — be the first!</div>';
+        return;
+      }
+
+      // Deduplicate: best score per student per activity
+      var seen = {};
+      var deduped = [];
+      rows.forEach(function (r) {
+        var key = r.student_name.toLowerCase() + '|' + r.activity;
+        if (!seen[key]) {
+          seen[key] = true;
+          deduped.push(r);
+        }
+      });
+
+      deduped.sort(function (a, b) { return b.percentage - a.percentage; });
+      var top = deduped.slice(0, 10);
+
+      var html = '';
+      top.forEach(function (row, i) {
+        var rank = i + 1;
+        var medal = rank === 1 ? '&#129351;' : rank === 2 ? '&#129352;' : rank === 3 ? '&#129353;' : rank;
+        html += '<div class="ext-lb-row">';
+        html += '<span class="ext-lb-rank' + (rank <= 3 ? ' top' : '') + '">' + medal + '</span>';
+        html += '<span class="ext-lb-name">' + escHtml(row.student_name) + '</span>';
+        if (activity === 'all') {
+          html += '<span class="ext-lb-activity">' + activityLabel(row.activity) + '</span>';
+        }
+        html += '<span class="ext-lb-pct">' + row.percentage + '%</span>';
+        html += '</div>';
+      });
+      el.innerHTML = html;
+    }
+
+    function escHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.ext-lb-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.ext-lb-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentActivity = btn.dataset.activity;
+        loadLeaderboard(currentActivity);
+      });
+    });
+
+    loadLeaderboard('all');
+  }());
+  </script>
+</body>
+</html>

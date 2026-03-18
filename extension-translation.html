@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hard Translation | Extension Zone | Year 8 French</title>
+  <link rel="stylesheet" href="styles-v2.css">
+  <style>
+    .ext-page-banner { background: linear-gradient(135deg, #1a2744 0%, #2a3f6f 100%); border-bottom: 3px solid #c9a84c; }
+    .ext-page-banner-inner { max-width: 1200px; margin: 0 auto; padding: 36px 28px 32px; }
+    .ext-banner-kicker {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(201,168,76,0.2); color: #c9a84c;
+      border: 1.5px solid #c9a84c; border-radius: 99px;
+      padding: 3px 12px; font-size: 11px; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .ext-banner-title { font-size: clamp(22px, 3.5vw, 36px); font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+    .ext-banner-sub { font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 6px; font-weight: 600; }
+    .ext-back { display: inline-flex; align-items: center; gap: 6px; color: #c9a84c; font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 16px; }
+    .ext-back:hover { color: #e6c96b; }
+
+    .eq-screen { display: none; }
+    .eq-screen.active { display: block; }
+
+    /* how it works */
+    .tr-how-box { background: var(--white); border: 2px solid var(--border); border-radius: 14px; padding: 18px 22px; margin-bottom: 24px; }
+    .tr-how-box h3 { font-size: 14px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+    .tr-how-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .tr-how-list li { font-size: 13px; font-weight: 600; color: var(--text-mid); display: flex; gap: 8px; align-items: flex-start; }
+
+    /* translation card */
+    .tr-card { background: var(--white); border: 2px solid var(--border); border-radius: 16px; padding: 28px 24px; margin-bottom: 16px; }
+    .tr-q-num { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+    .tr-q-en { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 16px; }
+    .tr-input { width: 100%; padding: 13px 16px; border: 2px solid var(--border); border-radius: 12px; font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); background: var(--white); outline: none; transition: border-color 0.12s; -webkit-appearance: none; resize: vertical; min-height: 52px; }
+    .tr-input:focus { border-color: #1a2744; }
+    .tr-input:disabled { background: #f9f9f8; }
+
+    /* revealed answer */
+    .tr-reveal { display: none; margin-top: 14px; border-top: 2px solid var(--border); padding-top: 14px; }
+    .tr-reveal.show { display: block; }
+    .tr-model-label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .tr-model-ans { font-size: 15px; font-weight: 700; color: #16a34a; margin-bottom: 10px; }
+    .tr-grammar-note { font-size: 13px; font-weight: 600; color: #1a2744; background: rgba(26,39,68,0.06); border-radius: 8px; padding: 8px 12px; line-height: 1.5; }
+    .tr-grammar-note strong { font-weight: 800; }
+
+    /* self-mark */
+    .tr-selfmark { display: flex; gap: 10px; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+    .tr-selfmark-label { font-size: 13px; font-weight: 700; color: var(--text-mid); }
+    .tr-sm-btn { padding: 8px 18px; border-radius: 8px; font-family: 'Dosis', sans-serif; font-size: 13px; font-weight: 800; border: 2px solid var(--border); background: var(--white); cursor: pointer; transition: all 0.12s; min-height: 40px; }
+    .tr-sm-btn:hover { border-color: #1a2744; }
+    .tr-sm-btn.got-it { background: #dcfce7; border-color: #16a34a; color: #14532d; }
+    .tr-sm-btn.not-yet { background: #fee2e2; border-color: #dc2626; color: #7f1d1d; }
+    .tr-sm-btn.selected { opacity: 0.85; }
+
+    /* submit all */
+    .tr-submit-all-wrap { margin-bottom: 24px; }
+    .tr-progress-note { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 14px; }
+    .tr-btn { padding: 14px 28px; background: #1a2744; color: #fff; border: none; border-radius: 10px; font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; transition: background 0.12s; min-height: 48px; }
+    .tr-btn:hover { background: #2a3f6f; }
+    .tr-btn:disabled { background: var(--border); color: var(--text-muted); cursor: default; }
+    .tr-btn-outline { background: transparent; border: 2px solid #1a2744; color: #1a2744; border-radius: 10px; padding: 12px 24px; font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.12s; min-height: 48px; }
+    .tr-btn-outline:hover { background: #1a2744; color: #fff; }
+
+    /* results */
+    .eq-results-card { background: var(--white); border: 2px solid var(--border); border-radius: 16px; padding: 36px 28px; text-align: center; margin-bottom: 24px; }
+    .eq-big-score { font-size: 80px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+    .eq-score-label { font-size: 16px; font-weight: 700; color: var(--text-muted); margin-bottom: 14px; }
+    .eq-verdict { font-size: 17px; font-weight: 700; padding: 14px 20px; border-radius: 12px; margin-bottom: 0; line-height: 1.4; }
+    .eq-verdict.high { background: #dcfce7; color: #14532d; border: 2px solid #86efac; }
+    .eq-verdict.mid  { background: #fef3c7; color: #78350f; border: 2px solid #fde68a; }
+    .eq-verdict.low  { background: #fee2e2; color: #7f1d1d; border: 2px solid #fca5a5; }
+    .eq-lb-submit { background: var(--white); border: 2px solid var(--border); border-radius: 14px; padding: 20px 22px; margin-bottom: 20px; }
+    .eq-lb-submit h3 { font-size: 14px; font-weight: 800; margin-bottom: 12px; }
+    .eq-lb-row-form { display: flex; gap: 10px; flex-wrap: wrap; }
+    .eq-name-input { flex: 1; min-width: 160px; padding: 11px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); outline: none; -webkit-appearance: none; }
+    .eq-name-input:focus { border-color: #1a2744; }
+    .eq-lb-submit-btn { padding: 11px 22px; background: #c9a84c; color: #1a2744; border: none; border-radius: 10px; font-family: 'Dosis', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; transition: background 0.12s; min-height: 48px; }
+    .eq-lb-submit-btn:hover { background: #b8942f; }
+    .eq-lb-submit-btn:disabled { background: var(--border); color: var(--text-muted); cursor: default; }
+    .eq-submit-msg { font-size: 13px; font-weight: 700; margin-top: 8px; }
+    .eq-submit-msg.success { color: #16a34a; }
+    .eq-submit-msg.error { color: #dc2626; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
+        </div>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="header-nav" id="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="index.html" class="hn-link">Topics</a>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Grammar <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="grammar.html" class="hn-link">Grammar</a>
+            <a href="grammar-trainer.html" class="hn-link">Grammar Trainer</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Practice <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="vocab-challenge.html" class="hn-link">Vocab Challenge</a>
+            <a href="spelling-test.html" class="hn-link">Spelling Test</a>
+            <a href="speed-recall.html" class="hn-link">Speed Recall</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Exam Prep <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="speaking-prep.html" class="hn-link">Speaking Prep</a>
+            <a href="select-correct-form.html" class="hn-link">Select the Form</a>
+            <a href="guided-translation.html" class="hn-link">Guided Translation</a>
+            <a href="past-papers.html" class="hn-link">Past Papers</a>
+            <a href="checklist.html" class="hn-link">Checklist</a>
+          </div>
+        </div>
+        <a href="extension.html" class="hn-link" style="background:#1a2744;color:#c9a84c;">&#9733; Extension</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="ext-page-banner">
+    <div class="ext-page-banner-inner">
+      <a href="extension.html" class="ext-back">&#8592; Extension Zone</a>
+      <div class="ext-banner-kicker">&#128221; Translation</div>
+      <div class="ext-banner-title">Hard Translation</div>
+      <div class="ext-banner-sub">8 sentences per attempt &mdash; each requiring 2+ Level 2 structures &mdash; self-mark against model answers</div>
+    </div>
+  </div>
+
+  <main class="page-wrap">
+
+    <!-- QUIZ SCREEN -->
+    <div id="tr-quiz" class="eq-screen active">
+
+      <div class="tr-how-box">
+        <h3>How this works</h3>
+        <ul class="tr-how-list">
+          <li><span>1.</span> Translate each sentence &mdash; every sentence requires at least 2 Level 2 structures.</li>
+          <li><span>2.</span> Click <strong>Reveal answers</strong> to see model answers and grammar notes.</li>
+          <li><span>3.</span> Self-mark each sentence: <strong>Got it</strong> or <strong>Not yet</strong>.</li>
+          <li><span>4.</span> Submit your score to the leaderboard. Translation is subjective &mdash; no 100% gate.</li>
+        </ul>
+      </div>
+
+      <div id="tr-cards"></div>
+
+      <div class="tr-submit-all-wrap">
+        <div class="tr-progress-note" id="tr-progress-note">Translate all 8 sentences, then reveal answers.</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="tr-btn" id="tr-reveal-btn">Reveal model answers</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RESULTS SCREEN -->
+    <div id="tr-results" class="eq-screen">
+      <div class="eq-results-card">
+        <div class="eq-big-score" id="tr-big-score">0/8</div>
+        <div class="eq-score-label">Hard Translation &mdash; self-marked</div>
+        <div class="eq-verdict" id="tr-verdict"></div>
+      </div>
+
+      <div class="eq-lb-submit">
+        <h3>&#127942; Submit to leaderboard</h3>
+        <div class="eq-lb-row-form">
+          <input type="text" class="eq-name-input" id="eq-name" placeholder="Your name" maxlength="30" autocomplete="off">
+          <button class="eq-lb-submit-btn" id="eq-lb-btn">Submit score</button>
+        </div>
+        <div class="eq-submit-msg" id="eq-submit-msg"></div>
+      </div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="tr-btn" id="tr-retry">&#8635; Try again — new sentences</button>
+        <a href="extension.html" class="tr-btn-outline">&#8592; Extension Zone</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/nav.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var SUPABASE_URL  = 'https://dlcseuejvducbsjhqvze.supabase.co';
+    var SUPABASE_ANON = 'sb_publishable_k_59EUPnHNnJ534tF0vMvQ_Ams9wV9L';
+    var db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    /* ═══════════════════════════════════════════════════════
+       SENTENCE POOL — 42 sentences, each requiring 2+ Level 2 structures
+    ═══════════════════════════════════════════════════════ */
+
+    var POOL = [
+      {
+        en: 'She never went to the old market.',
+        fr: 'Elle n\'est jamais allée au vieux marché.',
+        note: '<strong>ne...jamais</strong> wraps around the être auxiliary (n\'est jamais allée); <strong>adjective agreement</strong>: vieux stays before marché; allée agrees with elle.'
+      },
+      {
+        en: 'I didn\'t see them yesterday.',
+        fr: 'Je ne les ai pas vus hier.',
+        note: '<strong>Direct object pronoun</strong> les before the auxiliary ai; <strong>past participle agreement</strong>: vus agrees with les (masculine plural).'
+      },
+      {
+        en: 'He only ate the green vegetables.',
+        fr: 'Il n\'a mangé que les légumes verts.',
+        note: '<strong>ne...que</strong>: que follows the past participle in perfect tense; <strong>post-noun adjective</strong>: verts agrees masculine plural, after the noun.'
+      },
+      {
+        en: 'We (mixed group) arrived late but she had already left.',
+        fr: 'Nous sommes arrivés en retard mais elle était déjà partie.',
+        note: '<strong>Perfect tense with être</strong>: arrivés (m.pl agreement); <strong>imperfect/pluperfect</strong>: était partie (être verb in pluperfect — higher challenge).'
+      },
+      {
+        en: 'They (f) came back tired after the long journey.',
+        fr: 'Elles sont revenues fatiguées après le long voyage.',
+        note: '<strong>Perfect tense with être</strong>: revenues agrees feminine plural; <strong>adjective agreement</strong>: fatiguées (predicative, f.pl); long is a BAGS adjective before voyage.'
+      },
+      {
+        en: 'She gave him her old books.',
+        fr: 'Elle lui a donné ses vieux livres.',
+        note: '<strong>Indirect pronoun</strong> lui before the auxiliary; <strong>BAGS adjective</strong>: vieux before livres (masculine plural, irregular form).'
+      },
+      {
+        en: 'I never want to go there again.',
+        fr: 'Je ne veux plus jamais y aller.',
+        note: '<strong>ne...plus...jamais</strong>: two negatives combined; <strong>adverbial pronoun y</strong> replaces "there", placed before the infinitive.'
+      },
+      {
+        en: 'Nobody saw the beautiful new house.',
+        fr: 'Personne n\'a vu la belle nouvelle maison.',
+        note: '<strong>Personne as subject</strong>: personne n\'a vu (ne after personne); <strong>BAGS adjectives</strong>: belle and nouvelle both before maison, both feminine.'
+      },
+      {
+        en: 'I didn\'t give it to her.',
+        fr: 'Je ne le lui ai pas donné.',
+        note: '<strong>Double object pronouns</strong>: le (direct) before lui (indirect), both before auxiliary; <strong>ne...pas</strong> wraps around the whole pronoun + auxiliary block.'
+      },
+      {
+        en: 'She got up early and left without saying anything.',
+        fr: 'Elle s\'est levée tôt et est partie sans rien dire.',
+        note: '<strong>Reflexive verb in perfect tense</strong>: s\'est levée (agreement f.s); <strong>être verb</strong>: est partie; <strong>ne...rien</strong> with infinitive: sans rien dire.'
+      },
+      {
+        en: 'The good little boy never goes to bed late.',
+        fr: 'Le bon petit garçon ne va jamais se coucher tard.',
+        note: '<strong>BAGS adjectives</strong>: bon and petit both before garçon; <strong>ne...jamais</strong>: ne + va + jamais; reflexive infinitive se coucher.'
+      },
+      {
+        en: 'He read it yesterday evening and found it interesting.',
+        fr: 'Il l\'a lu hier soir et l\'a trouvé intéressant.',
+        note: '<strong>Direct pronoun in perfect tense</strong>: l\' before auxiliary (twice); <strong>irregular past participle</strong>: lu (from lire); intéressant stays masculine (referring to book).'
+      },
+      {
+        en: 'We (f) went to the old château and we visited it.',
+        fr: 'Nous sommes allées au vieux château et nous l\'avons visité.',
+        note: '<strong>Être verb</strong>: sommes allées (f.pl agreement); <strong>BAGS adjective</strong>: vieux before château; <strong>direct pronoun</strong>: l\' before auxiliary avons.'
+      },
+      {
+        en: 'She no longer speaks to him because he lied to her.',
+        fr: 'Elle ne lui parle plus parce qu\'il lui a menti.',
+        note: '<strong>ne...plus</strong> with indirect pronoun: ne lui parle plus; <strong>irregular past participle</strong>: menti (from mentir); <strong>indirect pronoun</strong> lui again in the second clause.'
+      },
+      {
+        en: 'I (f) got dressed quickly then left the beautiful old house.',
+        fr: 'Je me suis habillée vite puis j\'ai quitté la belle vieille maison.',
+        note: '<strong>Reflexive verb in perfect tense</strong>: me suis habillée (f.s agreement); <strong>BAGS adjectives</strong>: belle and vieille both before maison, both feminine singular.'
+      },
+      {
+        en: 'Nobody told him the truth.',
+        fr: 'Personne ne lui a dit la vérité.',
+        note: '<strong>Personne as subject</strong>: ne follows immediately; <strong>indirect pronoun</strong> lui before auxiliary; <strong>irregular past participle</strong>: dit (from dire).'
+      },
+      {
+        en: 'He didn\'t do anything useful during the long holiday.',
+        fr: 'Il n\'a rien fait d\'utile pendant les longues vacances.',
+        note: '<strong>ne...rien</strong>: rien between auxiliary and participle; <strong>irregular participle</strong>: fait; <strong>BAGS adjective</strong>: longues agrees with vacances (f.pl).'
+      },
+      {
+        en: 'She only read the short French books.',
+        fr: 'Elle n\'a lu que les courts livres français.',
+        note: '<strong>ne...que</strong>: que follows the participle; <strong>irregular participle</strong>: lu; <strong>BAGS adjective</strong>: court before livre; <strong>nationality</strong>: français after noun.'
+      },
+      {
+        en: 'The beautiful young woman went up to her big new room.',
+        fr: 'La belle jeune femme est montée dans sa grande nouvelle chambre.',
+        note: '<strong>Être verb</strong>: est montée (f.s agreement); <strong>BAGS adjectives before femme</strong>: belle, jeune; <strong>BAGS adjectives before chambre</strong>: grande, nouvelle (f.s).'
+      },
+      {
+        en: 'I (m) fell and they (f) didn\'t help me.',
+        fr: 'Je suis tombé et elles ne m\'ont pas aidé.',
+        note: '<strong>Être verb</strong>: suis tombé (m.s); <strong>ne...pas in perfect</strong>: ne m\'ont pas aidé; <strong>direct pronoun</strong>: m\' before auxiliary.'
+      },
+      {
+        en: 'She gave them all her old notes.',
+        fr: 'Elle leur a donné tous ses vieux cahiers.',
+        note: '<strong>Indirect pronoun</strong>: leur before auxiliary; <strong>irregular past participle</strong>: donné; <strong>BAGS adjective</strong>: vieux before cahiers (m.pl).'
+      },
+      {
+        en: 'He never goes out without his big black jacket.',
+        fr: 'Il ne sort jamais sans sa grande veste noire.',
+        note: '<strong>ne...jamais</strong>: ne + sort + jamais; <strong>BAGS adjective</strong>: grande before veste; <strong>post-noun adjective</strong>: noire (colour) after veste.'
+      },
+      {
+        en: 'We didn\'t see them at the new school.',
+        fr: 'Nous ne les avons pas vus à la nouvelle école.',
+        note: '<strong>Direct pronoun in perfect</strong>: les before auxiliary; <strong>past participle agreement</strong>: vus (m.pl); <strong>BAGS adjective</strong>: nouvelle before école (f.s).'
+      },
+      {
+        en: 'She found it (f) in the old beautiful garden.',
+        fr: 'Elle l\'a trouvée dans le vieux beau jardin.',
+        note: '<strong>Direct pronoun</strong>: l\' before auxiliary; <strong>agreement</strong>: trouvée (the thing she found was feminine); <strong>BAGS adjectives</strong>: vieux and beau before jardin (m).'
+      },
+      {
+        en: 'Nobody ever goes there on a cold winter morning.',
+        fr: 'Personne n\'y va jamais par une froide matinée d\'hiver.',
+        note: '<strong>Personne + ne...jamais</strong>; <strong>y</strong> (adverbial pronoun = there) before va; <strong>BAGS adjective</strong>: froide (before matinée, f.s).'
+      },
+      {
+        en: 'I (f) went out and she came in — we didn\'t see each other.',
+        fr: 'Je suis sortie et elle est entrée — nous ne nous sommes pas vus.',
+        note: '<strong>Two être verbs</strong>: sortie (f.s), entrée (f.s); <strong>reflexive in perfect</strong>: ne nous sommes pas vus (reciprocal); ne...pas in perfect.'
+      },
+      {
+        en: 'He told her everything and she said nothing.',
+        fr: 'Il lui a tout dit et elle n\'a rien dit.',
+        note: '<strong>Indirect pronoun</strong>: lui before auxiliary; <strong>tout</strong> before the participle; <strong>ne...rien</strong>: rien between auxiliary and participle (dit twice — irregular).'
+      },
+      {
+        en: 'She wore her beautiful new blue dress.',
+        fr: 'Elle a mis sa belle nouvelle robe bleue.',
+        note: '<strong>Irregular past participle</strong>: mis (from mettre); <strong>BAGS adjectives</strong>: belle and nouvelle before robe; <strong>colour</strong>: bleue after robe (f.s).'
+      },
+      {
+        en: 'The tall old man gave his good small dog a biscuit.',
+        fr: 'Le grand vieil homme a donné un biscuit à son bon petit chien.',
+        note: '<strong>BAGS adjectives before homme</strong>: grand and vieil (beau→bel/vieux→vieil before vowel); <strong>BAGS adjectives before chien</strong>: bon and petit.'
+      },
+      {
+        en: 'I only spoke to her once and she never replied.',
+        fr: 'Je ne lui ai parlé qu\'une fois et elle n\'a jamais répondu.',
+        note: '<strong>ne...que</strong>: indirect pronoun lui before auxiliary, que after participle; <strong>ne...jamais in perfect</strong>: n\'a jamais répondu.'
+      },
+      {
+        en: 'They (m) didn\'t take them (f) to the beautiful old cathedral.',
+        fr: 'Ils ne les ont pas emmenées à la belle vieille cathédrale.',
+        note: '<strong>Direct pronoun</strong>: les before auxiliary; <strong>agreement</strong>: emmenées (f.pl, agrees with les replacing feminine plural object); <strong>BAGS adjectives</strong>: belle, vieille before cathédrale.'
+      },
+      {
+        en: 'She came back with a new big beautiful hat.',
+        fr: 'Elle est revenue avec un beau grand chapeau neuf.',
+        note: '<strong>Être verb</strong>: est revenue (f.s); <strong>BAGS adjectives</strong>: beau and grand before chapeau; <strong>post-noun adjective</strong>: neuf (brand new, post-noun) after chapeau.'
+      },
+      {
+        en: 'Nobody did anything and nothing happened.',
+        fr: 'Personne n\'a rien fait et rien ne s\'est passé.',
+        note: '<strong>Personne + ne...rien</strong>: combined negatives; <strong>rien as subject</strong>: rien ne s\'est passé (rien at start, ne after); reflexive perfect tense.'
+      },
+      {
+        en: 'He spoke to them for a long time but they didn\'t understand him.',
+        fr: 'Il leur a parlé longtemps mais ils ne l\'ont pas compris.',
+        note: '<strong>Indirect pronoun</strong>: leur before auxiliary; <strong>ne...pas in perfect</strong>: ne l\'ont pas compris; <strong>direct pronoun</strong>: l\' before auxiliary.'
+      },
+      {
+        en: 'She is the only one who never forgets anything.',
+        fr: 'C\'est la seule qui n\'oublie jamais rien.',
+        note: '<strong>seule</strong> as adjective in superlative-like construction; <strong>ne...jamais...rien</strong>: triple negative structure.'
+      },
+      {
+        en: 'I (f) went down the old stone staircase and nobody saw me.',
+        fr: 'Je suis descendue par le vieil escalier en pierre et personne ne m\'a vue.',
+        note: '<strong>Être verb</strong>: descendue (f.s); <strong>BAGS adjective</strong>: vieil (vieux before vowel) before escalier; <strong>personne</strong> as subject; <strong>direct pronoun agreement</strong>: vue (f.s).'
+      },
+      {
+        en: 'We (f) put on our new coats and went out.',
+        fr: 'Nous avons mis nos nouveaux manteaux et nous sommes sorties.',
+        note: '<strong>Irregular past participle</strong>: mis (from mettre); <strong>BAGS adjective</strong>: nouveaux (m.pl of nouveau); <strong>être verb</strong>: sommes sorties (f.pl).'
+      },
+      {
+        en: 'She never wants to go to bed before she finishes her homework.',
+        fr: 'Elle ne veut jamais se coucher avant de finir ses devoirs.',
+        note: '<strong>ne...jamais</strong> with modal: ne veut jamais; <strong>reflexive infinitive</strong>: se coucher; avant de + infinitive construction.'
+      },
+      {
+        en: 'I didn\'t like it (m) at all — it was the worst film I have ever seen.',
+        fr: 'Je ne l\'ai pas du tout aimé — c\'était le pire film que j\'aie jamais vu.',
+        note: '<strong>Direct pronoun in perfect</strong>: l\' before auxiliary; <strong>ne...pas du tout</strong>; <strong>superlative</strong>: le pire (irregular); <strong>ne...jamais</strong> in relative clause.'
+      },
+      {
+        en: 'She told him nothing but gave him everything.',
+        fr: 'Elle ne lui a rien dit mais lui a tout donné.',
+        note: '<strong>ne...rien</strong>: rien between auxiliary and participle; <strong>indirect pronoun</strong>: lui twice; <strong>tout</strong> before the participle donné; irregular participle dit.'
+      },
+      {
+        en: 'The new young French teacher gave them a long old poem to learn.',
+        fr: 'La nouvelle jeune professeure française leur a donné un long vieux poème à apprendre.',
+        note: '<strong>BAGS adjectives before professeure</strong>: nouvelle and jeune; <strong>post-noun adjective</strong>: française (nationality) after noun; <strong>indirect pronoun</strong>: leur; <strong>BAGS adjectives before poème</strong>: long and vieux.'
+      },
+      {
+        en: 'Nobody brought anything and nobody said anything useful.',
+        fr: 'Personne n\'a rien apporté et personne n\'a rien dit d\'utile.',
+        note: '<strong>Personne + ne...rien</strong> twice; <strong>irregular past participle</strong>: dit; <strong>rien de + adjective</strong>: rien d\'utile.'
+      }
+    ];
+
+    /* ═══════════════════════════════════════════════════════
+       ENGINE
+    ═══════════════════════════════════════════════════════ */
+
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+      }
+      return a;
+    }
+
+    var TOTAL = 8;
+    var quiz = [];
+    var marks = [];  // 'got' | 'not' | null per question
+    var revealed = false;
+    var lastScore = 0;
+
+    function init() {
+      quiz = shuffle(POOL).slice(0, TOTAL);
+      marks = quiz.map(function () { return null; });
+      revealed = false;
+      buildCards();
+      document.getElementById('tr-reveal-btn').textContent = 'Reveal model answers';
+      document.getElementById('tr-reveal-btn').disabled = false;
+      document.getElementById('tr-progress-note').textContent = 'Translate all 8 sentences, then reveal answers.';
+      showScreen('tr-quiz');
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.eq-screen').forEach(function (s) { s.classList.remove('active'); });
+      document.getElementById(id).classList.add('active');
+    }
+
+    function escHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function buildCards() {
+      var container = document.getElementById('tr-cards');
+      container.innerHTML = '';
+      quiz.forEach(function (q, i) {
+        var card = document.createElement('div');
+        card.className = 'tr-card';
+        card.id = 'tr-card-' + i;
+        card.innerHTML =
+          '<div class="tr-q-num">Sentence ' + (i+1) + ' of ' + TOTAL + '</div>' +
+          '<div class="tr-q-en">' + escHtml(q.en) + '</div>' +
+          '<textarea class="tr-input" id="tr-inp-' + i + '" placeholder="Your French translation…" rows="2"></textarea>' +
+          '<div class="tr-reveal" id="tr-reveal-' + i + '">' +
+            '<div class="tr-model-label">Model answer</div>' +
+            '<div class="tr-model-ans" id="tr-model-' + i + '"></div>' +
+            '<div class="tr-grammar-note" id="tr-note-' + i + '"></div>' +
+            '<div class="tr-selfmark">' +
+              '<span class="tr-selfmark-label">Did you get it?</span>' +
+              '<button class="tr-sm-btn" data-q="' + i + '" data-mark="got">Got it ✓</button>' +
+              '<button class="tr-sm-btn" data-q="' + i + '" data-mark="not">Not yet ✗</button>' +
+            '</div>' +
+          '</div>';
+        container.appendChild(card);
+      });
+
+      // Self-mark button listeners
+      document.querySelectorAll('.tr-sm-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var qi = parseInt(btn.dataset.q, 10);
+          var mark = btn.dataset.mark;
+          marks[qi] = mark;
+          // Highlight
+          var siblings = btn.parentElement.querySelectorAll('.tr-sm-btn');
+          siblings.forEach(function (b) { b.classList.remove('got-it','not-yet','selected'); });
+          if (mark === 'got') { btn.classList.add('got-it','selected'); }
+          else { btn.classList.add('not-yet','selected'); }
+          updateProgressNote();
+        });
+      });
+    }
+
+    function updateProgressNote() {
+      var marked = marks.filter(function (m) { return m !== null; }).length;
+      if (revealed && marked < TOTAL) {
+        document.getElementById('tr-progress-note').textContent = 'Mark all ' + TOTAL + ' sentences to submit. (' + marked + '/' + TOTAL + ' marked)';
+      }
+    }
+
+    document.getElementById('tr-reveal-btn').addEventListener('click', function () {
+      if (!revealed) {
+        // Reveal all answers
+        quiz.forEach(function (q, i) {
+          document.getElementById('tr-inp-' + i).disabled = true;
+          document.getElementById('tr-model-' + i).textContent = q.fr;
+          document.getElementById('tr-note-' + i).innerHTML = q.note;
+          document.getElementById('tr-reveal-' + i).classList.add('show');
+        });
+        revealed = true;
+        this.textContent = 'Submit score';
+        document.getElementById('tr-progress-note').textContent = 'Mark each sentence, then click Submit score.';
+      } else {
+        // Submit
+        var marked = marks.filter(function (m) { return m !== null; }).length;
+        if (marked < TOTAL) {
+          document.getElementById('tr-progress-note').textContent = 'Mark all ' + TOTAL + ' sentences first. (' + marked + '/' + TOTAL + ' marked)';
+          return;
+        }
+        lastScore = marks.filter(function (m) { return m === 'got'; }).length;
+        showResults();
+      }
+    });
+
+    function showResults() {
+      var big = document.getElementById('tr-big-score');
+      big.textContent = lastScore + '/8';
+      big.style.color = lastScore >= 7 ? '#c9a84c' : lastScore >= 5 ? '#d97706' : '#dc2626';
+
+      var verdict = document.getElementById('tr-verdict');
+      if (lastScore === 8) {
+        verdict.className = 'eq-verdict high';
+        verdict.textContent = 'Perfect — flawless Level 2 translation. Scholarship territory.';
+      } else if (lastScore >= 6) {
+        verdict.className = 'eq-verdict high';
+        verdict.textContent = 'Excellent work. ' + (8 - lastScore) + ' to revise — look back at the grammar notes.';
+      } else if (lastScore >= 4) {
+        verdict.className = 'eq-verdict mid';
+        verdict.textContent = 'Good effort — ' + lastScore + '/8. The Level 2 structures are tricky. Keep practising.';
+      } else {
+        verdict.className = 'eq-verdict low';
+        verdict.textContent = 'Score: ' + lastScore + '/8. Head back to the grammar activities to strengthen the weak areas.';
+      }
+
+      document.getElementById('eq-submit-msg').textContent = '';
+      document.getElementById('eq-lb-btn').disabled = false;
+      showScreen('tr-results');
+    }
+
+    document.getElementById('tr-retry').addEventListener('click', init);
+
+    document.getElementById('eq-lb-btn').addEventListener('click', function () {
+      var name = document.getElementById('eq-name').value.trim();
+      var msgEl = document.getElementById('eq-submit-msg');
+      if (!name) { msgEl.className = 'eq-submit-msg error'; msgEl.textContent = 'Enter your name first.'; return; }
+      this.disabled = true;
+      var pct = Math.round((lastScore / 8) * 100);
+      db.from('extension_scores').insert({ student_name: name, activity: 'translation', score: lastScore, max_score: 8, percentage: pct }).then(function (res) {
+        if (res.error) { msgEl.className = 'eq-submit-msg error'; msgEl.textContent = 'Could not submit — try again.'; document.getElementById('eq-lb-btn').disabled = false; }
+        else { msgEl.className = 'eq-submit-msg success'; msgEl.textContent = 'Score submitted! \u2713'; }
+      });
+    });
+
+    init();
+  }());
+  </script>
+</body>
+</html>

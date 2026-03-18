@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Negatives in Context | Extension Zone | Year 8 French</title>
+  <link rel="stylesheet" href="styles-v2.css">
+  <style>
+    .ext-page-banner { background: linear-gradient(135deg, #1a2744 0%, #2a3f6f 100%); border-bottom: 3px solid #c9a84c; }
+    .ext-page-banner-inner { max-width: 1200px; margin: 0 auto; padding: 36px 28px 32px; }
+    .ext-banner-kicker {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(201,168,76,0.2); color: #c9a84c;
+      border: 1.5px solid #c9a84c; border-radius: 99px;
+      padding: 3px 12px; font-size: 11px; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .ext-banner-title { font-size: clamp(22px, 3.5vw, 36px); font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+    .ext-banner-sub { font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 6px; font-weight: 600; }
+    .ext-back { display: inline-flex; align-items: center; gap: 6px; color: #c9a84c; font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 16px; }
+    .ext-back:hover { color: #e6c96b; }
+
+    .eq-screen { display: none; }
+    .eq-screen.active { display: block; }
+    .eq-card { background: var(--white); border: 2px solid var(--border); border-radius: 16px; padding: 28px 24px; margin-bottom: 20px; }
+    .eq-progress-bar { background: #e4e4e7; border-radius: 99px; height: 8px; margin-bottom: 24px; overflow: hidden; }
+    .eq-progress-fill { background: linear-gradient(90deg, #1a2744, #c9a84c); height: 100%; border-radius: 99px; transition: width 0.3s ease; }
+    .eq-q-counter { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+    .eq-q-type { font-size: 11px; font-weight: 800; color: #1a2744; text-transform: uppercase; letter-spacing: 0.07em; background: rgba(26,39,68,0.08); border-radius: 99px; padding: 2px 10px; display: inline-block; margin-bottom: 10px; }
+    .eq-q-text { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 6px; }
+    .eq-q-hint { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 18px; font-style: italic; }
+    .eq-input { width: 100%; padding: 13px 16px; border: 2px solid var(--border); border-radius: 12px; font-family: 'Dosis', sans-serif; font-size: 16px; font-weight: 700; color: var(--text); background: var(--white); outline: none; transition: border-color 0.12s; -webkit-appearance: none; }
+    .eq-input:focus { border-color: #1a2744; }
+    .eq-input.correct { border-color: #16a34a; background: #dcfce7; }
+    .eq-input.wrong   { border-color: #dc2626; background: #fee2e2; }
+    .eq-feedback { font-size: 13px; font-weight: 700; padding: 10px 14px; border-radius: 10px; margin: 14px 0; display: none; }
+    .eq-feedback.show { display: block; }
+    .eq-feedback.correct { background: #dcfce7; color: #14532d; }
+    .eq-feedback.wrong   { background: #fee2e2; color: #7f1d1d; }
+    .eq-btn { padding: 12px 24px; background: #1a2744; color: #fff; border: none; border-radius: 10px; font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; transition: background 0.12s; min-height: 48px; }
+    .eq-btn:hover { background: #2a3f6f; }
+    .eq-btn-outline { background: transparent; border: 2px solid #1a2744; color: #1a2744; border-radius: 10px; padding: 10px 22px; font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.12s; min-height: 48px; }
+    .eq-btn-outline:hover { background: #1a2744; color: #fff; }
+    .eq-results-card { background: var(--white); border: 2px solid var(--border); border-radius: 16px; padding: 36px 28px; text-align: center; margin-bottom: 24px; }
+    .eq-big-score { font-size: 80px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+    .eq-score-label { font-size: 16px; font-weight: 700; color: var(--text-muted); margin-bottom: 20px; }
+    .eq-pass-badge { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #1a2744, #2a3f6f); color: #c9a84c; border: 2px solid #c9a84c; border-radius: 14px; padding: 18px 28px; font-size: 22px; font-weight: 800; margin-bottom: 20px; }
+    .eq-try-msg { font-size: 15px; font-weight: 700; color: var(--text-mid); background: #fef3c7; border: 2px solid #fde68a; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; }
+    .eq-missed-section { background: var(--white); border: 2px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 20px; }
+    .eq-missed-section h3 { font-size: 14px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+    .eq-missed-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; }
+    .eq-missed-item:last-child { border-bottom: none; }
+    .eq-missed-en { color: var(--text-mid); flex: 1; }
+    .eq-missed-fr { color: #16a34a; font-weight: 800; flex: 1; text-align: right; }
+    .eq-lb-submit { background: var(--white); border: 2px solid var(--border); border-radius: 14px; padding: 20px 22px; margin-bottom: 20px; }
+    .eq-lb-submit h3 { font-size: 14px; font-weight: 800; margin-bottom: 12px; }
+    .eq-lb-row-form { display: flex; gap: 10px; flex-wrap: wrap; }
+    .eq-name-input { flex: 1; min-width: 160px; padding: 11px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); outline: none; -webkit-appearance: none; }
+    .eq-name-input:focus { border-color: #1a2744; }
+    .eq-lb-submit-btn { padding: 11px 22px; background: #c9a84c; color: #1a2744; border: none; border-radius: 10px; font-family: 'Dosis', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; transition: background 0.12s; min-height: 48px; }
+    .eq-lb-submit-btn:hover { background: #b8942f; }
+    .eq-lb-submit-btn:disabled { background: var(--border); color: var(--text-muted); cursor: default; }
+    .eq-submit-msg { font-size: 13px; font-weight: 700; margin-top: 8px; }
+    .eq-submit-msg.success { color: #16a34a; }
+    .eq-submit-msg.error { color: #dc2626; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
+        </div>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="header-nav" id="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="index.html" class="hn-link">Topics</a>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Grammar <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="grammar.html" class="hn-link">Grammar</a>
+            <a href="grammar-trainer.html" class="hn-link">Grammar Trainer</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Practice <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="vocab-challenge.html" class="hn-link">Vocab Challenge</a>
+            <a href="spelling-test.html" class="hn-link">Spelling Test</a>
+            <a href="speed-recall.html" class="hn-link">Speed Recall</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Exam Prep <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="speaking-prep.html" class="hn-link">Speaking Prep</a>
+            <a href="select-correct-form.html" class="hn-link">Select the Form</a>
+            <a href="guided-translation.html" class="hn-link">Guided Translation</a>
+            <a href="past-papers.html" class="hn-link">Past Papers</a>
+            <a href="checklist.html" class="hn-link">Checklist</a>
+          </div>
+        </div>
+        <a href="extension.html" class="hn-link" style="background:#1a2744;color:#c9a84c;">&#9733; Extension</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="ext-page-banner">
+    <div class="ext-page-banner-inner">
+      <a href="extension.html" class="ext-back">&#8592; Extension Zone</a>
+      <div class="ext-banner-kicker">&#10060; Negatives</div>
+      <div class="ext-banner-title">Negatives in Context</div>
+      <div class="ext-banner-sub">10 questions from a pool of 30+ &mdash; new questions every attempt &mdash; 10/10 to pass</div>
+    </div>
+  </div>
+
+  <main class="page-wrap">
+
+    <div id="eq-quiz" class="eq-screen active">
+      <div class="eq-card">
+        <div class="eq-progress-bar"><div class="eq-progress-fill" id="eq-prog"></div></div>
+        <div class="eq-q-counter" id="eq-counter">Question 1 of 10</div>
+        <div class="eq-q-type" id="eq-type"></div>
+        <div class="eq-q-text" id="eq-qtext"></div>
+        <div class="eq-q-hint" id="eq-hint"></div>
+        <input type="text" class="eq-input" id="eq-input" placeholder="Type French here…" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+        <div class="eq-feedback" id="eq-feedback"></div>
+        <div style="display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;">
+          <button class="eq-btn" id="eq-submit">Check</button>
+          <button class="eq-btn" id="eq-next" style="display:none;">Next &#8594;</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="eq-results" class="eq-screen">
+      <div class="eq-results-card">
+        <div class="eq-big-score" id="eq-big-score">0/10</div>
+        <div class="eq-score-label">Negatives in Context</div>
+        <div id="eq-pass-area"></div>
+      </div>
+      <div class="eq-missed-section" id="eq-missed" style="display:none;">
+        <h3>Questions you missed</h3>
+        <div id="eq-missed-list"></div>
+      </div>
+      <div class="eq-lb-submit">
+        <h3>&#127942; Submit to leaderboard</h3>
+        <div class="eq-lb-row-form">
+          <input type="text" class="eq-name-input" id="eq-name" placeholder="Your name" maxlength="30" autocomplete="off">
+          <button class="eq-lb-submit-btn" id="eq-lb-btn">Submit score</button>
+        </div>
+        <div class="eq-submit-msg" id="eq-submit-msg"></div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="eq-btn" id="eq-retry">&#8635; Try again — new questions</button>
+        <a href="extension.html" class="eq-btn-outline">&#8592; Extension Zone</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/nav.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var SUPABASE_URL  = 'https://dlcseuejvducbsjhqvze.supabase.co';
+    var SUPABASE_ANON = 'sb_publishable_k_59EUPnHNnJ534tF0vMvQ_Ams9wV9L';
+    var db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    /* ═══════════════════════════════════════════════════════
+       QUESTION POOL — 30+ negatives questions (type-in)
+    ═══════════════════════════════════════════════════════ */
+
+    var POOL = [
+      // ne...jamais
+      { cat: 'ne...jamais', q: 'I never eat meat.', a: 'je ne mange jamais de viande', hint: 'ne + verb + jamais; de (not du) after jamais' },
+      { cat: 'ne...jamais', q: 'She never went to the market.', a: 'elle n\'est jamais allée au marché', hint: 'perfect tense with être; jamais between auxiliary and participle' },
+      { cat: 'ne...jamais', q: 'He never speaks to her.', a: 'il ne lui parle jamais', hint: 'ne + lui parle + jamais; object pronoun before verb' },
+      { cat: 'ne...jamais', q: 'They (m) never came back.', a: 'ils ne sont jamais revenus', hint: 'perfect tense with être; jamais between auxiliary and participle; revenu + s (m.pl)' },
+      { cat: 'ne...jamais', q: 'I never wanted to go.', a: 'je n\'ai jamais voulu y aller', hint: 'jamais between auxiliary and past participle; y before infinitive' },
+      { cat: 'ne...jamais', q: 'We never eat at school.', a: 'nous ne mangeons jamais à l\'école', hint: 'ne + mangeons + jamais; à l\'école' },
+
+      // ne...plus
+      { cat: 'ne...plus', q: 'She no longer lives here.', a: 'elle n\'habite plus ici', hint: 'ne + verb + plus; n\' before vowel' },
+      { cat: 'ne...plus', q: 'He no longer goes to school.', a: 'il ne va plus à l\'école', hint: 'ne + va + plus; à l\'école' },
+      { cat: 'ne...plus', q: 'They no longer play football.', a: 'ils ne jouent plus au football', hint: 'ne + jouent + plus; au football' },
+      { cat: 'ne...plus', q: 'I don\'t eat it anymore.', a: 'je ne le mange plus', hint: 'object pronoun le before the verb; ne...plus around it' },
+      { cat: 'ne...plus', q: 'She no longer speaks to him.', a: 'elle ne lui parle plus', hint: 'ne + lui parle + plus; indirect pronoun before verb' },
+
+      // ne...rien
+      { cat: 'ne...rien', q: 'He didn\'t eat anything.', a: 'il n\'a rien mangé', hint: 'in perfect tense, rien goes between auxiliary and past participle' },
+      { cat: 'ne...rien', q: 'We didn\'t do anything wrong.', a: 'nous n\'avons rien fait de mal', hint: 'rien between auxiliary and fait; de mal at the end' },
+      { cat: 'ne...rien', q: 'Nothing happened yesterday.', a: 'il ne s\'est rien passé hier', hint: 'rien between auxiliary and passé; reflexive perfect tense' },
+      { cat: 'ne...rien', q: 'I see nothing interesting.', a: 'je ne vois rien d\'intéressant', hint: 'rien de + adjective; ne + vois + rien' },
+      { cat: 'ne...rien', q: 'She said nothing.', a: 'elle n\'a rien dit', hint: 'rien between auxiliary and dit (irregular past participle)' },
+
+      // ne...personne
+      { cat: 'ne...personne', q: 'Nobody came to the party.', a: 'personne n\'est venu à la fête', hint: 'personne at the start = subject; n\'est venu (perfect with être)' },
+      { cat: 'ne...personne', q: 'I didn\'t see anyone.', a: 'je n\'ai vu personne', hint: 'with avoir, personne comes after the past participle' },
+      { cat: 'ne...personne', q: 'I didn\'t see anyone at school.', a: 'je n\'ai vu personne à l\'école', hint: 'personne after past participle; at school = à l\'école' },
+      { cat: 'ne...personne', q: 'She didn\'t speak to anyone.', a: 'elle n\'a parlé à personne', hint: 'parlé à personne — personne at the end with preposition à' },
+      { cat: 'ne...personne', q: 'Nobody knows.', a: 'personne ne sait', hint: 'personne as subject: personne + ne + verb' },
+
+      // ne...que
+      { cat: 'ne...que', q: 'I only have one brother.', a: 'je n\'ai qu\'un frère', hint: 'ne + verb + que (elides to qu\' before vowel)' },
+      { cat: 'ne...que', q: 'She only speaks French.', a: 'elle ne parle que le français', hint: 'ne + parle + que + the thing' },
+      { cat: 'ne...que', q: 'He only ate vegetables.', a: 'il n\'a mangé que des légumes', hint: 'que comes after the past participle in perfect tense' },
+      { cat: 'ne...que', q: 'We only have two weeks.', a: 'nous n\'avons que deux semaines', hint: 'ne + avons + que; no article needed before numbers' },
+
+      // ne...pas in perfect tense
+      { cat: 'ne...pas (perfect)', q: 'She didn\'t go to school today.', a: 'elle n\'est pas allée à l\'école aujourd\'hui', hint: 'pas between auxiliary and participle in perfect tense; être verb, agree allée' },
+      { cat: 'ne...pas (perfect)', q: 'I didn\'t see him yesterday.', a: 'je ne l\'ai pas vu hier', hint: 'object pronoun l\' before auxiliary; pas between auxiliary and participle' },
+      { cat: 'ne...pas (perfect)', q: 'They (f) didn\'t arrive on time.', a: 'elles ne sont pas arrivées à l\'heure', hint: 'être verb; pas between auxiliary and participle; arrivées (f.pl)' },
+      { cat: 'ne...pas (perfect)', q: 'He didn\'t do his homework.', a: 'il n\'a pas fait ses devoirs', hint: 'pas between auxiliary and fait; ses devoirs' },
+      { cat: 'ne...pas (perfect)', q: 'We didn\'t leave early.', a: 'nous ne sommes pas partis de bonne heure', hint: 'partir = être verb; pas between auxiliary and partis' },
+
+      // Mixed advanced
+      { cat: 'Mixed', q: 'She never speaks to anyone.', a: 'elle ne parle jamais à personne', hint: 'jamais + à personne — two negatives possible with ne' },
+      { cat: 'Mixed', q: 'I no longer eat anything in the morning.', a: 'je ne mange plus rien le matin', hint: 'plus + rien can combine; le matin' },
+      { cat: 'Mixed', q: 'Nobody ever goes there.', a: 'personne n\'y va jamais', hint: 'personne as subject; y before va; jamais at the end' }
+    ];
+
+    /* ═══════════════════════════════════════════════════════
+       ENGINE
+    ═══════════════════════════════════════════════════════ */
+
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+      }
+      return a;
+    }
+
+    var TOTAL = 10;
+    var quiz = [], qIdx = 0, score = 0, mistakes = [], answered = false, lastScore = 0;
+
+    function init() {
+      quiz = shuffle(POOL).slice(0, TOTAL);
+      qIdx = 0; score = 0; mistakes = []; answered = false;
+      showScreen('eq-quiz');
+      renderQ();
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.eq-screen').forEach(function (s) { s.classList.remove('active'); });
+      document.getElementById(id).classList.add('active');
+    }
+
+    function normalize(s) {
+      return s.toLowerCase().trim()
+        .replace(/[àâä]/g,'a').replace(/[éèêë]/g,'e')
+        .replace(/[îï]/g,'i').replace(/[ôö]/g,'o')
+        .replace(/[ùûü]/g,'u').replace(/ç/g,'c')
+        .replace(/œ/g,'oe').replace(/['']/g,"'")
+        .replace(/\s+/g,' ');
+    }
+
+    function renderQ() {
+      var q = quiz[qIdx];
+      document.getElementById('eq-prog').style.width = (qIdx / TOTAL * 100) + '%';
+      document.getElementById('eq-counter').textContent = 'Question ' + (qIdx+1) + ' of ' + TOTAL;
+      document.getElementById('eq-type').textContent = q.cat;
+      document.getElementById('eq-qtext').textContent = q.q;
+      document.getElementById('eq-hint').textContent = '(' + q.hint + ')';
+      var inp = document.getElementById('eq-input');
+      inp.value = ''; inp.className = 'eq-input'; inp.disabled = false;
+      var fb = document.getElementById('eq-feedback');
+      fb.className = 'eq-feedback'; fb.textContent = '';
+      document.getElementById('eq-submit').style.display = '';
+      document.getElementById('eq-submit').disabled = false;
+      document.getElementById('eq-next').style.display = 'none';
+      answered = false;
+      setTimeout(function () { inp.focus(); }, 50);
+    }
+
+    function check() {
+      if (answered) return;
+      var q = quiz[qIdx];
+      var inp = document.getElementById('eq-input');
+      var fb = document.getElementById('eq-feedback');
+      answered = true;
+      inp.disabled = true;
+      document.getElementById('eq-submit').style.display = 'none';
+      document.getElementById('eq-next').style.display = '';
+      if (normalize(inp.value) === normalize(q.a)) {
+        inp.className = 'eq-input correct';
+        score++;
+        fb.className = 'eq-feedback correct show';
+        fb.textContent = 'Correct!';
+      } else {
+        inp.className = 'eq-input wrong';
+        fb.className = 'eq-feedback wrong show';
+        fb.textContent = 'Model answer: ' + q.a;
+        mistakes.push({ q: q.q, a: q.a });
+      }
+    }
+
+    document.getElementById('eq-submit').addEventListener('click', check);
+    document.getElementById('eq-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        if (!answered) check();
+        else if (qIdx < TOTAL - 1) { qIdx++; renderQ(); }
+        else finish();
+      }
+    });
+    document.getElementById('eq-next').addEventListener('click', function () {
+      if (qIdx < TOTAL - 1) { qIdx++; renderQ(); }
+      else finish();
+    });
+    document.getElementById('eq-retry').addEventListener('click', init);
+
+    function finish() {
+      lastScore = score;
+      document.getElementById('eq-prog').style.width = '100%';
+      var big = document.getElementById('eq-big-score');
+      big.textContent = score + '/10';
+      big.style.color = score === 10 ? '#c9a84c' : score >= 7 ? '#d97706' : '#dc2626';
+
+      var passArea = document.getElementById('eq-pass-area');
+      if (score === 10) {
+        passArea.innerHTML = '<div class="eq-pass-badge">&#9733; PASS &#10003; &mdash; Perfect score! You\'ve nailed negatives.</div>';
+      } else {
+        passArea.innerHTML = '<div class="eq-try-msg">Score: ' + score + '/10. You need 10/10 to pass. Try again &mdash; questions are different each time!</div>';
+      }
+
+      if (mistakes.length) {
+        document.getElementById('eq-missed').style.display = '';
+        var html = '';
+        mistakes.forEach(function (m) {
+          html += '<div class="eq-missed-item"><span class="eq-missed-en">' + m.q + '</span><span class="eq-missed-fr">' + m.a + '</span></div>';
+        });
+        document.getElementById('eq-missed-list').innerHTML = html;
+      } else {
+        document.getElementById('eq-missed').style.display = 'none';
+      }
+
+      document.getElementById('eq-submit-msg').textContent = '';
+      document.getElementById('eq-lb-btn').disabled = false;
+      showScreen('eq-results');
+    }
+
+    document.getElementById('eq-lb-btn').addEventListener('click', function () {
+      var name = document.getElementById('eq-name').value.trim();
+      var msgEl = document.getElementById('eq-submit-msg');
+      if (!name) { msgEl.className = 'eq-submit-msg error'; msgEl.textContent = 'Enter your name first.'; return; }
+      this.disabled = true;
+      var pct = Math.round((lastScore / 10) * 100);
+      db.from('extension_scores').insert({ student_name: name, activity: 'negatives', score: lastScore, max_score: 10, percentage: pct }).then(function (res) {
+        if (res.error) { msgEl.className = 'eq-submit-msg error'; msgEl.textContent = 'Could not submit — try again.'; document.getElementById('eq-lb-btn').disabled = false; }
+        else { msgEl.className = 'eq-submit-msg success'; msgEl.textContent = 'Score submitted! \u2713'; }
+      });
+    });
+
+    init();
+  }());
+  </script>
+</body>
+</html>
