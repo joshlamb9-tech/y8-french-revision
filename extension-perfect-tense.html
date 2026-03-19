@@ -196,43 +196,43 @@
     ═══════════════════════════════════════════════════════ */
 
     var ETRE_VERBS = [
-      { inf: 'aller',      en: 'go',      part: 'allé',    place: 'à l\'école / au marché / en ville / à Paris' },
-      { inf: 'venir',      en: 'come',    part: 'venu',    place: 'ici / à la maison / au stade' },
-      { inf: 'partir',     en: 'leave',   part: 'parti',   place: 'tôt / à midi / en vacances' },
-      { inf: 'arriver',    en: 'arrive',  part: 'arrivé',  place: 'en retard / à l\'heure / à la gare' },
-      { inf: 'rester',     en: 'stay',    part: 'resté',   place: 'à la maison / au lit / ici' },
-      { inf: 'entrer',     en: 'enter',   part: 'entré',   place: 'dans la salle / par la porte' },
-      { inf: 'sortir',     en: 'go out',  part: 'sorti',   place: 'du collège / hier soir / avec ses amis' },
-      { inf: 'monter',     en: 'go up',   part: 'monté',   place: 'dans sa chambre / au premier étage' },
-      { inf: 'descendre',  en: 'go down', part: 'descendu', place: 'au rez-de-chaussée / l\'escalier' },
-      { inf: 'tomber',     en: 'fall',    part: 'tombé',   place: 'dans la rue / par terre' },
-      { inf: 'retourner',  en: 'return',  part: 'retourné', place: 'au collège / en France' },
-      { inf: 'rentrer',    en: 'go home', part: 'rentré',  place: 'à la maison / tard' },
-      { inf: 'revenir',    en: 'come back', part: 'revenu', place: 'fatigué / de vacances' }
+      { inf: 'aller',      en: 'went',      part: 'allé',    place: 'à l\'école / au marché / en ville / à Paris' },
+      { inf: 'venir',      en: 'came',      part: 'venu',    place: 'ici / à la maison / au stade' },
+      { inf: 'partir',     en: 'left',      part: 'parti',   place: 'tôt / à midi / en vacances' },
+      { inf: 'arriver',    en: 'arrived',   part: 'arrivé',  place: 'en retard / à l\'heure / à la gare' },
+      { inf: 'rester',     en: 'stayed',    part: 'resté',   place: 'à la maison / au lit / ici' },
+      { inf: 'entrer',     en: 'went in',   part: 'entré',   place: 'dans la salle / par la porte' },
+      { inf: 'sortir',     en: 'went out',  part: 'sorti',   place: 'du collège / hier soir / avec ses amis' },
+      { inf: 'monter',     en: 'went up',   part: 'monté',   place: 'dans sa chambre / au premier étage' },
+      { inf: 'descendre',  en: 'went down', part: 'descendu', place: 'au rez-de-chaussée / l\'escalier' },
+      { inf: 'tomber',     en: 'fell',      part: 'tombé',   place: 'dans la rue / par terre' },
+      { inf: 'retourner',  en: 'returned',  part: 'retourné', place: 'au collège / en France' },
+      { inf: 'rentrer',    en: 'went home', part: 'rentré',  place: 'à la maison / tard' },
+      { inf: 'revenir',    en: 'came back', part: 'revenu',  place: 'fatigué / de vacances' }
     ];
 
     var IRREGULAR_PARTS = [
-      { inf: 'faire', aux: 'avoir', part: 'fait',   en: 'do/make' },
-      { inf: 'prendre', aux: 'avoir', part: 'pris',  en: 'take' },
-      { inf: 'mettre', aux: 'avoir', part: 'mis',   en: 'put' },
-      { inf: 'dire',   aux: 'avoir', part: 'dit',   en: 'say' },
-      { inf: 'voir',   aux: 'avoir', part: 'vu',    en: 'see' },
-      { inf: 'lire',   aux: 'avoir', part: 'lu',    en: 'read' },
-      { inf: 'boire',  aux: 'avoir', part: 'bu',    en: 'drink' },
-      { inf: 'pouvoir',aux: 'avoir', part: 'pu',    en: 'be able to' },
-      { inf: 'vouloir',aux: 'avoir', part: 'voulu', en: 'want' },
-      { inf: 'savoir', aux: 'avoir', part: 'su',    en: 'know' },
-      { inf: 'avoir',  aux: 'avoir', part: 'eu',    en: 'have' },
-      { inf: 'être',   aux: 'avoir', part: 'été',   en: 'be' }
+      { inf: 'faire',   aux: 'avoir', part: 'fait',   en: 'did/made' },
+      { inf: 'prendre', aux: 'avoir', part: 'pris',   en: 'took' },
+      { inf: 'mettre',  aux: 'avoir', part: 'mis',    en: 'put' },
+      { inf: 'dire',    aux: 'avoir', part: 'dit',    en: 'said' },
+      { inf: 'voir',    aux: 'avoir', part: 'vu',     en: 'saw' },
+      { inf: 'lire',    aux: 'avoir', part: 'lu',     en: 'read' },
+      { inf: 'boire',   aux: 'avoir', part: 'bu',     en: 'drank' },
+      { inf: 'pouvoir', aux: 'avoir', part: 'pu',     en: 'was able to' },
+      { inf: 'vouloir', aux: 'avoir', part: 'voulu',  en: 'wanted' },
+      { inf: 'savoir',  aux: 'avoir', part: 'su',     en: 'found out' },
+      { inf: 'avoir',   aux: 'avoir', part: 'eu',     en: 'had' },
+      { inf: 'être',    aux: 'avoir', part: 'été',    en: 'was/were' }
     ];
 
     var REFLEXIVE = [
-      { fr_inf: 'se lever', en: 'get up' },
-      { fr_inf: 's\'habiller', en: 'get dressed' },
-      { fr_inf: 'se coucher', en: 'go to bed' },
-      { fr_inf: 'se réveiller', en: 'wake up' },
-      { fr_inf: 'se laver', en: 'wash' },
-      { fr_inf: 'se brosser les dents', en: 'brush teeth' }
+      { fr_inf: 'se lever',              en: 'got up' },
+      { fr_inf: 's\'habiller',           en: 'got dressed' },
+      { fr_inf: 'se coucher',            en: 'went to bed' },
+      { fr_inf: 'se réveiller',          en: 'woke up' },
+      { fr_inf: 'se laver',              en: 'washed' },
+      { fr_inf: 'se brosser les dents',  en: 'brushed their teeth' }
     ];
 
     var SUBJECTS = [
@@ -265,7 +265,7 @@
 
     function buildIrregQ(subj, verb) {
       var fr = subj.aux_avoir + ' ' + verb.part;
-      var en = subj.en + ' ' + verb.en + ' (give the full passé composé).';
+      var en = subj.en + ' ' + verb.en + ' [passé composé].';
       return { type: 'Irregular past participle', q: en, a: fr, hint: verb.inf + ' — irregular past participle, uses avoir' };
     }
 
