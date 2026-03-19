@@ -236,14 +236,17 @@
     ];
 
     var SUBJECTS = [
-      { pron: 'je',   aux_avoir: 'j\'ai',    aux_etre: 'je suis',      refl: 'je me suis',    gen: 'm', num: 's', en: 'I' },
-      { pron: 'tu',   aux_avoir: 'tu as',    aux_etre: 'tu es',        refl: 'tu t\'es',      gen: 'm', num: 's', en: 'you' },
-      { pron: 'il',   aux_avoir: 'il a',     aux_etre: 'il est',       refl: 'il s\'est',     gen: 'm', num: 's', en: 'he' },
-      { pron: 'elle', aux_avoir: 'elle a',   aux_etre: 'elle est',     refl: 'elle s\'est',   gen: 'f', num: 's', en: 'she' },
+      { pron: 'je',   aux_avoir: 'j\'ai',    aux_etre: 'je suis',      refl: 'je me suis',       gen: 'm', num: 's', en: 'I' },
+      { pron: 'je',   aux_avoir: 'j\'ai',    aux_etre: 'je suis',      refl: 'je me suis',       gen: 'f', num: 's', en: 'I (fem.)' },
+      { pron: 'tu',   aux_avoir: 'tu as',    aux_etre: 'tu es',        refl: 'tu t\'es',         gen: 'm', num: 's', en: 'you' },
+      { pron: 'tu',   aux_avoir: 'tu as',    aux_etre: 'tu es',        refl: 'tu t\'es',         gen: 'f', num: 's', en: 'you (fem.)' },
+      { pron: 'il',   aux_avoir: 'il a',     aux_etre: 'il est',       refl: 'il s\'est',        gen: 'm', num: 's', en: 'he' },
+      { pron: 'elle', aux_avoir: 'elle a',   aux_etre: 'elle est',     refl: 'elle s\'est',      gen: 'f', num: 's', en: 'she' },
       { pron: 'nous', aux_avoir: 'nous avons', aux_etre: 'nous sommes', refl: 'nous nous sommes', gen: 'm', num: 'p', en: 'we' },
-      { pron: 'vous', aux_avoir: 'vous avez', aux_etre: 'vous êtes',   refl: 'vous vous êtes', gen: 'm', num: 'p', en: 'you (pl)' },
-      { pron: 'ils',  aux_avoir: 'ils ont',   aux_etre: 'ils sont',    refl: 'ils se sont',   gen: 'm', num: 'p', en: 'they (m)' },
-      { pron: 'elles',aux_avoir: 'elles ont', aux_etre: 'elles sont',  refl: 'elles se sont', gen: 'f', num: 'p', en: 'they (f)' }
+      { pron: 'nous', aux_avoir: 'nous avons', aux_etre: 'nous sommes', refl: 'nous nous sommes', gen: 'f', num: 'p', en: 'we (fem.)' },
+      { pron: 'vous', aux_avoir: 'vous avez', aux_etre: 'vous êtes',   refl: 'vous vous êtes',   gen: 'm', num: 'p', en: 'you (pl.)' },
+      { pron: 'ils',  aux_avoir: 'ils ont',   aux_etre: 'ils sont',    refl: 'ils se sont',      gen: 'm', num: 'p', en: 'they (m.)' },
+      { pron: 'elles',aux_avoir: 'elles ont', aux_etre: 'elles sont',  refl: 'elles se sont',    gen: 'f', num: 'p', en: 'they (fem.)' }
     ];
 
     function agreeEtre(part, gen, num) {
