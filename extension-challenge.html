@@ -617,6 +617,7 @@
 
       var verdict = document.getElementById('eq-verdict');
       if (score >= 12) {
+        localStorage.setItem('ext_unlocked', '1');
         verdict.className = 'eq-verdict pass';
         verdict.innerHTML = '&#9989; Excellent — you\'re ready for the challenge activities. Head back to the Extension Zone and try them all.';
       } else {

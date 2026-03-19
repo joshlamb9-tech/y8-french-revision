@@ -169,6 +169,9 @@
       transition: background 0.15s;
     }
     .ext-card-btn:hover { background: #2a3f6f; }
+    .ext-card.locked { opacity: 0.45; pointer-events: none; filter: grayscale(0.4); }
+    .ext-lock-notice { text-align: center; background: #fff8e1; border: 1.5px solid #c9a84c; border-radius: 12px; padding: 14px 20px; margin-bottom: 24px; font-size: 14px; font-weight: 700; color: #92640a; display: none; }
+    .ext-lock-notice.show { display: block; }
 
     /* ─── PASS THRESHOLD BADGE ─── */
     .ext-rule-box {
@@ -358,6 +361,7 @@
     </div>
 
     <!-- ACTIVITY CARDS -->
+    <div class="ext-lock-notice" id="ext-lock-notice">&#128274; Complete the diagnostic and score 12/15 or above to unlock the challenge activities.</div>
     <div class="ext-grid">
 
       <a href="extension-perfect-tense.html" class="ext-card">
@@ -554,6 +558,12 @@
     });
 
     loadLeaderboard('all');
+
+    // Gate activity cards behind diagnostic
+    if (!localStorage.getItem('ext_unlocked')) {
+      document.querySelectorAll('.ext-grid .ext-card:not(.diagnostic)').forEach(function(c){ c.classList.add('locked'); });
+      document.getElementById('ext-lock-notice').classList.add('show');
+    }
   }());
   </script>
 </body>
