@@ -33,6 +33,9 @@
     .eq-input:focus { border-color: #1a2744; }
     .eq-input.correct { border-color: #16a34a; background: #dcfce7; }
     .eq-input.wrong   { border-color: #dc2626; background: #fee2e2; }
+    .eq-accent-bar { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+    .eq-ab { background: #f1f5f9; border: 1.5px solid #cbd5e1; border-radius: 7px; padding: 5px 11px; font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 700; color: #1a2744; cursor: pointer; transition: background 0.1s; -webkit-appearance: none; }
+    .eq-ab:active { background: #dde3ea; }
     .eq-feedback { font-size: 13px; font-weight: 700; padding: 10px 14px; border-radius: 10px; margin: 14px 0; display: none; }
     .eq-feedback.show { display: block; }
     .eq-feedback.correct { background: #dcfce7; color: #14532d; }
@@ -130,6 +133,7 @@
         <div class="eq-q-type" id="eq-type"></div>
         <div class="eq-q-text" id="eq-qtext"></div>
         <div class="eq-q-hint" id="eq-hint"></div>
+        <div class="eq-accent-bar" id="eq-accent-bar"></div>
         <input type="text" class="eq-input" id="eq-input" placeholder="Type French here…" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
         <div class="eq-feedback" id="eq-feedback"></div>
         <div style="display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;">
@@ -367,7 +371,26 @@
     });
 
     init();
-  }());
-  </script>
+        var ACCENTS = ['é','è','ê','ë','à','â','ç','ù','û','ô','î','ï','œ'];
+    function buildAccentBar() {
+      var bar = document.getElementById('eq-accent-bar');
+      if (!bar) return;
+      ACCENTS.forEach(function(ch) {
+        var btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'eq-ab'; btn.textContent = ch;
+        btn.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          var inp = document.getElementById('eq-input');
+          var s = inp.selectionStart, end = inp.selectionEnd;
+          inp.value = inp.value.substring(0, s) + ch + inp.value.substring(end);
+          inp.selectionStart = inp.selectionEnd = s + 1;
+          inp.focus();
+        });
+        bar.appendChild(btn);
+      });
+    }
+    buildAccentBar();
+  })();
+</script>
 </body>
 </html>

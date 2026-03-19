@@ -155,6 +155,7 @@
         </ul>
       </div>
 
+      <div class="eq-accent-bar" id="eq-accent-bar" style="margin-bottom:16px;"></div>
       <div id="tr-cards"></div>
 
       <div class="tr-submit-all-wrap">
@@ -573,7 +574,31 @@
     });
 
     init();
-  }());
-  </script>
+    var ACCENTS = ['é','è','ê','ë','à','â','ç','ù','û','ô','î','ï','œ'];
+    var lastFocused = null;
+    document.addEventListener('focusin', function(e) {
+      if (e.target && e.target.classList.contains('tr-input')) lastFocused = e.target;
+    });
+    function buildAccentBar() {
+      var bar = document.getElementById('eq-accent-bar');
+      if (!bar) return;
+      ACCENTS.forEach(function(ch) {
+        var btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'eq-ab'; btn.textContent = ch;
+        btn.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          var inp = lastFocused || document.querySelector('.tr-input');
+          if (!inp) return;
+          var s = inp.selectionStart, end = inp.selectionEnd;
+          inp.value = inp.value.substring(0, s) + ch + inp.value.substring(end);
+          inp.selectionStart = inp.selectionEnd = s + 1;
+          inp.focus();
+        });
+        bar.appendChild(btn);
+      });
+    }
+    buildAccentBar();
+  })();
+</script>
 </body>
 </html>
