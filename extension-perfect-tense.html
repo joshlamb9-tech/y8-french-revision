@@ -256,13 +256,13 @@
       var place = places[Math.floor(Math.random() * places.length)];
       var fr = subj.aux_etre + ' ' + partAgreed + ' ' + place;
       var en = subj.en + ' ' + verb.en + ' ' + place.replace(/à /,'to ').replace(/au /,'to the ').replace(/en /,'to ') + '.';
-      return { type: 'Être verb + agreement', q: en, a: fr, hint: 'être auxiliary + past participle agreement' };
+      return { type: 'Être verb + agreement', q: en, a: fr, hint: verb.inf + ' — être verb, remember past participle agreement' };
     }
 
     function buildIrregQ(subj, verb) {
       var fr = subj.aux_avoir + ' ' + verb.part;
       var en = subj.en + ' ' + verb.en + ' (give the full passé composé).';
-      return { type: 'Irregular past participle', q: en, a: fr, hint: 'Auxiliary avoir + irregular past participle: ' + verb.part };
+      return { type: 'Irregular past participle', q: en, a: fr, hint: verb.inf + ' — irregular past participle, uses avoir' };
     }
 
     function buildReflexQ(subj, verb) {
@@ -277,7 +277,7 @@
       var partAgreed = (verb.fr_inf === 'se brosser les dents') ? partBase : agreeEtre(partBase, subj.gen, subj.num);
       var fr = subj.refl + ' ' + partAgreed;
       var en = subj.en + ' ' + verb.en + '.';
-      return { type: 'Reflexive verb', q: en, a: fr, hint: 'Reflexive verbs use être; agree the participle (not se brosser les dents — body part is the direct object)' };
+      return { type: 'Reflexive verb', q: en, a: fr, hint: verb.fr_inf + ' — reflexive, uses être, agree the participle' };
     }
 
     function generatePool() {
