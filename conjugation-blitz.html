@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conjugation Blitz | Year 8 French Revision</title>
+  <link rel="stylesheet" href="styles-v2.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#003B72">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CE French">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/y8-french-revision/sw.js');
+      });
+    }
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GRSHMVBVGD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GRSHMVBVGD');
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <!--
+  ══════════════════════════════════════════════════════════
+  SUPABASE SETUP — run this SQL once in the Supabase editor:
+  https://supabase.com/dashboard/project/dlcseuejvducbsjhqvze/sql/new
+
+  CREATE TABLE IF NOT EXISTS conjugation_blitz_scores (
+    id bigserial primary key,
+    initials text not null,
+    score int not null,
+    total int not null,
+    tense text not null,
+    created_at timestamptz default now()
+  );
+  ALTER TABLE conjugation_blitz_scores ENABLE ROW LEVEL SECURITY;
+  CREATE POLICY "anon insert" ON conjugation_blitz_scores FOR INSERT TO anon WITH CHECK (true);
+  CREATE POLICY "anon select" ON conjugation_blitz_scores FOR SELECT TO anon USING (true);
+
+  CREATE OR REPLACE FUNCTION get_blitz_leaderboard(p_tense text DEFAULT 'all')
+  RETURNS TABLE(initials text, score int, total int, pct numeric, created_at timestamptz)
+  LANGUAGE sql SECURITY DEFINER AS $$
+    SELECT initials, score, total,
+           round(score::numeric / NULLIF(total,0) * 100) AS pct,
+           created_at
+    FROM conjugation_blitz_scores
+    WHERE p_tense = 'all' OR tense = p_tense
+    ORDER BY (score::numeric / NULLIF(total,0)) DESC, score DESC, created_at ASC
+    LIMIT 10;
+  $$;
+  ══════════════════════════════════════════════════════════
+  -->
+
+  <style>
+    /* ─── SCREENS ─── */
+    .blitz-screen { display: none; }
+    .blitz-screen.active { display: block; }
+
+    /* ─── SETUP ─── */
+    .blitz-section-label {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-muted);
+      margin: 24px 0 10px;
+    }
+    .blitz-tense-row {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 4px;
+    }
+    .blitz-tense-btn {
+      flex: 1; min-width: 140px;
+      padding: 14px 18px;
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 12px; cursor: pointer;
+      font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 700;
+      color: var(--text); text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .blitz-tense-btn .bt-sub { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
+    .blitz-tense-btn:hover { border-color: #a78bfa; background: #f5f3ff; }
+    .blitz-tense-btn.sel { border-color: #7c3aed; background: #ede9fe; color: #4c1d95; }
+    .blitz-tense-btn.sel .bt-sub { color: #7c3aed; }
+
+    .blitz-length-row {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;
+    }
+    .blitz-len-btn {
+      padding: 10px 22px;
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 10px; cursor: pointer;
+      font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 700;
+      color: var(--text); transition: border-color 0.15s, background 0.15s;
+    }
+    .blitz-len-btn:hover { border-color: #a78bfa; background: #f5f3ff; }
+    .blitz-len-btn.sel { border-color: #7c3aed; background: #ede9fe; color: #4c1d95; }
+
+    .blitz-verb-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 8px; margin-bottom: 4px;
+      max-height: 260px; overflow-y: auto; padding-right: 4px;
+    }
+    .blitz-verb-btn {
+      padding: 10px 14px;
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 10px; cursor: pointer;
+      font-family: 'Dosis', sans-serif; font-size: 14px; font-weight: 700;
+      color: var(--text); text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .blitz-verb-btn .vb-en { font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-top: 1px; }
+    .blitz-verb-btn:hover { border-color: #a78bfa; background: #f5f3ff; }
+    .blitz-verb-btn.sel { border-color: #7c3aed; background: #ede9fe; color: #4c1d95; }
+    .blitz-verb-btn.sel .vb-en { color: #7c3aed; }
+
+    .blitz-verb-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 8px; margin-bottom: 8px;
+    }
+    .blitz-verb-count { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+    .blitz-filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .blitz-filter-btn {
+      background: none; border: none; padding: 0;
+      font-family: 'Dosis', sans-serif; font-size: 13px; font-weight: 700;
+      color: #7c3aed; cursor: pointer; text-decoration: underline;
+    }
+
+    /* ─── QUESTION SCREEN ─── */
+    .blitz-header-row {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
+    }
+    .blitz-score-pill {
+      background: #ede9fe; color: #4c1d95;
+      border-radius: 99px; padding: 6px 16px;
+      font-size: 14px; font-weight: 800;
+    }
+    .blitz-progress-wrap { margin-bottom: 28px; }
+    .blitz-prog-meta {
+      display: flex; justify-content: space-between;
+      font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .blitz-prog-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .blitz-prog-fill { height: 100%; background: #7c3aed; border-radius: 99px; transition: width 0.3s ease; }
+
+    .blitz-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 28px 24px;
+      margin-bottom: 16px;
+    }
+    .blitz-card-badges {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+    }
+    .blitz-tense-badge {
+      padding: 4px 12px; border-radius: 99px;
+      font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .tbadge-present { background: #dbeafe; color: #1e40af; }
+    .tbadge-pc      { background: #fce7f3; color: #9d174d; }
+    .tbadge-nf      { background: #dcfce7; color: #166534; }
+
+    .blitz-pronoun {
+      font-size: 15px; font-weight: 800; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;
+    }
+    .blitz-infinitive {
+      font-size: 36px; font-weight: 800; color: var(--text); line-height: 1.1; margin-bottom: 4px;
+    }
+    .blitz-meaning {
+      font-size: 14px; color: var(--text-muted); font-weight: 600; margin-bottom: 24px;
+    }
+    .blitz-input-wrap {
+      position: relative;
+    }
+    .blitz-input {
+      width: 100%; box-sizing: border-box;
+      font-family: 'Dosis', sans-serif;
+      font-size: 22px; font-weight: 700;
+      padding: 14px 18px;
+      border: 2.5px solid var(--border);
+      border-radius: 12px;
+      background: var(--white); color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .blitz-input:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
+    .blitz-input.correct  { border-color: #16a34a; background: #f0fdf4; color: #166534; }
+    .blitz-input.incorrect { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
+
+    .blitz-feedback {
+      min-height: 28px; margin-top: 10px;
+      font-size: 15px; font-weight: 700;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .blitz-feedback.ok  { color: #16a34a; }
+    .blitz-feedback.bad { color: #dc2626; }
+    .blitz-correct-ans { font-size: 17px; font-weight: 800; color: #15803d; }
+
+    .blitz-accent-bar {
+      display: flex; flex-wrap: wrap; gap: 5px; margin: 12px 0 16px;
+      align-items: center;
+    }
+    .blitz-accent-label { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-right: 4px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .blitz-ab {
+      width: 34px; height: 34px;
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 7px; font-family: 'Dosis', sans-serif;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: all 0.1s; color: var(--text);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .blitz-ab:hover { background: #ede9fe; border-color: #7c3aed; color: #4c1d95; }
+
+    .blitz-btn-row {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px;
+    }
+    #blitz-check {
+      padding: 13px 28px;
+      background: #7c3aed; color: #fff;
+      border: none; border-radius: 10px;
+      font-family: 'Dosis', sans-serif; font-size: 16px; font-weight: 800;
+      cursor: pointer; transition: background 0.15s;
+    }
+    #blitz-check:hover { background: #6d28d9; }
+    #blitz-check:disabled { background: #c4b5fd; cursor: default; }
+    #blitz-next {
+      padding: 13px 24px;
+      background: var(--white); color: #7c3aed;
+      border: 2px solid #7c3aed; border-radius: 10px;
+      font-family: 'Dosis', sans-serif; font-size: 16px; font-weight: 800;
+      cursor: pointer; transition: all 0.15s; display: none;
+    }
+    #blitz-next:hover { background: #ede9fe; }
+
+    /* ─── RESULTS ─── */
+    .blitz-result-score {
+      display: flex; align-items: center; gap: 24px;
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 16px; padding: 28px 32px; margin-bottom: 28px;
+    }
+    .blitz-score-n { font-size: 60px; font-weight: 800; line-height: 1; color: #7c3aed; flex-shrink: 0; }
+    .blitz-score-msg { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+    .blitz-score-sub { font-size: 14px; color: var(--text-muted); }
+
+    .blitz-submit-card {
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 14px; padding: 20px 24px; margin-bottom: 28px;
+    }
+    .blitz-submit-card h3 {
+      font-size: 14px; font-weight: 800; margin: 0 0 12px;
+      color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .blitz-initials-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .blitz-initials-input {
+      font-family: 'Dosis', sans-serif; font-size: 18px; font-weight: 800;
+      padding: 10px 16px; width: 120px;
+      border: 2px solid var(--border); border-radius: 10px;
+      background: var(--white); color: var(--text); outline: none;
+      text-transform: uppercase;
+      transition: border-color 0.15s;
+    }
+    .blitz-initials-input:focus { border-color: #7c3aed; }
+    #blitz-submit-score {
+      padding: 11px 22px;
+      background: #7c3aed; color: #fff;
+      border: none; border-radius: 10px;
+      font-family: 'Dosis', sans-serif; font-size: 15px; font-weight: 800;
+      cursor: pointer; transition: background 0.15s;
+    }
+    #blitz-submit-score:hover { background: #6d28d9; }
+    #blitz-submit-score:disabled { background: #c4b5fd; cursor: default; }
+    .blitz-submit-msg { font-size: 13px; font-weight: 700; margin-top: 10px; }
+    .blitz-submit-msg.ok  { color: #16a34a; }
+    .blitz-submit-msg.err { color: #dc2626; }
+
+    /* ─── LEADERBOARD ─── */
+    .blitz-lb {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 14px; overflow: hidden; margin-bottom: 28px;
+    }
+    .blitz-lb-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; border-bottom: 1.5px solid var(--border);
+      background: #f8fafc;
+    }
+    .blitz-lb-title { font-size: 15px; font-weight: 800; color: var(--text); }
+    .blitz-lb-body { padding: 0; }
+    .blitz-lb-row {
+      display: grid; grid-template-columns: 36px 1fr 80px 60px;
+      padding: 10px 18px; border-bottom: 1px solid var(--border);
+      align-items: center; font-size: 14px; font-weight: 700;
+    }
+    .blitz-lb-row:last-child { border-bottom: none; }
+    .blitz-lb-row.top1 { background: #fffbeb; }
+    .blitz-lb-row.top2 { background: #f8fafc; }
+    .blitz-lb-row.top3 { background: #fdf4ff; }
+    .blitz-lb-rank { font-size: 12px; font-weight: 800; color: var(--text-muted); }
+    .blitz-lb-name { font-size: 16px; font-weight: 800; color: var(--text); }
+    .blitz-lb-score { font-size: 14px; font-weight: 700; color: var(--text-muted); text-align: right; }
+    .blitz-lb-pct { font-size: 14px; font-weight: 800; color: #7c3aed; text-align: right; }
+    .blitz-lb-empty { padding: 20px 18px; font-size: 14px; color: var(--text-muted); font-weight: 600; }
+    .blitz-lb-loading { padding: 20px 18px; font-size: 14px; color: var(--text-muted); font-weight: 600; }
+
+    .blitz-action-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">FR</div>
+        <div>
+          <div class="brand-name">French Revision</div>
+          <div class="brand-sub">Mowden Hall &mdash; Year 8 CE</div>
+        </div>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="header-nav" id="header-nav">
+        <a href="index.html" class="hn-link">Home</a>
+        <a href="index.html" class="hn-link">Topics</a>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Grammar <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="grammar.html" class="hn-link">Grammar</a>
+            <a href="grammar-trainer.html" class="hn-link">Grammar Trainer</a>
+            <a href="conjugation-blitz.html" class="hn-link">Conjugation Blitz ⚡</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Practice <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="vocab-challenge.html" class="hn-link">Vocab Challenge</a>
+            <a href="spelling-test.html" class="hn-link">Spelling Test</a>
+            <a href="speed-recall.html" class="hn-link">Speed Recall</a>
+          </div>
+        </div>
+        <div class="hn-group">
+          <a href="#" class="hn-link hn-group-toggle">Exam Prep <svg class="hn-arrow" viewBox="0 0 10 6" width="9" height="6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+          <div class="hn-dropdown">
+            <a href="speaking-prep.html" class="hn-link">Speaking Prep</a>
+            <a href="select-correct-form.html" class="hn-link">Select the Form <span style="font-size:10px;background:#dcfce7;color:#166534;border-radius:4px;padding:1px 5px;margin-left:4px;font-weight:800;">L1</span></a>
+            <a href="guided-translation.html" class="hn-link">Guided Translation <span style="font-size:10px;background:#e0e7ff;color:#1e1b4b;border-radius:4px;padding:1px 5px;margin-left:4px;font-weight:800;">L2</span></a>
+            <a href="past-papers.html" class="hn-link">Past Papers</a>
+            <a href="checklist.html" class="hn-link">Checklist</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <div class="page-banner-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Conjugation Blitz</span>
+      </div>
+      <div class="hero-kicker kicker-purple">
+        <div class="kicker-dot"></div>
+        Rapid-Fire Practice
+      </div>
+      <h1 class="hero-title" style="margin-top:12px;">⚡ Conjugation Blitz</h1>
+      <p class="hero-desc">One conjugation at a time &mdash; pick your tense and verbs, beat your score, top the leaderboard</p>
+    </div>
+  </div>
+
+  <main class="content-wrap">
+
+    <!-- ══════════════════════════════
+         SCREEN 1 — SETUP
+    ══════════════════════════════ -->
+    <div id="blitz-setup" class="blitz-screen active">
+
+      <div class="blitz-section-label">1. Choose a Tense</div>
+      <div class="blitz-tense-row" id="blitz-tense-row">
+        <button class="blitz-tense-btn sel" data-tense="present">
+          🕐 Présent
+          <span class="bt-sub">-er / -ir / -re &amp; irregular verbs</span>
+        </button>
+        <button class="blitz-tense-btn" data-tense="pc">
+          ⏪ Passé Composé
+          <span class="bt-sub">auxiliary + past participle</span>
+        </button>
+        <button class="blitz-tense-btn" data-tense="nf">
+          ⏩ Futur Proche
+          <span class="bt-sub">aller + infinitif</span>
+        </button>
+      </div>
+
+      <div class="blitz-section-label">2. Session Length</div>
+      <div class="blitz-length-row" id="blitz-length-row">
+        <button class="blitz-len-btn" data-len="10">10 questions</button>
+        <button class="blitz-len-btn sel" data-len="20">20 questions</button>
+        <button class="blitz-len-btn" data-len="30">30 questions</button>
+      </div>
+
+      <div class="blitz-section-label">3. Select Verbs</div>
+      <div class="blitz-verb-toolbar">
+        <span class="blitz-verb-count" id="blitz-verb-count">0 verbs selected</span>
+        <div class="blitz-filter-row">
+          <button class="blitz-filter-btn" data-filter="all">All</button>
+          <button class="blitz-filter-btn" data-filter="er">-ER</button>
+          <button class="blitz-filter-btn" data-filter="ir">-IR</button>
+          <button class="blitz-filter-btn" data-filter="re">-RE</button>
+          <button class="blitz-filter-btn" data-filter="irreg">Irregular</button>
+          <button class="blitz-filter-btn" data-filter="none">Clear</button>
+        </div>
+      </div>
+      <div class="blitz-verb-row" id="blitz-verb-grid"></div>
+
+      <div style="margin-top:20px;">
+        <button class="btn btn-primary" id="blitz-start"
+          style="background:#7c3aed;color:#fff;border:none;padding:14px 32px;border-radius:10px;font-family:'Dosis',sans-serif;font-size:16px;font-weight:800;cursor:pointer;"
+          disabled>Start ⚡</button>
+      </div>
+
+    </div><!-- /setup -->
+
+
+    <!-- ══════════════════════════════
+         SCREEN 2 — QUESTION
+    ══════════════════════════════ -->
+    <div id="blitz-question" class="blitz-screen">
+
+      <div class="blitz-header-row">
+        <span id="blitz-q-label" style="font-size:14px;font-weight:700;color:var(--text-muted);">Question 1 / 20</span>
+        <span class="blitz-score-pill" id="blitz-score-pill">0 correct</span>
+      </div>
+
+      <div class="blitz-progress-wrap">
+        <div class="blitz-prog-bar"><div class="blitz-prog-fill" id="blitz-prog-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="blitz-card" id="blitz-card">
+        <div class="blitz-card-badges">
+          <span class="blitz-tense-badge" id="blitz-q-tense-badge"></span>
+        </div>
+        <div class="blitz-pronoun" id="blitz-q-pronoun"></div>
+        <div class="blitz-infinitive" id="blitz-q-inf"></div>
+        <div class="blitz-meaning" id="blitz-q-meaning"></div>
+
+        <div class="blitz-input-wrap">
+          <input class="blitz-input" id="blitz-input" type="text"
+            autocomplete="off" autocorrect="off" autocapitalize="off"
+            spellcheck="false" placeholder="Type the conjugated form…">
+        </div>
+        <div class="blitz-feedback" id="blitz-feedback"></div>
+      </div>
+
+      <div class="blitz-accent-bar" id="blitz-accent-bar">
+        <span class="blitz-accent-label">Accents</span>
+      </div>
+
+      <div class="blitz-btn-row">
+        <button id="blitz-check">Check ✓</button>
+        <button id="blitz-next">Next →</button>
+      </div>
+
+    </div><!-- /question -->
+
+
+    <!-- ══════════════════════════════
+         SCREEN 3 — RESULTS
+    ══════════════════════════════ -->
+    <div id="blitz-results" class="blitz-screen">
+
+      <div class="blitz-result-score">
+        <div class="blitz-score-n" id="blitz-res-pct">0%</div>
+        <div>
+          <div class="blitz-score-msg" id="blitz-res-msg"></div>
+          <div class="blitz-score-sub" id="blitz-res-sub"></div>
+        </div>
+      </div>
+
+      <div class="blitz-submit-card" id="blitz-submit-card">
+        <h3>🏆 Add to Leaderboard</h3>
+        <div class="blitz-initials-row">
+          <input class="blitz-initials-input" id="blitz-initials" type="text"
+            maxlength="4" placeholder="INIT" autocomplete="off">
+          <button id="blitz-submit-score">Submit Score</button>
+        </div>
+        <div class="blitz-submit-msg" id="blitz-submit-msg"></div>
+      </div>
+
+      <div class="blitz-lb" id="blitz-lb">
+        <div class="blitz-lb-header">
+          <span class="blitz-lb-title" id="blitz-lb-title">🏆 Top Scores</span>
+        </div>
+        <div class="blitz-lb-body" id="blitz-lb-rows">
+          <div class="blitz-lb-loading">Loading…</div>
+        </div>
+      </div>
+
+      <div class="blitz-action-row">
+        <button class="btn btn-outline" id="blitz-retry" style="cursor:pointer;">↺ Same Setup</button>
+        <button class="btn btn-ghost" id="blitz-new" style="cursor:pointer;">← New Session</button>
+      </div>
+
+    </div><!-- /results -->
+
+  </main>
+
+  <footer>
+    <span class="footer-brand">Mowden Hall School</span>
+    <span>Found a problem or want to request a feature? Email <a href="mailto:jlamb@mowdenhall.org.uk">Mr Lamb</a></span>
+  </footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ══════════════════════════════════════════
+     VERB DATA
+  ══════════════════════════════════════════ */
+  var PRONOUNS = ['je', 'tu', 'il/elle', 'nous', 'vous', 'ils/elles'];
+
+  var AVOIR_PRES = ['ai','as','a','avons','avez','ont'];
+  var ETRE_PRES  = ['suis','es','est','sommes','êtes','sont'];
+  var ALLER_PRES = ['vais','vas','va','allons','allez','vont'];
+
+  var VERBS = [
+    // Regular -ER
+    { inf:'parler',     en:'to speak',      type:'er',   present:['parle','parles','parle','parlons','parlez','parlent'],        pc_aux:'avoir', pc_part:'parlé' },
+    { inf:'aimer',      en:'to like/love',  type:'er',   present:['aime','aimes','aime','aimons','aimez','aiment'],             pc_aux:'avoir', pc_part:'aimé' },
+    { inf:'habiter',    en:'to live',       type:'er',   present:['habite','habites','habite','habitons','habitez','habitent'],  pc_aux:'avoir', pc_part:'habité' },
+    { inf:'regarder',   en:'to watch',      type:'er',   present:['regarde','regardes','regarde','regardons','regardez','regardent'], pc_aux:'avoir', pc_part:'regardé' },
+    { inf:'écouter',    en:'to listen to',  type:'er',   present:['écoute','écoutes','écoute','écoutons','écoutez','écoutent'], pc_aux:'avoir', pc_part:'écouté' },
+    { inf:'jouer',      en:'to play',       type:'er',   present:['joue','joues','joue','jouons','jouez','jouent'],             pc_aux:'avoir', pc_part:'joué' },
+    { inf:'travailler', en:'to work',       type:'er',   present:['travaille','travailles','travaille','travaillons','travaillez','travaillent'], pc_aux:'avoir', pc_part:'travaillé' },
+    { inf:'manger',     en:'to eat',        type:'er',   present:['mange','manges','mange','mangeons','mangez','mangent'],      pc_aux:'avoir', pc_part:'mangé' },
+    // Regular -IR
+    { inf:'finir',      en:'to finish',     type:'ir',   present:['finis','finis','finit','finissons','finissez','finissent'],  pc_aux:'avoir', pc_part:'fini' },
+    { inf:'choisir',    en:'to choose',     type:'ir',   present:['choisis','choisis','choisit','choisissons','choisissez','choisissent'], pc_aux:'avoir', pc_part:'choisi' },
+    { inf:'réussir',    en:'to succeed',    type:'ir',   present:['réussis','réussis','réussit','réussissons','réussissez','réussissent'], pc_aux:'avoir', pc_part:'réussi' },
+    { inf:'obéir',      en:'to obey',       type:'ir',   present:['obéis','obéis','obéit','obéissons','obéissez','obéissent'], pc_aux:'avoir', pc_part:'obéi' },
+    // Regular -RE
+    { inf:'vendre',     en:'to sell',       type:'re',   present:['vends','vends','vend','vendons','vendez','vendent'],        pc_aux:'avoir', pc_part:'vendu' },
+    { inf:'attendre',   en:'to wait for',   type:'re',   present:['attends','attends','attend','attendons','attendez','attendent'], pc_aux:'avoir', pc_part:'attendu' },
+    { inf:'répondre',   en:'to answer',     type:'re',   present:['réponds','réponds','répond','répondons','répondez','répondent'], pc_aux:'avoir', pc_part:'répondu' },
+    // Irregular
+    { inf:'être',       en:'to be',         type:'irreg', present:['suis','es','est','sommes','êtes','sont'],                  pc_aux:'avoir', pc_part:'été' },
+    { inf:'avoir',      en:'to have',       type:'irreg', present:['ai','as','a','avons','avez','ont'],                        pc_aux:'avoir', pc_part:'eu' },
+    { inf:'aller',      en:'to go',         type:'irreg', present:['vais','vas','va','allons','allez','vont'],                  pc_aux:'être',  pc_part:'allé' },
+    { inf:'faire',      en:'to do/make',    type:'irreg', present:['fais','fais','fait','faisons','faites','font'],             pc_aux:'avoir', pc_part:'fait' },
+    { inf:'pouvoir',    en:'to be able to', type:'irreg', present:['peux','peux','peut','pouvons','pouvez','peuvent'],          pc_aux:'avoir', pc_part:'pu' },
+    { inf:'vouloir',    en:'to want',       type:'irreg', present:['veux','veux','veut','voulons','voulez','veulent'],          pc_aux:'avoir', pc_part:'voulu' },
+    { inf:'savoir',     en:'to know',       type:'irreg', present:['sais','sais','sait','savons','savez','savent'],             pc_aux:'avoir', pc_part:'su' },
+    { inf:'venir',      en:'to come',       type:'irreg', present:['viens','viens','vient','venons','venez','viennent'],        pc_aux:'être',  pc_part:'venu' },
+    { inf:'prendre',    en:'to take',       type:'irreg', present:['prends','prends','prend','prenons','prenez','prennent'],    pc_aux:'avoir', pc_part:'pris' },
+    { inf:'voir',       en:'to see',        type:'irreg', present:['vois','vois','voit','voyons','voyez','voient'],             pc_aux:'avoir', pc_part:'vu' },
+    { inf:'partir',     en:'to leave',      type:'irreg', present:['pars','pars','part','partons','partez','partent'],          pc_aux:'être',  pc_part:'parti' },
+    { inf:'sortir',     en:'to go out',     type:'irreg', present:['sors','sors','sort','sortons','sortez','sortent'],          pc_aux:'être',  pc_part:'sorti' }
+  ];
+
+  var ACCENTS = ['é','è','ê','à','â','ç','î','ï','ô','û','ù','œ'];
+
+  /* ══════════════════════════════════════════
+     SUPABASE
+  ══════════════════════════════════════════ */
+  var SUPABASE_URL  = 'https://dlcseuejvducbsjhqvze.supabase.co';
+  var SUPABASE_ANON = 'sb_publishable_k_59EUPnHNnJ534tF0vMvQ_Ams9wV9L';
+  var db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  /* ══════════════════════════════════════════
+     STATE
+  ══════════════════════════════════════════ */
+  var cfg = { tense: 'present', length: 20, verbs: [] };
+  var session = { questions: [], idx: 0, correct: 0, submitted: false, checked: false };
+
+  /* ══════════════════════════════════════════
+     HELPERS
+  ══════════════════════════════════════════ */
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function getAnswer(verb, pIdx, tense) {
+    if (tense === 'present') return verb.present[pIdx];
+    if (tense === 'pc') {
+      var aux = verb.pc_aux === 'avoir' ? AVOIR_PRES[pIdx] : ETRE_PRES[pIdx];
+      return aux + ' ' + verb.pc_part;
+    }
+    if (tense === 'nf') return ALLER_PRES[pIdx] + ' ' + verb.inf;
+    return '';
+  }
+
+  function normalise(s) {
+    return (s || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+
+  function tenseBadgeClass(tense) {
+    return tense === 'present' ? 'tbadge-present' : tense === 'pc' ? 'tbadge-pc' : 'tbadge-nf';
+  }
+
+  function tenseLabel(tense) {
+    return tense === 'present' ? 'Présent' : tense === 'pc' ? 'Passé Composé' : 'Futur Proche';
+  }
+
+  function scoreMsg(pct) {
+    if (pct === 100) return '🎉 Perfect!';
+    if (pct >= 80)  return '⭐ Excellent!';
+    if (pct >= 60)  return '👍 Good effort';
+    if (pct >= 40)  return '📖 Keep practising';
+    return '💪 Don\'t give up!';
+  }
+
+  function show(id) {
+    ['blitz-setup','blitz-question','blitz-results'].forEach(function(s) {
+      document.getElementById(s).classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+  }
+
+  /* ══════════════════════════════════════════
+     SETUP SCREEN
+  ══════════════════════════════════════════ */
+
+  // Tense buttons
+  document.getElementById('blitz-tense-row').addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-tense]');
+    if (!btn) return;
+    document.querySelectorAll('[data-tense]').forEach(function(b) { b.classList.remove('sel'); });
+    btn.classList.add('sel');
+    cfg.tense = btn.dataset.tense;
+  });
+
+  // Length buttons
+  document.getElementById('blitz-length-row').addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-len]');
+    if (!btn) return;
+    document.querySelectorAll('[data-len]').forEach(function(b) { b.classList.remove('sel'); });
+    btn.classList.add('sel');
+    cfg.length = parseInt(btn.dataset.len);
+  });
+
+  // Build verb grid
+  function buildVerbGrid() {
+    var grid = document.getElementById('blitz-verb-grid');
+    grid.innerHTML = '';
+    VERBS.forEach(function(v, i) {
+      var btn = document.createElement('button');
+      btn.className = 'blitz-verb-btn';
+      btn.dataset.idx = i;
+      btn.innerHTML = v.inf + ' <span class="vb-en">' + v.en + '</span>';
+      btn.addEventListener('click', function() {
+        btn.classList.toggle('sel');
+        updateVerbCount();
+      });
+      grid.appendChild(btn);
+    });
+  }
+
+  function updateVerbCount() {
+    var sel = document.querySelectorAll('.blitz-verb-btn.sel');
+    cfg.verbs = Array.from(sel).map(function(b) { return parseInt(b.dataset.idx); });
+    document.getElementById('blitz-verb-count').textContent = cfg.verbs.length + ' verb' + (cfg.verbs.length !== 1 ? 's' : '') + ' selected';
+    document.getElementById('blitz-start').disabled = cfg.verbs.length === 0;
+  }
+
+  // Filter buttons
+  document.querySelectorAll('.blitz-filter-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var f = btn.dataset.filter;
+      document.querySelectorAll('.blitz-verb-btn').forEach(function(vb) {
+        var verb = VERBS[parseInt(vb.dataset.idx)];
+        if (f === 'all')  vb.classList.add('sel');
+        else if (f === 'none') vb.classList.remove('sel');
+        else if (verb.type === f) vb.classList.add('sel');
+        else vb.classList.remove('sel');
+      });
+      updateVerbCount();
+    });
+  });
+
+  buildVerbGrid();
+  updateVerbCount();
+
+  /* ══════════════════════════════════════════
+     ACCENT BAR
+  ══════════════════════════════════════════ */
+  function buildAccentBar() {
+    var bar = document.getElementById('blitz-accent-bar');
+    // clear existing accent buttons (keep label)
+    Array.from(bar.querySelectorAll('.blitz-ab')).forEach(function(b) { b.remove(); });
+    ACCENTS.forEach(function(ch) {
+      var btn = document.createElement('button');
+      btn.className = 'blitz-ab';
+      btn.type = 'button';
+      btn.textContent = ch;
+      btn.addEventListener('click', function() {
+        var inp = document.getElementById('blitz-input');
+        var start = inp.selectionStart;
+        var end = inp.selectionEnd;
+        inp.value = inp.value.slice(0, start) + ch + inp.value.slice(end);
+        inp.selectionStart = inp.selectionEnd = start + 1;
+        inp.focus();
+      });
+      bar.appendChild(btn);
+    });
+  }
+
+  /* ══════════════════════════════════════════
+     GAME LOGIC
+  ══════════════════════════════════════════ */
+  function generateQuestions() {
+    // Build pool: every selected verb × every pronoun
+    var pool = [];
+    cfg.verbs.forEach(function(vi) {
+      for (var pi = 0; pi < 6; pi++) {
+        pool.push({ verbIdx: vi, pronounIdx: pi });
+      }
+    });
+    pool = shuffle(pool);
+    // Take cfg.length questions (wrap around if pool smaller)
+    var qs = [];
+    for (var i = 0; i < cfg.length; i++) {
+      qs.push(pool[i % pool.length]);
+    }
+    return qs;
+  }
+
+  function startSession(questions) {
+    session.questions = questions;
+    session.idx = 0;
+    session.correct = 0;
+    session.submitted = false;
+    session.checked = false;
+    buildAccentBar();
+    show('blitz-question');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    var q = session.questions[session.idx];
+    var verb = VERBS[q.verbIdx];
+    var pronoun = PRONOUNS[q.pronounIdx];
+    var total = session.questions.length;
+    var num = session.idx + 1;
+
+    // Progress
+    document.getElementById('blitz-q-label').textContent = 'Question ' + num + ' / ' + total;
+    document.getElementById('blitz-score-pill').textContent = session.correct + ' correct';
+    document.getElementById('blitz-prog-fill').style.width = Math.round((session.idx / total) * 100) + '%';
+
+    // Badge
+    var badge = document.getElementById('blitz-q-tense-badge');
+    badge.className = 'blitz-tense-badge ' + tenseBadgeClass(cfg.tense);
+    badge.textContent = tenseLabel(cfg.tense);
+
+    // Question content
+    document.getElementById('blitz-q-pronoun').textContent = pronoun.toUpperCase();
+    document.getElementById('blitz-q-inf').textContent = verb.inf;
+    document.getElementById('blitz-q-meaning').textContent = verb.en;
+
+    // Input
+    var inp = document.getElementById('blitz-input');
+    inp.value = '';
+    inp.className = 'blitz-input';
+    inp.disabled = false;
+    inp.focus();
+
+    // Feedback
+    var fb = document.getElementById('blitz-feedback');
+    fb.textContent = '';
+    fb.className = 'blitz-feedback';
+
+    // Buttons
+    document.getElementById('blitz-check').style.display = '';
+    document.getElementById('blitz-check').disabled = false;
+    document.getElementById('blitz-next').style.display = 'none';
+
+    session.checked = false;
+  }
+
+  function checkAnswer() {
+    if (session.checked) return;
+    session.checked = true;
+
+    var q = session.questions[session.idx];
+    var verb = VERBS[q.verbIdx];
+    var correct = getAnswer(verb, q.pronounIdx, cfg.tense);
+    var given = normalise(document.getElementById('blitz-input').value);
+    var isOk = given === normalise(correct);
+
+    var inp = document.getElementById('blitz-input');
+    inp.disabled = true;
+    inp.className = 'blitz-input ' + (isOk ? 'correct' : 'incorrect');
+
+    var fb = document.getElementById('blitz-feedback');
+    if (isOk) {
+      fb.className = 'blitz-feedback ok';
+      fb.textContent = '✓ Correct!';
+      session.correct++;
+    } else {
+      fb.className = 'blitz-feedback bad';
+      fb.innerHTML = '✗ ' + (given ? 'You wrote: <em>' + given + '</em> &mdash; ' : 'Answer: ') +
+        'correct form: <span class="blitz-correct-ans">' + correct + '</span>';
+    }
+
+    document.getElementById('blitz-score-pill').textContent = session.correct + ' correct';
+    document.getElementById('blitz-check').style.display = 'none';
+    document.getElementById('blitz-next').style.display = '';
+  }
+
+  function nextQuestion() {
+    session.idx++;
+    if (session.idx >= session.questions.length) {
+      showResults();
+    } else {
+      renderQuestion();
+    }
+  }
+
+  /* ══════════════════════════════════════════
+     RESULTS
+  ══════════════════════════════════════════ */
+  function showResults() {
+    var total = session.questions.length;
+    var pct = Math.round((session.correct / total) * 100);
+
+    document.getElementById('blitz-res-pct').textContent = pct + '%';
+    document.getElementById('blitz-res-msg').textContent = scoreMsg(pct);
+    document.getElementById('blitz-res-sub').textContent =
+      session.correct + ' correct out of ' + total + ' \u2014 ' + tenseLabel(cfg.tense);
+
+    // Reset submit form
+    document.getElementById('blitz-initials').value = '';
+    document.getElementById('blitz-submit-msg').textContent = '';
+    document.getElementById('blitz-submit-msg').className = 'blitz-submit-msg';
+    document.getElementById('blitz-submit-score').disabled = false;
+    document.getElementById('blitz-submit-card').style.display = '';
+    session.submitted = false;
+
+    show('blitz-results');
+    loadLeaderboard();
+  }
+
+  /* ══════════════════════════════════════════
+     LEADERBOARD
+  ══════════════════════════════════════════ */
+  function loadLeaderboard() {
+    var rowsEl = document.getElementById('blitz-lb-rows');
+    var titleEl = document.getElementById('blitz-lb-title');
+    titleEl.textContent = '🏆 Top Scores \u2014 ' + tenseLabel(cfg.tense);
+    rowsEl.innerHTML = '<div class="blitz-lb-loading">Loading\u2026</div>';
+
+    db.rpc('get_blitz_leaderboard', { p_tense: cfg.tense })
+      .then(function(res) {
+        renderLeaderboard(res.data || []);
+      })
+      .catch(function() {
+        rowsEl.innerHTML = '<div class="blitz-lb-empty">Could not load leaderboard.</div>';
+      });
+  }
+
+  function renderLeaderboard(rows) {
+    var rowsEl = document.getElementById('blitz-lb-rows');
+    if (!rows.length) {
+      rowsEl.innerHTML = '<div class="blitz-lb-empty">No scores yet \u2014 be the first!</div>';
+      return;
+    }
+    rowsEl.innerHTML = '';
+    rows.forEach(function(r, i) {
+      var div = document.createElement('div');
+      div.className = 'blitz-lb-row' + (i === 0 ? ' top1' : i === 1 ? ' top2' : i === 2 ? ' top3' : '');
+      var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
+      div.innerHTML =
+        '<span class="blitz-lb-rank">' + medal + '</span>' +
+        '<span class="blitz-lb-name">' + r.initials + '</span>' +
+        '<span class="blitz-lb-score">' + r.score + '/' + r.total + '</span>' +
+        '<span class="blitz-lb-pct">' + r.pct + '%</span>';
+      rowsEl.appendChild(div);
+    });
+  }
+
+  /* ══════════════════════════════════════════
+     EVENT LISTENERS
+  ══════════════════════════════════════════ */
+
+  // Start
+  document.getElementById('blitz-start').addEventListener('click', function() {
+    startSession(generateQuestions());
+  });
+
+  // Check (button)
+  document.getElementById('blitz-check').addEventListener('click', checkAnswer);
+
+  // Check (Enter key)
+  document.getElementById('blitz-input').addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter') return;
+    if (!session.checked) {
+      checkAnswer();
+    } else {
+      nextQuestion();
+    }
+  });
+
+  // Next
+  document.getElementById('blitz-next').addEventListener('click', nextQuestion);
+
+  // Submit score
+  document.getElementById('blitz-submit-score').addEventListener('click', function() {
+    var initials = document.getElementById('blitz-initials').value.trim().toUpperCase();
+    if (!initials) {
+      document.getElementById('blitz-submit-msg').textContent = 'Please enter your initials.';
+      document.getElementById('blitz-submit-msg').className = 'blitz-submit-msg err';
+      return;
+    }
+    var btn = document.getElementById('blitz-submit-score');
+    btn.disabled = true;
+    document.getElementById('blitz-submit-msg').textContent = 'Submitting…';
+    document.getElementById('blitz-submit-msg').className = 'blitz-submit-msg';
+
+    db.from('conjugation_blitz_scores').insert({
+      initials: initials,
+      score: session.correct,
+      total: session.questions.length,
+      tense: cfg.tense
+    }).then(function(res) {
+      if (res.error) throw res.error;
+      document.getElementById('blitz-submit-msg').textContent = '✓ Score added!';
+      document.getElementById('blitz-submit-msg').className = 'blitz-submit-msg ok';
+      document.getElementById('blitz-submit-card').style.display = 'none';
+      session.submitted = true;
+      loadLeaderboard();
+    }).catch(function() {
+      document.getElementById('blitz-submit-msg').textContent = 'Could not submit — check your connection.';
+      document.getElementById('blitz-submit-msg').className = 'blitz-submit-msg err';
+      btn.disabled = false;
+    });
+  });
+
+  // Retry / New
+  document.getElementById('blitz-retry').addEventListener('click', function() {
+    startSession(generateQuestions());
+  });
+  document.getElementById('blitz-new').addEventListener('click', function() {
+    show('blitz-setup');
+  });
+
+  // Nav toggle (inherited from main site pattern)
+  var navToggle = document.getElementById('nav-toggle');
+  var headerNav = document.getElementById('header-nav');
+  if (navToggle) {
+    navToggle.addEventListener('click', function() {
+      var open = headerNav.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', open);
+    });
+  }
+  document.querySelectorAll('.hn-group-toggle').forEach(function(toggle) {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      var group = toggle.closest('.hn-group');
+      if (group) group.classList.toggle('open');
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
