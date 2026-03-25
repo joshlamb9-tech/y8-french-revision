@@ -814,7 +814,9 @@
 
     document.getElementById('blitz-score-pill').textContent = session.correct + ' correct';
     document.getElementById('blitz-check').style.display = 'none';
-    document.getElementById('blitz-next').style.display = '';
+    var nextBtn = document.getElementById('blitz-next');
+    nextBtn.style.display = '';
+    nextBtn.focus();
   }
 
   function nextQuestion() {
