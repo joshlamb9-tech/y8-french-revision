@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ma famille — Extension · Y8 French</title>
+<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2744;
+    --navy-dark: #0f1a30;
+    --gold: #c9a84c;
+    --gold-soft: #e8d9a3;
+    --paper: #fdfdfb;
+    --soft: #f4f1e8;
+    --rule: #d8d3bf;
+    --ink: #2a2a2a;
+    --ink-soft: #555;
+    --correct: #1f6b3a;
+    --correct-soft: #d4ecdb;
+    --wrong: #a8401a;
+    --wrong-soft: #f5dcd3;
+    --accent: #7b4fa0;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Dosis', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+    color: #fff;
+    padding: 40px 24px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--gold);
+  }
+  header .wrap { max-width: 960px; margin: 0 auto; position: relative; z-index: 2; }
+  header .eyebrow {
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 3px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  header h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    margin: 6px 0 4px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  header .subtitle {
+    color: var(--gold-soft);
+    font-size: 18px;
+    font-weight: 400;
+    font-style: italic;
+    margin-bottom: 18px;
+  }
+  header .meta {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    margin-top: 14px;
+  }
+  header .meta strong { color: var(--gold); }
+
+  /* Nav */
+  nav.stage-nav {
+    background: var(--soft);
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav.stage-nav .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  nav.stage-nav a {
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+  nav.stage-nav a:hover {
+    background: var(--gold);
+    color: var(--navy);
+  }
+  nav.stage-nav .score {
+    margin-left: auto;
+    font-size: 14px;
+    color: var(--navy);
+    font-weight: 700;
+  }
+  nav.stage-nav .score .val { color: var(--gold); }
+
+  main { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  section.stage {
+    margin-bottom: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+  section.stage:first-of-type { border-top: none; padding-top: 8px; }
+  .stage-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .stage-num {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  h2 {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 4px 0;
+    letter-spacing: -0.3px;
+  }
+  .stage-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: var(--navy);
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .stage-tag.stretch { background: var(--accent); }
+  .stage-desc {
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin: 0 0 20px;
+    font-style: italic;
+  }
+
+  /* Rules panel */
+  .rules {
+    background: var(--soft);
+    border-left: 4px solid var(--gold);
+    padding: 14px 18px;
+    margin: 16px 0 20px;
+    border-radius: 4px;
+  }
+  .rules h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: var(--navy);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .rules ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .rules li { margin-bottom: 4px; }
+  .rules code {
+    background: #fff;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  /* Questions */
+  .q {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .q.correct { border-color: var(--correct); background: var(--correct-soft); }
+  .q.wrong { border-color: var(--wrong); background: var(--wrong-soft); }
+  .q .prompt {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .q .prompt .tag {
+    font-size: 11px;
+    background: var(--navy);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .q .prompt em { color: var(--accent); font-style: normal; font-weight: 600; }
+  .q .input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .q input[type="text"], .q textarea {
+    flex: 1;
+    font-family: 'Dosis', sans-serif;
+    font-size: 16px;
+    padding: 8px 12px;
+    border: 1.5px solid var(--rule);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--ink);
+    min-width: 200px;
+  }
+  .q textarea { min-height: 80px; resize: vertical; width: 100%; }
+  .q input[type="text"]:focus, .q textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .q button {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Dosis', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+  .q button:hover { background: var(--gold); color: var(--navy); }
+  .q button.reveal { background: var(--rule); color: var(--navy); }
+  .q .feedback {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    display: none;
+  }
+  .q .feedback.show { display: block; }
+  .q .feedback.ok { background: #fff; color: var(--correct); border-left: 3px solid var(--correct); }
+  .q .feedback.no { background: #fff; color: var(--wrong); border-left: 3px solid var(--wrong); }
+  .q .feedback strong { color: var(--navy); }
+
+  /* MCQ */
+  .mcq-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .mcq-options button {
+    background: #fff;
+    border: 1.5px solid var(--rule);
+    color: var(--ink);
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Dosis', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .mcq-options button:hover { border-color: var(--gold); background: var(--soft); }
+  .mcq-options button.picked-right { background: var(--correct); color: #fff; border-color: var(--correct); }
+  .mcq-options button.picked-wrong { background: var(--wrong); color: #fff; border-color: var(--wrong); }
+
+  /* Paragraph box */
+  .paragraph-box {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .paragraph-box .must {
+    background: var(--soft);
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .paragraph-box .must strong { color: var(--navy); }
+  .paragraph-box textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 12px;
+    font-family: 'Dosis', sans-serif;
+    font-size: 16px;
+    border: 1.5px solid var(--rule);
+    border-radius: 4px;
+    resize: vertical;
+  }
+  .paragraph-box .model {
+    display: none;
+    margin-top: 14px;
+    padding: 14px;
+    background: var(--soft);
+    border-left: 4px solid var(--gold);
+    border-radius: 4px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .paragraph-box .model.show { display: block; }
+  .paragraph-box .model h4 {
+    margin: 0 0 6px;
+    color: var(--navy);
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .paragraph-box .model .highlight { font-weight: 700; color: var(--accent); }
+
+  /* Timeline drill */
+  .timeline {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .timeline .base {
+    font-size: 17px;
+    color: var(--navy);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .timeline .rows {
+    display: grid;
+    gap: 8px;
+  }
+  .timeline .row {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 10px;
+    align-items: center;
+  }
+  .timeline .row .label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--navy);
+    padding: 4px 10px;
+    background: var(--soft);
+    border-radius: 4px;
+    text-align: center;
+  }
+  .timeline .row.pc .label { background: #e8d4f0; color: var(--accent); }
+  .timeline .row.imp .label { background: #fde8d4; color: #b4540a; }
+  .timeline .row.fut .label { background: #d4e8f0; color: #0a6b8a; }
+  .timeline input[type="text"] {
+    padding: 7px 10px;
+    font-size: 15px;
+    border: 1.5px solid var(--rule);
+    border-radius: 4px;
+    font-family: 'Dosis', sans-serif;
+  }
+  .timeline button {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Dosis', sans-serif;
+    font-weight: 600;
+  }
+  .timeline .ans-line {
+    display: none;
+    font-size: 14px;
+    margin-top: 4px;
+    color: var(--correct);
+    font-weight: 600;
+  }
+  .timeline .ans-line.show { display: block; }
+
+  /* Footer */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.7);
+    padding: 30px 24px;
+    text-align: center;
+    font-size: 13px;
+  }
+  footer strong { color: var(--gold); }
+
+  /* Totals summary */
+  .stage-total {
+    display: inline-block;
+    font-size: 13px;
+    padding: 4px 10px;
+    background: var(--gold);
+    color: var(--navy);
+    border-radius: 12px;
+    font-weight: 700;
+    margin-left: 8px;
+  }
+
+  @media (max-width: 640px) {
+    .timeline .row { grid-template-columns: 1fr; }
+    .timeline .row .label { justify-self: start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a href="extension.html" style="display: inline-block; color: var(--gold); text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 1px; margin-bottom: 14px; border: 1px solid var(--gold); padding: 5px 14px; border-radius: 20px;">← Back to Extension Zone</a>
+    <div class="eyebrow">Y8 FRENCH · EXTENSION · CE PREP</div>
+    <h1>Ma famille — pousse plus loin</h1>
+    <div class="subtitle">Higher-order family practice · past, imperfect, future and beyond</div>
+    <div class="meta">
+      This is for pupils who've nailed the basics. Every task pushes you into CE-level grammar.<br>
+      <strong>CE Listening: Mon 11 May · Speaking: 13–14 May</strong>
+    </div>
+  </div>
+</header>
+
+<nav class="stage-nav">
+  <div class="wrap">
+    <a href="#stage1">1 · Passé composé</a>
+    <a href="#stage2">2 · Imparfait</a>
+    <a href="#stage3">3 · Futur</a>
+    <a href="#stage4">4 · Tense shift</a>
+    <a href="#stage5">5 · Paragraphe</a>
+    <a href="#stage6">6 · Stretch</a>
+    <div class="score">Score: <span class="val" id="scoreVal">0</span> / <span id="scoreTotal">0</span></div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===== STAGE 1 ===== -->
+<section class="stage" id="stage1">
+  <div class="stage-head">
+    <span class="stage-num">Stage 1</span>
+    <h2>Au passé composé</h2>
+    <span class="stage-tag">Past actions</span>
+  </div>
+  <p class="stage-desc">Talking about what your family did. Mix of avoir verbs, être verbs, and a couple of irregulars.</p>
+
+  <div class="rules">
+    <h3>Quick reminders</h3>
+    <ul>
+      <li><code>avoir</code> + past participle for most verbs: <em>j'ai mangé, elle a fini, nous avons vu</em>.</li>
+      <li><code>être</code> + past participle for the <strong>MRS VAN DER TRAMP</strong> verbs: <em>je suis allé(e), elle est partie, nous sommes restés</em>.</li>
+      <li>With <code>être</code>, the past participle <strong>agrees</strong> with the subject. Feminine adds <code>-e</code>, plural adds <code>-s</code>.</li>
+      <li>Irregular participles to watch: <em>avoir → eu, être → été, faire → fait, voir → vu, prendre → pris, mettre → mis, venir → venu, lire → lu, boire → bu</em>.</li>
+    </ul>
+  </div>
+
+  <!-- 1.1 MCQ aux -->
+  <div class="q" data-type="mcq" data-correct="0">
+    <div class="prompt"><span class="tag">Auxiliaire</span>My sister went to Paris. → Ma sœur ___ allée à Paris.</div>
+    <div class="mcq-options">
+      <button data-val="0">est</button>
+      <button data-val="1">a</button>
+      <button data-val="2">était</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="mcq" data-correct="1">
+    <div class="prompt"><span class="tag">Auxiliaire</span>My parents watched a film. → Mes parents ___ regardé un film.</div>
+    <div class="mcq-options">
+      <button data-val="0">sont</button>
+      <button data-val="1">ont</button>
+      <button data-val="2">étaient</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="mcq" data-correct="0">
+    <div class="prompt"><span class="tag">Auxiliaire</span>My brothers stayed at home. → Mes frères ___ restés à la maison.</div>
+    <div class="mcq-options">
+      <button data-val="0">sont</button>
+      <button data-val="1">ont</button>
+      <button data-val="2">étaient</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <!-- 1.2 Fill past participle -->
+  <div class="q" data-type="text" data-answers="mangé,mangee" data-show="mangé">
+    <div class="prompt"><span class="tag">Participe passé</span>Hier, ma famille a ___ (manger) au restaurant. <em>Write the past participle only.</em></div>
+    <div class="input-row">
+      <input type="text" placeholder="participe passé">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="partie" data-show="partie">
+    <div class="prompt"><span class="tag">Participe passé + accord</span>Ma sœur est ___ (partir) à sept heures. <em>Watch the agreement.</em></div>
+    <div class="input-row">
+      <input type="text" placeholder="participe passé">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="nés,nes" data-show="nés">
+    <div class="prompt"><span class="tag">Participe passé + accord</span>Mes cousins sont ___ (naître) en France.</div>
+    <div class="input-row">
+      <input type="text" placeholder="participe passé">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <!-- 1.3 Translation -->
+  <div class="q" data-type="text" data-answers="ma mère a fait un gâteau.,ma mere a fait un gateau.,ma mère a fait un gâteau,ma mere a fait un gateau" data-show="Ma mère a fait un gâteau.">
+    <div class="prompt"><span class="tag">Traduction</span>My mother made a cake.</div>
+    <div class="input-row">
+      <input type="text" placeholder="Translate into French">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="mon père est allé au supermarché.,mon pere est alle au supermarche.,mon père est allé au supermarché,mon pere est alle au supermarche" data-show="Mon père est allé au supermarché.">
+    <div class="prompt"><span class="tag">Traduction</span>My father went to the supermarket.</div>
+    <div class="input-row">
+      <input type="text" placeholder="Translate into French">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="mes grands-parents sont arrivés hier.,mes grands-parents sont arrives hier.,mes grands parents sont arrivés hier.,mes grands parents sont arrives hier." data-show="Mes grands-parents sont arrivés hier.">
+    <div class="prompt"><span class="tag">Traduction</span>My grandparents arrived yesterday.</div>
+    <div class="input-row">
+      <input type="text" placeholder="Translate into French">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+</section>
+
+<!-- ===== STAGE 2 ===== -->
+<section class="stage" id="stage2">
+  <div class="stage-head">
+    <span class="stage-num">Stage 2</span>
+    <h2>À l'imparfait</h2>
+    <span class="stage-tag">How things were</span>
+  </div>
+  <p class="stage-desc">Describe what your family used to do, how things were, ongoing past states. Perfect for "quand j'étais petit(e)".</p>
+
+  <div class="rules">
+    <h3>The imparfait shortcut</h3>
+    <ul>
+      <li>Take the <strong>nous</strong> form of the present, drop <code>-ons</code>, add the endings: <code>-ais, -ais, -ait, -ions, -iez, -aient</code>.</li>
+      <li>Example: <em>finir → nous finissons → je finissais, tu finissais, il finissait…</em></li>
+      <li>Only true irregular: <strong>être</strong> → <em>j'étais, tu étais, il était, nous étions, vous étiez, ils étaient</em>.</li>
+      <li>Use it for: <strong>repeated actions</strong> in the past, <strong>descriptions</strong>, <strong>ongoing states</strong>. Signals: <em>tous les jours, souvent, toujours, quand j'étais…</em></li>
+    </ul>
+  </div>
+
+  <div class="q" data-type="text" data-answers="habitais" data-show="habitais">
+    <div class="prompt"><span class="tag">Terminaison</span>Quand j'étais petit, j' ___ (habiter) à Londres.</div>
+    <div class="input-row">
+      <input type="text" placeholder="verbe à l'imparfait">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="jouions" data-show="jouions">
+    <div class="prompt"><span class="tag">Terminaison</span>Mes frères et moi, nous ___ (jouer) au foot tous les samedis.</div>
+    <div class="input-row">
+      <input type="text" placeholder="verbe à l'imparfait">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="était" data-show="était">
+    <div class="prompt"><span class="tag">être — irrégulier</span>Ma grand-mère ___ (être) très gentille.</div>
+    <div class="input-row">
+      <input type="text" placeholder="verbe à l'imparfait">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="avions" data-show="avions">
+    <div class="prompt"><span class="tag">avoir</span>Nous ___ (avoir) un chien qui s'appelait Max.</div>
+    <div class="input-row">
+      <input type="text" placeholder="verbe à l'imparfait">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="quand j'étais petit, je jouais avec mon frère.,quand j'étais petite, je jouais avec mon frère.,quand j'étais petit, je jouais avec mon frère,quand j'étais petite, je jouais avec mon frère,quand j etais petit, je jouais avec mon frere.,quand j etais petite, je jouais avec mon frere." data-show="Quand j'étais petit(e), je jouais avec mon frère.">
+    <div class="prompt"><span class="tag">Traduction</span>When I was little, I used to play with my brother.</div>
+    <div class="input-row">
+      <input type="text" placeholder="Translate into French">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="ma famille habitait à la campagne.,ma famille habitait à la campagne,ma famille habitait a la campagne." data-show="Ma famille habitait à la campagne.">
+    <div class="prompt"><span class="tag">Traduction</span>My family used to live in the countryside.</div>
+    <div class="input-row">
+      <input type="text" placeholder="Translate into French">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+</section>
+
+<!-- ===== STAGE 3 ===== -->
+<section class="stage" id="stage3">
+  <div class="stage-head">
+    <span class="stage-num">Stage 3</span>
+    <h2>Au futur</h2>
+    <span class="stage-tag">What's coming</span>
+  </div>
+  <p class="stage-desc">Two futures. The near future (<em>aller</em> + infinitive) is the workhorse. The simple future (one-word) is the mark-grabber.</p>
+
+  <div class="rules">
+    <h3>Near future vs. simple future</h3>
+    <ul>
+      <li><strong>Futur proche:</strong> conjugate <code>aller</code> + infinitive. <em>Je vais manger, elle va partir, nous allons voir</em>.</li>
+      <li><strong>Futur simple:</strong> infinitive + endings <code>-ai, -as, -a, -ons, -ez, -ont</code>. <em>Je mangerai, elle partira, nous verrons</em>.</li>
+      <li>Irregular stems to know: <em>être → ser-, avoir → aur-, aller → ir-, faire → fer-, voir → verr-, venir → viendr-, pouvoir → pourr-, devoir → devr-, savoir → saur-</em>.</li>
+    </ul>
+  </div>
+
+  <div class="q" data-type="text" data-answers="je vais visiter ma grand-mère.,je vais visiter ma grand-mère,je vais visiter ma grand mère.,je vais visiter ma grand mère" data-show="Je vais visiter ma grand-mère.">
+    <div class="prompt"><span class="tag">Futur proche</span>I'm going to visit my grandmother.</div>
+    <div class="input-row">
+      <input type="text" placeholder="Translate into French">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="nous allons manger au restaurant.,nous allons manger au restaurant" data-show="Nous allons manger au restaurant.">
+    <div class="prompt"><span class="tag">Futur proche</span>We are going to eat at the restaurant.</div>
+    <div class="input-row">
+      <input type="text" placeholder="Translate into French">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="aurai" data-show="aurai">
+    <div class="prompt"><span class="tag">Futur simple — irrégulier</span>L'année prochaine, j' ___ (avoir) quatorze ans.</div>
+    <div class="input-row">
+      <input type="text" placeholder="verbe au futur simple">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="sera" data-show="sera">
+    <div class="prompt"><span class="tag">Futur simple — irrégulier</span>Mon frère ___ (être) plus grand que moi.</div>
+    <div class="input-row">
+      <input type="text" placeholder="verbe au futur simple">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="ira" data-show="ira">
+    <div class="prompt"><span class="tag">Futur simple — irrégulier</span>Ma sœur ___ (aller) à l'université dans trois ans.</div>
+    <div class="input-row">
+      <input type="text" placeholder="verbe au futur simple">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="feront" data-show="feront">
+    <div class="prompt"><span class="tag">Futur simple — irrégulier</span>Mes parents ___ (faire) un voyage en Italie cet été.</div>
+    <div class="input-row">
+      <input type="text" placeholder="verbe au futur simple">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="ma famille habitera dans une grande maison.,ma famille habitera dans une grande maison" data-show="Ma famille habitera dans une grande maison.">
+    <div class="prompt"><span class="tag">Traduction</span>My family will live in a big house.</div>
+    <div class="input-row">
+      <input type="text" placeholder="Translate into French">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+</section>
+
+<!-- ===== STAGE 4 ===== -->
+<section class="stage" id="stage4">
+  <div class="stage-head">
+    <span class="stage-num">Stage 4</span>
+    <h2>Même phrase, trois temps</h2>
+    <span class="stage-tag">Tense-shifting</span>
+  </div>
+  <p class="stage-desc">Take one sentence. Write it in three tenses. This is the single best exercise for CE — examiners love a pupil who can switch gears.</p>
+
+  <div class="timeline" data-answers-pc="ma sœur a joué au tennis.,ma soeur a joué au tennis.,ma sœur a joué au tennis,ma soeur a joue au tennis." data-answers-imp="ma sœur jouait au tennis.,ma soeur jouait au tennis.,ma sœur jouait au tennis,ma soeur jouait au tennis" data-answers-fut="ma sœur jouera au tennis.,ma soeur jouera au tennis.,ma sœur jouera au tennis,ma soeur jouera au tennis"
+       data-show-pc="Ma sœur a joué au tennis." data-show-imp="Ma sœur jouait au tennis." data-show-fut="Ma sœur jouera au tennis.">
+    <div class="base"><em>Base sentence:</em> Ma sœur joue au tennis.</div>
+    <div class="rows">
+      <div class="row pc">
+        <div class="label">Passé composé</div>
+        <input type="text" data-tense="pc" placeholder="Ma sœur... (a joué)">
+        <button class="check-tl">Check</button>
+      </div>
+      <div class="ans-line" data-for="pc"></div>
+      <div class="row imp">
+        <div class="label">Imparfait</div>
+        <input type="text" data-tense="imp" placeholder="Ma sœur... (jouait)">
+        <button class="check-tl">Check</button>
+      </div>
+      <div class="ans-line" data-for="imp"></div>
+      <div class="row fut">
+        <div class="label">Futur simple</div>
+        <input type="text" data-tense="fut" placeholder="Ma sœur... (jouera)">
+        <button class="check-tl">Check</button>
+      </div>
+      <div class="ans-line" data-for="fut"></div>
+    </div>
+  </div>
+
+  <div class="timeline" data-answers-pc="mon père a travaillé à Londres.,mon pere a travaillé à londres.,mon père a travaillé à londres.,mon pere a travaille a londres." data-answers-imp="mon père travaillait à Londres.,mon pere travaillait à londres.,mon père travaillait à londres.,mon pere travaillait a londres." data-answers-fut="mon père travaillera à Londres.,mon pere travaillera à londres.,mon père travaillera à londres.,mon pere travaillera a londres."
+       data-show-pc="Mon père a travaillé à Londres." data-show-imp="Mon père travaillait à Londres." data-show-fut="Mon père travaillera à Londres.">
+    <div class="base"><em>Base sentence:</em> Mon père travaille à Londres.</div>
+    <div class="rows">
+      <div class="row pc"><div class="label">Passé composé</div><input type="text" data-tense="pc" placeholder="Mon père..."><button class="check-tl">Check</button></div>
+      <div class="ans-line" data-for="pc"></div>
+      <div class="row imp"><div class="label">Imparfait</div><input type="text" data-tense="imp" placeholder="Mon père..."><button class="check-tl">Check</button></div>
+      <div class="ans-line" data-for="imp"></div>
+      <div class="row fut"><div class="label">Futur simple</div><input type="text" data-tense="fut" placeholder="Mon père..."><button class="check-tl">Check</button></div>
+      <div class="ans-line" data-for="fut"></div>
+    </div>
+  </div>
+
+  <div class="timeline" data-answers-pc="nous sommes allés en vacances.,nous sommes allees en vacances.,nous sommes alles en vacances.,nous sommes allées en vacances." data-answers-imp="nous allions en vacances.,nous allions en vacances" data-answers-fut="nous irons en vacances.,nous irons en vacances"
+       data-show-pc="Nous sommes allé(e)s en vacances." data-show-imp="Nous allions en vacances." data-show-fut="Nous irons en vacances.">
+    <div class="base"><em>Base sentence:</em> Nous allons en vacances.</div>
+    <div class="rows">
+      <div class="row pc"><div class="label">Passé composé</div><input type="text" data-tense="pc" placeholder="Nous..."><button class="check-tl">Check</button></div>
+      <div class="ans-line" data-for="pc"></div>
+      <div class="row imp"><div class="label">Imparfait</div><input type="text" data-tense="imp" placeholder="Nous..."><button class="check-tl">Check</button></div>
+      <div class="ans-line" data-for="imp"></div>
+      <div class="row fut"><div class="label">Futur simple</div><input type="text" data-tense="fut" placeholder="Nous..."><button class="check-tl">Check</button></div>
+      <div class="ans-line" data-for="fut"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STAGE 5 ===== -->
+<section class="stage" id="stage5">
+  <div class="stage-head">
+    <span class="stage-num">Stage 5</span>
+    <h2>Écriture longue — paragraph</h2>
+    <span class="stage-tag">Higher-order</span>
+  </div>
+  <p class="stage-desc">Write a paragraph about your family (80–120 words). The rubric forces you to use multiple tenses — which is exactly what CE markers want.</p>
+
+  <div class="paragraph-box">
+    <div class="must">
+      <strong>You MUST include at least:</strong>
+      <ul>
+        <li>2 sentences in the <strong>present</strong> describing your family now</li>
+        <li>2 sentences in the <strong>passé composé</strong> (what you did together recently)</li>
+        <li>1 sentence in the <strong>imparfait</strong> (how things used to be)</li>
+        <li>1 sentence in the <strong>future</strong> (near or simple — what you will do)</li>
+        <li>2 opinions (with <em>je pense que, à mon avis</em>…)</li>
+        <li>2 connectives (<em>parce que, mais, cependant, donc, par contre</em>)</li>
+      </ul>
+    </div>
+    <textarea id="paragraph-input" placeholder="Écris ici ton paragraphe... (80–120 mots)"></textarea>
+    <div style="margin-top: 10px; display: flex; gap: 8px; align-items: center;">
+      <button onclick="document.getElementById('model-para').classList.add('show')" style="background: var(--rule); color: var(--navy); border: none; padding: 8px 16px; border-radius: 4px; font-family: Dosis; cursor: pointer; font-weight: 600;">Show model paragraph</button>
+      <span id="word-count" style="color: var(--ink-soft); font-size: 13px; margin-left: auto;">0 mots</span>
+    </div>
+    <div class="model" id="model-para">
+      <h4>Model paragraph — Mme Martin</h4>
+      <p>
+        Dans ma famille, nous <span class="highlight">sommes</span> quatre personnes : mes parents, mon frère et moi. À mon avis, ma famille est assez grande mais nous <span class="highlight">nous entendons</span> bien.
+        Le weekend dernier, nous <span class="highlight">sommes allés</span> au cinéma et après, mon père <span class="highlight">a fait</span> une pizza délicieuse à la maison.
+        Quand j'étais petite, nous <span class="highlight">habitions</span> à Paris et j'adorais ça parce que mes grands-parents habitaient juste à côté.
+        L'été prochain, nous <span class="highlight">allons passer</span> deux semaines en Espagne, ce qui sera super. Je pense que voyager en famille est très important donc j'ai hâte.
+      </p>
+      <p style="font-size: 13px; color: var(--ink-soft); margin-top: 8px;">
+        <strong>Highlighted:</strong> present · present · passé composé · passé composé · imparfait · futur proche
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STAGE 6 ===== -->
+<section class="stage" id="stage6">
+  <div class="stage-head">
+    <span class="stage-num">Stage 6</span>
+    <h2>La zone stretch</h2>
+    <span class="stage-tag stretch">Scholarship-level</span>
+  </div>
+  <p class="stage-desc">Scholarship territory. These structures impress examiners and will mark you out as an able linguist.</p>
+
+  <div class="rules">
+    <h3>Three stretch structures</h3>
+    <ul>
+      <li><strong>Reflexive verbs in the past</strong> — they take <code>être</code>, and the past participle agrees: <em>ma sœur s'est levée tôt</em>. (Not "s'a levée".)</li>
+      <li><strong>Direct object pronouns</strong> — go <strong>before</strong> the verb: <em>je vois mon frère → je le vois</em>. Before the auxiliary in past: <em>je l'ai vu</em>.</li>
+      <li><strong>Subjunctive after "il faut que" / "je veux que"</strong> — use the present subjunctive. Common: <em>j'aille, je sois, j'aie, je fasse</em>.</li>
+    </ul>
+  </div>
+
+  <div class="q" data-type="text" data-answers="levée" data-show="levée">
+    <div class="prompt"><span class="tag">Verbe réfléchi au passé</span>Ma mère s'est ___ (lever) à six heures. <em>Mind the agreement.</em></div>
+    <div class="input-row">
+      <input type="text" placeholder="participe passé">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="couchés,couches" data-show="couchés">
+    <div class="prompt"><span class="tag">Verbe réfléchi au passé</span>Mes frères se sont ___ (coucher) tard.</div>
+    <div class="input-row">
+      <input type="text" placeholder="participe passé">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="je la vois tous les jours.,je la vois tous les jours" data-show="Je la vois tous les jours.">
+    <div class="prompt"><span class="tag">Pronom objet</span>Replace "ma sœur" with a pronoun: <em>Je vois ma sœur tous les jours.</em></div>
+    <div class="input-row">
+      <input type="text" placeholder="Use le/la/les">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="je l'ai vu hier.,je l ai vu hier.,je l'ai vu hier,je l ai vu hier" data-show="Je l'ai vu hier.">
+    <div class="prompt"><span class="tag">Pronom objet au passé</span>Translate: I saw him yesterday. <em>Pronoun before the auxiliary.</em></div>
+    <div class="input-row">
+      <input type="text" placeholder="Translate into French">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="aille" data-show="aille">
+    <div class="prompt"><span class="tag">Subjonctif</span>Il faut que j' ___ (aller) au supermarché.</div>
+    <div class="input-row">
+      <input type="text" placeholder="verbe au subjonctif">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="soit" data-show="soit">
+    <div class="prompt"><span class="tag">Subjonctif</span>Ma mère veut que je ___ (être) plus gentil avec mon frère.</div>
+    <div class="input-row">
+      <input type="text" placeholder="verbe au subjonctif">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-type="text" data-answers="fasse" data-show="fasse">
+    <div class="prompt"><span class="tag">Subjonctif</span>Il faut que je ___ (faire) mes devoirs.</div>
+    <div class="input-row">
+      <input type="text" placeholder="verbe au subjonctif">
+      <button class="check">Check</button>
+      <button class="reveal">Reveal</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+</section>
+
+<div style="background: var(--soft); padding: 24px; border-radius: 8px; text-align: center; margin-top: 30px;">
+  <h3 style="color: var(--navy); margin: 0 0 8px;">Well done.</h3>
+  <p style="color: var(--ink-soft); margin: 0; font-size: 15px;">
+    When you finish, screenshot your score and show your teacher. The real test is whether you can use these structures <em>unprompted</em> in your next piece of writing.
+  </p>
+</div>
+
+</main>
+
+<footer>
+  <strong>Y8 French · Ma famille — Extension</strong><br>
+  Mowden Hall School · Summer 2026 · For CE preparation
+</footer>
+
+<script>
+(function() {
+  const scoreVal = document.getElementById('scoreVal');
+  const scoreTotal = document.getElementById('scoreTotal');
+  let score = 0;
+  let total = 0;
+
+  function normalize(s) {
+    return s.trim().toLowerCase()
+      .replace(/\s+/g, ' ')
+      .replace(/\s+([.,!?])/g, '$1');
+  }
+
+  function showFeedback(q, ok, correctText, userText) {
+    const fb = q.querySelector('.feedback');
+    fb.classList.add('show');
+    fb.classList.remove('ok', 'no');
+    if (ok) {
+      fb.classList.add('ok');
+      fb.innerHTML = `<strong>Correct.</strong> ${correctText ? `<em>${correctText}</em>` : ''}`;
+    } else {
+      fb.classList.add('no');
+      fb.innerHTML = `<strong>Not quite.</strong> Answer: <em>${correctText}</em>`;
+    }
+  }
+
+  function registerQ(q) {
+    total += 1;
+    q.dataset.answered = 'false';
+  }
+
+  function awardIfFirst(q, correct) {
+    if (q.dataset.answered === 'true') return;
+    q.dataset.answered = 'true';
+    if (correct) {
+      score += 1;
+      q.classList.add('correct');
+    } else {
+      q.classList.add('wrong');
+    }
+    scoreVal.textContent = score;
+  }
+
+  // MCQ setup
+  document.querySelectorAll('.q[data-type="mcq"]').forEach(q => {
+    registerQ(q);
+    const correctIdx = parseInt(q.dataset.correct, 10);
+    q.querySelectorAll('.mcq-options button').forEach((btn, i) => {
+      btn.addEventListener('click', () => {
+        if (q.dataset.answered === 'true') return;
+        const isCorrect = i === correctIdx;
+        if (isCorrect) {
+          btn.classList.add('picked-right');
+        } else {
+          btn.classList.add('picked-wrong');
+          const right = q.querySelector(`.mcq-options button[data-val="${correctIdx}"]`);
+          if (right) right.classList.add('picked-right');
+        }
+        showFeedback(q, isCorrect, q.querySelector(`.mcq-options button[data-val="${correctIdx}"]`).textContent.trim());
+        awardIfFirst(q, isCorrect);
+      });
+    });
+  });
+
+  // Text input setup
+  document.querySelectorAll('.q[data-type="text"]').forEach(q => {
+    registerQ(q);
+    const answers = q.dataset.answers.split(',').map(a => normalize(a));
+    const show = q.dataset.show;
+    const input = q.querySelector('input[type="text"]');
+    const checkBtn = q.querySelector('.check');
+    const revealBtn = q.querySelector('.reveal');
+
+    const doCheck = () => {
+      if (q.dataset.answered === 'true') return;
+      const val = normalize(input.value);
+      if (!val) return;
+      const ok = answers.includes(val);
+      showFeedback(q, ok, show, val);
+      awardIfFirst(q, ok);
+      input.disabled = true;
+    };
+
+    checkBtn.addEventListener('click', doCheck);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doCheck();
+    });
+    if (revealBtn) {
+      revealBtn.addEventListener('click', () => {
+        if (q.dataset.answered === 'true') return;
+        showFeedback(q, false, show, '');
+        awardIfFirst(q, false);
+        input.disabled = true;
+      });
+    }
+  });
+
+  // Timeline setup
+  document.querySelectorAll('.timeline').forEach(tl => {
+    const answers = {
+      pc: tl.dataset.answersPc.split(',').map(a => normalize(a)),
+      imp: tl.dataset.answersImp.split(',').map(a => normalize(a)),
+      fut: tl.dataset.answersFut.split(',').map(a => normalize(a)),
+    };
+    const shows = {
+      pc: tl.dataset.showPc,
+      imp: tl.dataset.showImp,
+      fut: tl.dataset.showFut,
+    };
+
+    tl.querySelectorAll('.row').forEach(row => {
+      total += 1;
+      const tense = row.querySelector('input').dataset.tense;
+      row.dataset.answered = 'false';
+      const input = row.querySelector('input');
+      const btn = row.querySelector('.check-tl');
+      const ans = tl.querySelector(`.ans-line[data-for="${tense}"]`);
+
+      const check = () => {
+        if (row.dataset.answered === 'true') return;
+        const val = normalize(input.value);
+        if (!val) return;
+        const ok = answers[tense].includes(val);
+        row.dataset.answered = 'true';
+        ans.classList.add('show');
+        if (ok) {
+          ans.style.color = 'var(--correct)';
+          ans.textContent = `✓ Correct — ${shows[tense]}`;
+          score += 1;
+          scoreVal.textContent = score;
+        } else {
+          ans.style.color = 'var(--wrong)';
+          ans.textContent = `✗ Answer: ${shows[tense]}`;
+        }
+        input.disabled = true;
+      };
+      btn.addEventListener('click', check);
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter') check(); });
+    });
+  });
+
+  scoreTotal.textContent = total;
+
+  // Word count for paragraph
+  const para = document.getElementById('paragraph-input');
+  const wc = document.getElementById('word-count');
+  if (para && wc) {
+    para.addEventListener('input', () => {
+      const words = para.value.trim().split(/\s+/).filter(Boolean).length;
+      wc.textContent = `${words} mots`;
+      if (words >= 80 && words <= 120) wc.style.color = 'var(--correct)';
+      else if (words > 120) wc.style.color = 'var(--wrong)';
+      else wc.style.color = 'var(--ink-soft)';
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
