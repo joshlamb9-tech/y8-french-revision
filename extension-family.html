@@ -424,6 +424,49 @@
     .timeline .row { grid-template-columns: 1fr; }
     .timeline .row .label { justify-self: start; }
   }
+
+  /* Accent toolbar (floating) */
+  .accent-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--navy);
+    padding: 10px 12px;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 200;
+    border-top: 2px solid var(--gold);
+  }
+  .accent-bar.show { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; }
+  .accent-bar button {
+    font-family: 'Dosis', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    background: #fff;
+    color: var(--navy);
+    border: 1.5px solid var(--gold);
+    border-radius: 6px;
+    padding: 6px 14px;
+    min-width: 44px;
+    cursor: pointer;
+    line-height: 1;
+    transition: all 0.12s;
+  }
+  .accent-bar button:hover { background: var(--gold); color: var(--navy); }
+  .accent-bar button:active { transform: scale(0.94); }
+  .accent-bar .hint {
+    color: var(--gold);
+    font-size: 11px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 4px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  /* Give main content space so the bar doesn't cover answers */
+  body.accent-active main { padding-bottom: 140px; }
 </style>
 </head>
 <body>
@@ -956,6 +999,36 @@
       .replace(/\s+([.,!?])/g, '$1');
   }
 
+  // Expand answers containing "(x)" into all with/without variants.
+  // e.g. "petit(e)" -> ["petit", "petite"]
+  //      "allé(e)s" -> ["allés", "allées"]
+  function expandBrackets(str) {
+    const parts = str.split(/(\([^)]+\))/);
+    let results = [''];
+    parts.forEach(p => {
+      if (/^\([^)]+\)$/.test(p)) {
+        const inside = p.slice(1, -1);
+        const next = [];
+        results.forEach(r => { next.push(r); next.push(r + inside); });
+        results = next;
+      } else {
+        results = results.map(r => r + p);
+      }
+    });
+    return results;
+  }
+
+  function buildAnswerSet(rawStr) {
+    const raws = rawStr.split(',');
+    const out = [];
+    raws.forEach(r => {
+      expandBrackets(r).forEach(variant => {
+        out.push(normalize(variant));
+      });
+    });
+    return out;
+  }
+
   function showFeedback(q, ok, correctText, userText) {
     const fb = q.querySelector('.feedback');
     fb.classList.add('show');
@@ -1010,7 +1083,7 @@
   // Text input setup
   document.querySelectorAll('.q[data-type="text"]').forEach(q => {
     registerQ(q);
-    const answers = q.dataset.answers.split(',').map(a => normalize(a));
+    const answers = buildAnswerSet(q.dataset.answers);
     const show = q.dataset.show;
     const input = q.querySelector('input[type="text"]');
     const checkBtn = q.querySelector('.check');
@@ -1043,9 +1116,9 @@
   // Timeline setup
   document.querySelectorAll('.timeline').forEach(tl => {
     const answers = {
-      pc: tl.dataset.answersPc.split(',').map(a => normalize(a)),
-      imp: tl.dataset.answersImp.split(',').map(a => normalize(a)),
-      fut: tl.dataset.answersFut.split(',').map(a => normalize(a)),
+      pc: buildAnswerSet(tl.dataset.answersPc),
+      imp: buildAnswerSet(tl.dataset.answersImp),
+      fut: buildAnswerSet(tl.dataset.answersFut),
     };
     const shows = {
       pc: tl.dataset.showPc,
@@ -1098,6 +1171,72 @@
       else wc.style.color = 'var(--ink-soft)';
     });
   }
+
+  // ─── Accent toolbar ───
+  const ACCENTS = ['é','è','ê','ë','à','â','ä','ù','û','ç','î','ï','ô','œ'];
+  const bar = document.createElement('div');
+  bar.className = 'accent-bar';
+  const hint = document.createElement('div');
+  hint.className = 'hint';
+  hint.textContent = 'Accents — click to insert';
+  bar.appendChild(hint);
+  let lastFocused = null;
+
+  ACCENTS.forEach(ch => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = ch;
+    btn.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      insertAccent(ch);
+    });
+    btn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      insertAccent(ch);
+    }, { passive: false });
+    bar.appendChild(btn);
+  });
+  document.body.appendChild(bar);
+
+  function insertAccent(ch) {
+    const el = lastFocused;
+    if (!el || el.disabled) return;
+    const start = el.selectionStart ?? el.value.length;
+    const end = el.selectionEnd ?? el.value.length;
+    const val = el.value;
+    el.value = val.slice(0, start) + ch + val.slice(end);
+    el.selectionStart = el.selectionEnd = start + ch.length;
+    el.focus();
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  function isFrenchInput(el) {
+    if (!el) return false;
+    if (el.disabled) return false;
+    const t = el.tagName;
+    return t === 'INPUT' && el.type === 'text' || t === 'TEXTAREA';
+  }
+
+  document.addEventListener('focusin', (e) => {
+    if (isFrenchInput(e.target)) {
+      lastFocused = e.target;
+      bar.classList.add('show');
+      document.body.classList.add('accent-active');
+    }
+  });
+
+  document.addEventListener('focusout', (e) => {
+    // Small delay so a click on the bar can land before we hide
+    setTimeout(() => {
+      const act = document.activeElement;
+      if (!isFrenchInput(act)) {
+        bar.classList.remove('show');
+        document.body.classList.remove('accent-active');
+        lastFocused = null;
+      }
+    }, 150);
+  });
+
 })();
 </script>
 
