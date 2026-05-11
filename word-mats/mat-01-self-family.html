@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CE French Speaking — Self, Family, Friends & Pets</title>
+<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Dosis', sans-serif;
+    background: #f5f5f5;
+    padding: 0;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .page {
+    width: 297mm;
+    height: 210mm;
+    background: white;
+    margin: 0 auto;
+    padding: 6mm 6mm 5mm 6mm;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 3mm;
+    overflow: hidden;
+  }
+  /* Header */
+  .header {
+    background: #1a3a5c;
+    color: white;
+    padding: 4mm 6mm;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left { display: flex; flex-direction: column; }
+  .header-topic {
+    font-size: 18pt;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+  }
+  .header-sub {
+    font-size: 8pt;
+    font-weight: 500;
+    opacity: 0.75;
+    margin-top: 1mm;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+  .header-badge {
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    border-radius: 4px;
+    padding: 2mm 4mm;
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr 1fr 0.95fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 3mm;
+    overflow: hidden;
+  }
+  .box {
+    border-radius: 5px;
+    padding: 3mm 3.5mm;
+    display: flex;
+    flex-direction: column;
+    gap: 1mm;
+    overflow: hidden;
+  }
+  .box-title {
+    font-size: 7.5pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding-bottom: 1.5mm;
+    border-bottom: 1.5px solid rgba(0,0,0,0.12);
+    margin-bottom: 0.5mm;
+    flex-shrink: 0;
+  }
+  .box ul { list-style: none; padding: 0; }
+  .box ul li {
+    font-size: 7.5pt;
+    font-weight: 500;
+    line-height: 1.4;
+    padding: 0;
+  }
+  .box ul li strong {
+    font-weight: 700;
+  }
+  /* Colour themes */
+  .blue-dark  { background: #e8f0f8; border-left: 4px solid #1a3a5c; }
+  .blue-dark .box-title { color: #1a3a5c; border-color: #1a3a5c40; }
+  .green      { background: #e8f5ec; border-left: 4px solid #2e7d52; }
+  .green .box-title { color: #2e7d52; border-color: #2e7d5240; }
+  .amber      { background: #fff8e6; border-left: 4px solid #b07800; }
+  .amber .box-title { color: #b07800; border-color: #b0780040; }
+  .purple     { background: #f3edf8; border-left: 4px solid #6b3fa0; }
+  .purple .box-title { color: #6b3fa0; border-color: #6b3fa040; }
+  .red        { background: #fdecea; border-left: 4px solid #b03030; }
+  .red .box-title { color: #b03030; border-color: #b0303040; }
+  .teal       { background: #e6f4f4; border-left: 4px solid #1e7575; }
+  .teal .box-title { color: #1e7575; border-color: #1e757540; }
+  .orange     { background: #fff3e8; border-left: 4px solid #b05a00; }
+  .orange .box-title { color: #b05a00; border-color: #b05a0040; }
+  .grey       { background: #f0f0f0; border-left: 4px solid #555; }
+  .grey .box-title { color: #333; border-color: #55555540; }
+
+  /* Showcase sentences box spans 2 cols */
+  .span2 { grid-column: span 2; }
+
+  .showcase {
+    background: #1a3a5c;
+    color: white;
+    border-radius: 5px;
+    padding: 3.5mm 4mm;
+  }
+  .showcase .box-title {
+    color: rgba(255,255,255,0.7);
+    border-color: rgba(255,255,255,0.2);
+    font-size: 7.5pt;
+  }
+  .showcase ul li {
+    font-size: 8pt;
+    line-height: 1.55;
+    color: white;
+  }
+  .showcase ul li .tag {
+    background: rgba(255,255,255,0.18);
+    border-radius: 2px;
+    padding: 0px 3px;
+    font-size: 6.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 3px;
+    vertical-align: middle;
+  }
+  .stretch-label {
+    display: inline-block;
+    background: #f0c040;
+    color: #1a3a5c;
+    border-radius: 2px;
+    padding: 0px 4px;
+    font-size: 6.5pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 3px;
+    vertical-align: middle;
+  }
+
+  @media print {
+    body { background: white; }
+    .page {
+      width: 297mm;
+      height: 210mm;
+      padding: 6mm 6mm 5mm 6mm;
+      page-break-after: avoid;
+      overflow: hidden;
+    }
+    @page { size: A4 landscape; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="header-topic">Moi, ma famille, mes amis et mes animaux</div>
+      <div class="header-sub">Self &bull; Family &bull; Friends &bull; Pets &mdash; CE French Speaking Word Mat</div>
+    </div>
+    <div class="header-badge">Theme A<br>Socialising<br>L1 &amp; L2</div>
+  </div>
+
+  <div class="grid">
+
+    <!-- NOUNS / TOPIC VOCAB -->
+    <div class="box blue-dark">
+      <div class="box-title">Nouns — who &amp; what</div>
+      <ul>
+        <li><strong>mon/ma fr&egrave;re/s&oelig;ur</strong> — brother / sister</li>
+        <li><strong>mon p&egrave;re / ma m&egrave;re</strong> — father / mother</li>
+        <li><strong>mes parents</strong> — my parents</li>
+        <li><strong>mon/ma meilleur(e) ami(e)</strong> — best friend</li>
+        <li><strong>un chien / un chat</strong> — dog / cat</li>
+        <li><strong>un lapin / un cochon d'Inde</strong> — rabbit / guinea pig</li>
+        <li><strong>les yeux (m.pl)</strong> — eyes</li>
+        <li><strong>les cheveux (m.pl)</strong> — hair</li>
+        <li><strong>le caract&egrave;re</strong> — personality</li>
+        <li><strong>la personnalit&eacute;</strong> — personality</li>
+        <li><strong>un animal de compagnie</strong> — pet</li>
+      </ul>
+    </div>
+
+    <!-- ADJECTIVES -->
+    <div class="box green">
+      <div class="box-title">Adjectives — describing people</div>
+      <ul>
+        <li><strong>grand(e) / petit(e)</strong> — tall / short</li>
+        <li><strong>brun(e) / blond(e) / roux/rousse</strong> — brown / blonde / red hair</li>
+        <li><strong>les yeux bleus/verts/marron</strong> — blue/green/brown eyes</li>
+        <li><strong>sympa(thique)</strong> — friendly (inv.)</li>
+        <li><strong>amusant(e)</strong> — funny</li>
+        <li><strong>bavard(e)</strong> — chatty</li>
+        <li><strong>timide</strong> — shy</li>
+        <li><strong>g&eacute;n&eacute;reux/g&eacute;n&eacute;reuse</strong> — generous</li>
+        <li><strong>paresseux/paresseuse</strong> — lazy</li>
+        <li><strong>travailleur/travailleuse</strong> — hardworking</li>
+      </ul>
+    </div>
+
+    <!-- VERBS -->
+    <div class="box amber">
+      <div class="box-title">Verbs — key forms</div>
+      <ul>
+        <li><strong>je m'appelle</strong> — my name is</li>
+        <li><strong>j'ai ... ans</strong> — I am ... years old</li>
+        <li><strong>j'habite &agrave;</strong> — I live in</li>
+        <li><strong>je suis</strong> — I am</li>
+        <li><strong>il/elle est</strong> — he/she is</li>
+        <li><strong>il/elle s'appelle</strong> — his/her name is</li>
+        <li><strong>il/elle a ... ans</strong> — he/she is ... years old</li>
+        <li><strong>nous nous entendons bien</strong> — we get on well</li>
+        <li><strong>je m'entends bien avec</strong> — I get on well with</li>
+        <li><strong>j'ai un/une ...</strong> — I have a ...</li>
+      </ul>
+    </div>
+
+    <!-- OPINIONS -->
+    <div class="box purple">
+      <div class="box-title">Opinions &amp; connectors</div>
+      <ul>
+        <li><strong>je pense que</strong> — I think that</li>
+        <li><strong>je trouve que</strong> — I find that</li>
+        <li><strong>&agrave; mon avis</strong> — in my opinion</li>
+        <li><strong>j'aime (bien) / j'adore</strong> — I like / love</li>
+        <li><strong>je n'aime pas / je d&eacute;teste</strong> — I don't like / hate</li>
+        <li><strong>parce que / car</strong> — because</li>
+        <li><strong>mais / cependant</strong> — but / however</li>
+        <li><strong>aussi / &eacute;galement</strong> — also</li>
+        <li><strong>surtout</strong> — especially</li>
+        <li><strong>en g&eacute;n&eacute;ral</strong> — in general</li>
+      </ul>
+    </div>
+
+    <!-- TIME MARKERS -->
+    <div class="box teal">
+      <div class="box-title">Time markers</div>
+      <ul>
+        <li><strong>normalement</strong> — normally</li>
+        <li><strong>d'habitude</strong> — usually</li>
+        <li><strong>depuis</strong> — for / since</li>
+        <li><strong>quand j'&eacute;tais petit(e)</strong> — when I was young</li>
+        <li><strong>l'ann&eacute;e derni&egrave;re</strong> — last year</li>
+        <li><strong>&agrave; l'avenir</strong> — in the future</li>
+        <li><strong>un jour</strong> — one day</li>
+      </ul>
+    </div>
+
+    <!-- SHOWCASE SENTENCES -->
+    <div class="box showcase span2">
+      <div class="box-title">Model sentences — use these structures in your answers</div>
+      <ul>
+        <li>J'ai une s&oelig;ur qui s'appelle Emma — elle a quinze ans et elle est tr&egrave;s sympa. <span class="tag">present</span></li>
+        <li>Je m'entends bien avec mon fr&egrave;re parce qu'il est amusant, mais parfois il est un peu &eacute;nerv&eacute;. <span class="tag">opinion + reason + contrast</span></li>
+        <li>L'ann&eacute;e derni&egrave;re, nous avons adopt&eacute; un chien — je l'adore parce qu'il est tr&egrave;s affectueux. <span class="tag">perfect</span> <span class="stretch-label">L2 stretch</span></li>
+        <li>&Agrave; mon avis, il est important d'avoir des amis sur qui on peut compter. <span class="stretch-label">L2 stretch</span></li>
+      </ul>
+    </div>
+
+    <!-- NUMBERS/AGES quick ref -->
+    <div class="box orange">
+      <div class="box-title">Useful phrases</div>
+      <ul>
+        <li><strong>Je suis fils/fille unique</strong> — I'm an only child</li>
+        <li><strong>Je suis l'a&icirc;n&eacute;(e)</strong> — I'm the oldest</li>
+        <li><strong>Je suis le/la cadet(te)</strong> — I'm the youngest</li>
+        <li><strong>On se conna&icirc;t depuis</strong> — we've known each other for</li>
+        <li><strong>C'est mon/ma meilleur(e) ami(e)</strong> — he/she is my best friend</li>
+        <li><strong>Il/Elle me fait rire</strong> — he/she makes me laugh</li>
+        <li><strong>On partage les m&ecirc;mes int&eacute;r&ecirc;ts</strong> — we share the same interests</li>
+      </ul>
+    </div>
+
+    <!-- NEAR FUTURE -->
+    <div class="box red">
+      <div class="box-title">Near future &amp; past tense boosters</div>
+      <ul>
+        <li><strong>je vais + infinitif</strong> — I'm going to ...</li>
+        <li><strong>j'esp&egrave;re + infinitif</strong> — I hope to ...</li>
+        <li><strong>j'ai parl&eacute;</strong> — I talked / spoke</li>
+        <li><strong>on a pass&eacute; du temps ensemble</strong> — we spent time together</li>
+        <li><strong>je suis n&eacute;(e) &agrave;</strong> — I was born in</li>
+        <li><strong>je suis all&eacute;(e)</strong> — I went <span class="stretch-label">L2</span></li>
+        <li><strong>nous avons f&ecirc;t&eacute;</strong> — we celebrated <span class="stretch-label">L2</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CE French Speaking — Where I Live</title>
+<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Dosis', sans-serif; background: #f5f5f5; }
+
+  .page {
+    width: 297mm; height: 210mm; background: white;
+    margin: 0 auto; padding: 6mm 7mm 5mm 7mm;
+    display: grid; grid-template-rows: auto 1fr; gap: 3mm;
+    overflow: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background: #1a4a7a; color: white;
+    padding: 4mm 6mm; border-radius: 4px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .header-topic { font-size: 20pt; font-weight: 800; line-height: 1.1; }
+  .header-sub { font-size: 8pt; font-weight: 500; opacity: 0.75; margin-top: 1mm; letter-spacing: 0.8px; text-transform: uppercase; }
+  .header-badge {
+    background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3);
+    border-radius: 4px; padding: 2mm 4mm; font-size: 8pt; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; text-align: center; line-height: 1.4;
+  }
+
+  /* MAIN BODY */
+  .body {
+    display: grid;
+    grid-template-columns: 70mm 1fr 1fr 1fr;
+    grid-template-rows: 1fr auto;
+    gap: 3mm;
+  }
+
+  /* HOUSE PANEL (col 1, spans both rows) */
+  .house-panel {
+    grid-row: 1 / 3;
+    display: flex; flex-direction: column; gap: 2mm;
+  }
+  .house-panel-title {
+    font-size: 7pt; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.8px; color: #1a3a5c;
+    border-bottom: 1.5px solid #1a3a5c; padding-bottom: 1mm;
+  }
+
+  .house {
+    flex: 1;
+    display: flex; flex-direction: column;
+    border: 2px solid #1a4a7a; border-radius: 4px;
+    overflow: hidden; background: #f7fafd;
+  }
+
+  .roof {
+    background: #1a4a7a;
+    flex-shrink: 0;
+    height: 16mm;
+    position: relative;
+    clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+    display: flex; align-items: flex-end; justify-content: center;
+    padding-bottom: 2.5mm;
+  }
+  .roof-label {
+    font-size: 7pt; font-weight: 800; color: white;
+    text-align: center; line-height: 1.3;
+  }
+  .roof-label span {
+    display: block; font-size: 5.5pt; font-weight: 600; color: rgba(255,255,255,0.7);
+  }
+
+  .floor {
+    border-top: 1.5px solid #b8cfe0;
+    padding: 2mm 2.5mm;
+    display: flex; flex-direction: column; gap: 1.5mm;
+    flex: 1;
+  }
+  .floor-label {
+    font-size: 6.5pt; font-weight: 800; color: #1a4a7a;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding-bottom: 1mm; border-bottom: 1px dotted #b8cfe0;
+    display: flex; align-items: baseline; gap: 2mm;
+  }
+  .floor-label span {
+    font-size: 5.5pt; font-weight: 600; color: #6a90b0;
+    text-transform: none; letter-spacing: 0;
+  }
+  .room-list {
+    display: flex; flex-wrap: wrap; gap: 1.5mm 2mm;
+  }
+  .room {
+    background: white; border: 1px solid #b8cfe0; border-radius: 3px;
+    padding: 0.8mm 2.5mm;
+    font-size: 7.5pt; font-weight: 600; color: #1a3a5c;
+    line-height: 1.3;
+  }
+  .room em {
+    display: block; font-style: normal; font-size: 6pt;
+    color: #6a90b0; font-weight: 500;
+  }
+
+  .garden-strip {
+    background: #d4edda; border-top: 2px solid #2e7d52;
+    padding: 2mm 2.5mm;
+    display: flex; flex-direction: column; gap: 1mm;
+    flex-shrink: 0;
+  }
+  .garden-strip .floor-label { color: #2e7d52; border-color: #8ec8a0; }
+  .garden-strip .room { background: #f0faf2; border-color: #8ec8a0; color: #1c5c35; }
+  .garden-strip .room em { color: #5a9a70; }
+
+  .prompt-box {
+    background: #1a4a7a; border-radius: 4px;
+    padding: 2mm 3mm;
+    flex-shrink: 0;
+  }
+  .prompt-title {
+    font-size: 6pt; font-weight: 800; color: rgba(255,255,255,0.65);
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.5mm;
+  }
+  .prompt-box ul { list-style: none; }
+  .prompt-box ul li {
+    font-size: 7.5pt; font-weight: 600; color: white; line-height: 1.5;
+  }
+  .prompt-box ul li em {
+    font-style: normal; color: rgba(255,255,255,0.6); font-size: 6.5pt;
+  }
+
+  /* STANDARD BOXES */
+  .box { border-radius: 5px; padding: 3mm 3.5mm; display: flex; flex-direction: column; gap: 1.5mm; }
+  .box-title {
+    font-size: 7pt; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.8px; padding-bottom: 1.5mm;
+    border-bottom: 1.5px solid rgba(0,0,0,0.12); margin-bottom: 0.5mm;
+  }
+  .box ul { list-style: none; }
+  .box ul li { font-size: 7.5pt; font-weight: 500; line-height: 1.5; padding: 0.2mm 0; }
+  .box ul li strong { font-weight: 700; }
+
+  .col { display: flex; flex-direction: column; gap: 3mm; }
+
+  .blue-dark  { background: #e8f0f8; border-left: 4px solid #1a3a5c; }
+  .blue-dark .box-title { color: #1a3a5c; }
+  .green      { background: #e8f5ec; border-left: 4px solid #2e7d52; }
+  .green .box-title { color: #2e7d52; }
+  .amber      { background: #fff8e6; border-left: 4px solid #b07800; }
+  .amber .box-title { color: #b07800; }
+  .purple     { background: #f3edf8; border-left: 4px solid #6b3fa0; }
+  .purple .box-title { color: #6b3fa0; }
+  .teal       { background: #e6f4f4; border-left: 4px solid #1e7575; }
+  .teal .box-title { color: #1e7575; }
+  .red        { background: #fdecea; border-left: 4px solid #b03030; }
+  .red .box-title { color: #b03030; }
+  .orange     { background: #fff3e8; border-left: 4px solid #b05a00; }
+  .orange .box-title { color: #b05a00; }
+
+  .showcase {
+    grid-column: 2 / 5;
+    background: #1a4a7a; color: white;
+    border-radius: 5px; padding: 3mm 4mm;
+  }
+  .showcase .box-title { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.2); font-size: 7pt; }
+  .showcase ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5mm 4mm; }
+  .showcase ul li { font-size: 7.5pt; line-height: 1.5; color: white; padding: 0.2mm 0; }
+
+  .tag {
+    background: rgba(255,255,255,0.18); border-radius: 2px;
+    padding: 0px 3px; font-size: 6pt; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-left: 3px; vertical-align: middle;
+  }
+  .stretch-label {
+    display: inline-block; background: #f0c040; color: #1a3a5c;
+    border-radius: 2px; padding: 0px 4px; font-size: 6pt;
+    font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-left: 3px; vertical-align: middle;
+  }
+
+  @media print {
+    body { background: white; }
+    .page { width: 297mm; height: 210mm; padding: 6mm 7mm 5mm 7mm; page-break-after: avoid; overflow: hidden; }
+    @page { size: A4 landscape; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div>
+      <div class="header-topic">O&ugrave; j'habite &mdash; ma maison et ma ville</div>
+      <div class="header-sub">Where I Live &mdash; House &amp; Local Area &mdash; CE French Speaking Word Mat</div>
+    </div>
+    <div class="header-badge">Theme A<br>Socialising<br>L1 &amp; L2</div>
+  </div>
+
+  <div class="body">
+
+    <!-- House panel: col 1, full height -->
+    <div class="house-panel">
+      <div class="house-panel-title">La maison &mdash; les pi&egrave;ces par &eacute;tage</div>
+
+      <div class="house">
+
+        <div class="roof">
+          <div class="roof-label">
+            le grenier
+            <span>attic</span>
+          </div>
+        </div>
+
+        <div class="floor">
+          <div class="floor-label">
+            Au premier &eacute;tage &nbsp;&mdash;&nbsp; <span>first floor</span>
+          </div>
+          <div class="room-list">
+            <div class="room"><strong>ma chambre</strong><em>my bedroom</em></div>
+            <div class="room"><strong>la salle de bains</strong><em>bathroom</em></div>
+            <div class="room"><strong>les toilettes</strong><em>toilet</em></div>
+            <div class="room"><strong>la chambre des parents</strong><em>parents&rsquo; room</em></div>
+            <div class="room"><strong>le bureau</strong><em>study</em></div>
+          </div>
+        </div>
+
+        <div class="floor">
+          <div class="floor-label">
+            Au rez-de-chauss&eacute;e &nbsp;&mdash;&nbsp; <span>ground floor</span>
+          </div>
+          <div class="room-list">
+            <div class="room"><strong>le salon / la salle de s&eacute;jour</strong><em>living room</em></div>
+            <div class="room"><strong>la cuisine</strong><em>kitchen</em></div>
+            <div class="room"><strong>la salle &agrave; manger</strong><em>dining room</em></div>
+            <div class="room"><strong>le couloir</strong><em>hallway</em></div>
+            <div class="room"><strong>le garage</strong><em>garage</em></div>
+          </div>
+        </div>
+
+        <div class="garden-strip">
+          <div class="floor-label">
+            Le jardin / la terrasse &nbsp;&mdash;&nbsp; <span>garden / terrace</span>
+          </div>
+          <div class="room-list">
+            <div class="room"><strong>la terrasse</strong><em>patio</em></div>
+            <div class="room"><strong>la cave</strong><em>cellar</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-title">Sentence starters &mdash; use these</div>
+        <ul>
+          <li>Au premier &eacute;tage, il y a... <em>on the first floor there is</em></li>
+          <li>Au rez-de-chauss&eacute;e, on trouve... <em>on the ground floor you find</em></li>
+          <li>Dans le jardin, il y a... <em>in the garden there is</em></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Column 2 -->
+    <div class="col">
+      <div class="box amber">
+        <div class="box-title">Local area &mdash; town facilities</div>
+        <ul>
+          <li><strong>une ville / un village</strong> &mdash; town / village</li>
+          <li><strong>un supermarch&eacute;</strong> &mdash; supermarket</li>
+          <li><strong>une boulangerie / p&acirc;tisserie</strong> &mdash; bakery / cake shop</li>
+          <li><strong>une piscine</strong> &mdash; swimming pool</li>
+          <li><strong>un parc / une biblioth&egrave;que</strong> &mdash; park / library</li>
+          <li><strong>un cin&eacute;ma / un th&eacute;&acirc;tre</strong> &mdash; cinema / theatre</li>
+          <li><strong>une gare / un h&ocirc;pital</strong> &mdash; station / hospital</li>
+        </ul>
+      </div>
+      <div class="box teal">
+        <div class="box-title">Adjectives &mdash; home &amp; area</div>
+        <ul>
+          <li><strong>grand(e) / spacieux(-euse)</strong> &mdash; large / spacious</li>
+          <li><strong>petit(e) / &eacute;troit(e)</strong> &mdash; small / narrow</li>
+          <li><strong>moderne / ancien(ne)</strong> &mdash; modern / old</li>
+          <li><strong>confortable</strong> &mdash; comfortable</li>
+          <li><strong>anim&eacute;(e) / calme</strong> &mdash; lively / quiet</li>
+          <li><strong>pollu&eacute;(e) / propre</strong> &mdash; polluted / clean</li>
+          <li><strong>pittoresque / pratique</strong> &mdash; picturesque / convenient</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Column 3 -->
+    <div class="col">
+      <div class="box green">
+        <div class="box-title">Verbs &mdash; describing &amp; locating</div>
+        <ul>
+          <li><strong>j'habite &agrave; / dans</strong> &mdash; I live in</li>
+          <li><strong>c'est situ&eacute; dans le nord/sud</strong> &mdash; in the north/south</li>
+          <li><strong>il y a / il n'y a pas de</strong> &mdash; there is / there isn't</li>
+          <li><strong>on peut / on trouve</strong> &mdash; you can / you find</li>
+          <li><strong>c'est &agrave; ... minutes de</strong> &mdash; it's ... minutes from</li>
+          <li><strong>c'est pr&egrave;s de / loin de</strong> &mdash; near / far from</li>
+        </ul>
+      </div>
+      <div class="box red">
+        <div class="box-title">Directions (role play)</div>
+        <ul>
+          <li><strong>tournez &agrave; gauche / droite</strong> &mdash; turn left / right</li>
+          <li><strong>allez tout droit</strong> &mdash; go straight on</li>
+          <li><strong>prenez la premi&egrave;re rue &agrave; gauche</strong> &mdash; take the first left</li>
+          <li><strong>traversez le pont / la place</strong> &mdash; cross the bridge / square</li>
+          <li><strong>c'est en face de / &agrave; c&ocirc;t&eacute; de</strong> &mdash; opposite / next to</li>
+          <li><strong>vous &ecirc;tes perdu(e)?</strong> &mdash; are you lost?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Column 4 -->
+    <div class="col">
+      <div class="box purple">
+        <div class="box-title">Opinions &amp; connectors</div>
+        <ul>
+          <li><strong>j'aime habiter ici parce que</strong> &mdash; I like living here because</li>
+          <li><strong>l'inconv&eacute;nient c'est que</strong> &mdash; the disadvantage is that</li>
+          <li><strong>il manque de</strong> &mdash; it lacks</li>
+          <li><strong>ce que j'aime le plus c'est</strong> &mdash; what I like most is</li>
+          <li><strong>par contre</strong> &mdash; on the other hand</li>
+          <li><strong>on devrait construire</strong> &mdash; they should build <span class="stretch-label">L2</span></li>
+        </ul>
+      </div>
+      <div class="box orange">
+        <div class="box-title">Time &amp; change</div>
+        <ul>
+          <li><strong>j'habite ici depuis ... ans</strong> &mdash; I've lived here for ... years</li>
+          <li><strong>avant, il y avait</strong> &mdash; there used to be</li>
+          <li><strong>maintenant il y a</strong> &mdash; now there is</li>
+          <li><strong>on a construit</strong> &mdash; they built <span class="stretch-label">L2</span></li>
+          <li><strong>on a d&eacute;m&eacute;nag&eacute;</strong> &mdash; we moved house <span class="stretch-label">L2</span></li>
+          <li><strong>&agrave; l'avenir / dans le futur</strong> &mdash; in the future</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Showcase sentences: cols 2-4, bottom row -->
+    <div class="showcase">
+      <div class="box-title">Model sentences &mdash; use the floor structure in your answers</div>
+      <ul>
+        <li>Au rez-de-chauss&eacute;e, il y a un grand salon et une cuisine moderne &mdash; c'est tr&egrave;s confortable. <span class="tag">floor + adjective</span></li>
+        <li>Au premier &eacute;tage, il y a ma chambre, qui est assez petite mais bien d&eacute;cor&eacute;e. <span class="tag">floor + relative clause</span></li>
+        <li>J'habite dans une grande maison &agrave; la campagne &mdash; c'est calme mais il manque de transports. <span class="tag">contrast</span></li>
+        <li>L'inconv&eacute;nient c'est qu'il n'y a pas de cin&eacute;ma ici, donc on doit toujours prendre la voiture. <span class="tag">disadvantage</span> <span class="stretch-label">L2</span></li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>
